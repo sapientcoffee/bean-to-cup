@@ -1,3 +1,6 @@
+ork in progess and experimenting - do not use yet!!
+
+
 # Bean-to-Cup (Blueprint Forge)
 
 A comprehensive Gemini CLI Extension that provides a **Multi-Agent Swarm** for autonomous software development, alongside specialized, step-by-step commands for **SQL-to-DDD Refactoring**.
@@ -13,7 +16,7 @@ Install the [Gemini CLI](https://github.com/google-gemini/gemini-cli)
 From your command line:
 
 ```bash
-gemini extensions install https://github.com/jjdelorme/bean-to-cup
+gemini extensions install https://github.com/sapientcoffee/bean-to-cup
 ```
 
 ### Activating the Swarm Supervisor (Per-Workspace)
