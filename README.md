@@ -1,4 +1,4 @@
-# Gemini Swarm & Modernization Toolkit
+# Bean-to-Cup (Blueprint Forge)
 
 A comprehensive Gemini CLI Extension that provides a **Multi-Agent Swarm** for autonomous software development, alongside specialized, step-by-step commands for **SQL-to-DDD Refactoring**.
 
@@ -13,7 +13,7 @@ Install the [Gemini CLI](https://github.com/google-gemini/gemini-cli)
 From your command line:
 
 ```bash
-gemini extensions install https://github.com/jjdelorme/plan-commands
+gemini extensions install https://github.com/jjdelorme/bean-to-cup
 ```
 
 ### Activating the Swarm Supervisor (Per-Workspace)
@@ -35,7 +35,7 @@ While the agents (`architect`, `engineer`, `auditor`) are installed globally by 
 
 ## 🤖 1. The Autonomous Swarm
 
-This extension packages a portable, framework-agnostic AI agent swarm designed to manage the software development lifecycle using a rigorous **Plan -> Act -> Verify** state machine.
+Bean-to-Cup is a portable, framework-agnostic AI agent swarm (Blueprint Forge) designed to manage the software development lifecycle using a rigorous **Plan -> Act -> Verify** state machine.
 
 ### The Agents
 *   **Supervisor (`system.md`)**: The Project Manager. Enforces the state machine, manages hand-offs, and gates Git commits.
@@ -49,32 +49,42 @@ The system moves through distinct phases, enforced by the Supervisor.
 ```mermaid
 graph TD
     %% Roles
-    subgraph Phase 1 & 2: Strategy
-        Scout[Scout/Investigator: Research & Map]
-        Architect[Architect: Plan & Strategy]
+    subgraph Strategy & Planning
+        Supervisor1[Supervisor: Question]
+        Scout[Scout/Investigator: Research]
+        Architect1[Architect: Design]
+        Architect2[Architect: Structure]
+        Architect3[Architect: Plan]
     end
 
-    subgraph Phase 3: Construction
+    subgraph Execution & Delivery
+        Supervisor2[Supervisor: Worktree]
         Engineer[Engineer: Implement]
         Auditor[Auditor: Verify]
+        Supervisor3[Supervisor: PR]
     end
 
     %% Flow
-    Start([User Start]) --> Scout
-    Scout --> Architect
-    Architect --> Review{User Approval}
+    Start([User Start]) --> Supervisor1
+    Supervisor1 --> Scout
+    Scout --> Architect1
+    Architect1 --> Architect2
+    Architect2 --> Architect3
+    Architect3 --> Review{User Approval}
     
-    Review -- Reject --> Architect
-    Review -- Approve --> Engineer
+    Review -- Reject --> Architect3
+    Review -- Approve --> Supervisor2
     
+    Supervisor2 --> Engineer
     Engineer --> Auditor
     
     %% The Three-Way Fork
     Auditor -- Code Broken? --> Engineer
-    Auditor -- Plan Wrong? --> Architect
+    Auditor -- Plan Wrong? --> Architect3
     Auditor -- Verified --> Commit([Git Commit])
     
-    Commit --> Engineer
+    Commit --> Supervisor3
+    Supervisor3 --> End([Done])
 ```
 
 ### Workspace Maintenance: Archiving Plans
