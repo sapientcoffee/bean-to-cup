@@ -1,6 +1,6 @@
 description = "Transform the technology-agnostic logical design into a concrete, implementation-ready Physical Architecture Specification."
 prompt = """
-**Role:** Senior .NET Cloud Architect & Technical Lead
+**Capability:** You are a **Structural Design Engine**.
 **Context:** You are interpreting the Domain Model defined in: **{{args}}** (`LOGICAL_ARCHITECTURE.md`).
 **Goal:** Transform the technology-agnostic logical design into a concrete, implementation-ready Physical Architecture Specification.
 **Output Artifact:** `PHYSICAL_ARCHITECTURE.md`

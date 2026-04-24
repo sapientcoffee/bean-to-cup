@@ -1,165 +1,229 @@
-ork in progess and experimenting - do not use yet!!
+# ☕ Bean-to-Cup: The Autonomous Barista Swarm
 
+**Bean-to-Cup** is a comprehensive Gemini CLI extension designed to automate the entire Software Development Lifecycle (SDLC). It transforms the AI from a simple code generator into a structured **Autonomous Brewing Team** (Blueprint Forge) that follows a rigorous, multi-phase protocol to deliver high-quality, verified software.
 
-# Bean-to-Cup (Blueprint Forge)
+![The Brewing Swarm](docs/images/brewing-swarm.png)
 
-A comprehensive Gemini CLI Extension that provides a **Multi-Agent Swarm** for autonomous software development, alongside specialized, step-by-step commands for **SQL-to-DDD Refactoring**.
-
-**See** [Gemini CLI Extensions](https://github.com/google-gemini/gemini-cli/blob/main/docs/extensions/index.md) for more details.
-
-**Credits**: [@dandobrin](https://github.com/ddobrin), [@jjdelorme](https://github.com/jjdelorme) & [@cedricyao](https://github.com/cedricyao). Parts of this work were adapted from Dan's [production serverless repository](https://github.com/GoogleCloudPlatform/serverless-production-readiness-java-gcp/tree/main/genai/quotes-llm/.gemini/commands).
-
-## Prerequisites
-Install the [Gemini CLI](https://github.com/google-gemini/gemini-cli)
-
-## Extension Installation
-From your command line:
-
-```bash
-gemini extensions install https://github.com/sapientcoffee/bean-to-cup
-```
-
-### Activating the Swarm Supervisor (Per-Workspace)
-
-While the agents (`architect`, `engineer`, `auditor`) are installed globally by the extension, the **Supervisor** (`system.md`) must be activated locally in each project you want to use it in.
-
-1. Navigate to your project directory.
-2. Run the initialization command:
-   ```bash
-   /swarm:init
-   ```
-   *(This downloads the `system.md` file into your local `.gemini/` folder).*
-3. **Restart** the Gemini CLI with the system override enabled:
-   ```bash
-   GEMINI_SYSTEM_MD=true gemini
-   ```
+This is a collection of AI-assisted development techniques, steps, and methods I have been experimenting with and building up over the last year. It is always evolving, and the space is evolving very quickly.
 
 ---
 
-## 🤖 1. The Autonomous Swarm
+## 📖 Core Philosophy: "The Perfect Brew"
 
-Bean-to-Cup is a portable, framework-agnostic AI agent swarm (Blueprint Forge) designed to manage the software development lifecycle using a rigorous **Plan -> Act -> Verify** state machine.
+Just as a master barista follows a precise recipe—from selecting the beans to the final pour—this extension treats software features as "Brews." It enforces a strict **State Machine** based on the "Document-as-Context" architecture, where Markdown files act as the API for your AI agents.
 
-### The Agents
-*   **Supervisor (`system.md`)**: The Project Manager. Enforces the state machine, manages hand-offs, and gates Git commits.
-*   **Architect (`architect`)**: The Planner. Reads research, creates comprehensive step-by-step TDD implementation plans in the `plans/` directory.
-*   **Engineer (`engineer`)**: The Builder. Strictly follows the Architect's plans, writing tests and implementing changes via Red-Green-Refactor.
-*   **Auditor (`auditor`)**: The Gatekeeper. Verifies the Engineer's work. Compiles code, runs tests, and hunts for lazy AI shortcuts (TODOs, commented-out tests).
+![The Control Funnel](docs/images/control-funnel.png)
 
-### 🔄 Protocol Lifecycle
-The system moves through distinct phases, enforced by the Supervisor.
+This extension is a formal implementation of the **QRSPI method** (Questions, Research, Structure, Plan, Implement). This workflow, pioneered as the RPI technique by **Dex Horthy** at HumanLayer and evolved into an emerging approach for agentic pipelines, ensures that the human remains the "director" while the AI handles the "execution." It is designed to prevent "outsourcing thinking" by creating high-fidelity checkpoints where you and the AI must align.
+
+### The AI-Native SDLC Stack
+This extension implements emerging standards for AI-assisted development:
+
+![The Artifact Filter](docs/images/artifact-filter.png)
+
+| SDLC Phase | Standard / Convention | Artifact File | extension Role |
+| :--- | :--- | :--- | :--- |
+| **Product** | AI-PRD | `01_PRD.md` | Machine-parsable requirements & non-goals. |
+| **Extraction** | Context Mapping | `02_EXTRACTION.md` | Factual codebase mapping (Blind Research). |
+| **Technical** | SPEC / design.md | `03_SPEC.md` | Tech spec aligned with local `design.md`. |
+| **Implementation** | Sequential Plan | `04_PLAN.md` | Phased execution roadmap. |
+| **Verification** | Audit & Cupping | `05_VERIFICATION.md` | Static & dynamic verification results. |
+| **Delivery** | Service Walkthrough | `06_WALKTHROUGH.md` | Visual & technical proof of success. |
+
+---
+
+### 🛡️ Spec-Driven Development (SDD)
+
+Transitioning to SDD requires a shift in how you work with agents. If specifications are too long or vague, the agent will "drift" or experience context loss. This extension enforces these SDD tenets:
+
+#### A. Prioritize Human Reviewability
+The "fundamental test" of a spec is whether a human can review it effectively. If a specification change is too long to review in 5 minutes, the feature is too large. We keep specifications concise and focused on intentionality.
+
+#### B. Solve the "Lost in the Middle" Problem
+LLMs often struggle with information buried in the middle of long documents. We keep `03_SPEC.md` and `04_PLAN.md` files modular and use **Plan Mode** guardrails to iterate in a read-only state before generating any code.
+
+#### C. Use "Boundary Specs" (What NOT to build)
+Agents are prone to "over-implementing." Our artifacts explicitly list **Constraints** and **Non-Goals** (e.g., "Do not upgrade existing dependencies" or "Do not add authentication logic") to prevent scope drift.
+
+#### D. Agentic Validation (Evals)
+Don't just write tests; write Evals. In your `03_SPEC.md`, we define what "Success" looks like for the AI using measurable criteria (SLIs/SLOs), such as "The generated API must have a response time < 100ms."
+
+---
+
+## 🏗️ Architectural Overview
+
+### The 9-Phase Protocol (The State Machine)
+The extension follows a rigorous 9-phase protocol to move from initial idea to a verified Pull Request.
 
 ```mermaid
-graph TD
-    %% Roles
-    subgraph Strategy & Planning
-        Supervisor1[Supervisor: Question]
-        Scout[Scout/Investigator: Research]
-        Architect1[Architect: Design]
-        Architect2[Architect: Structure]
-        Architect3[Architect: Plan]
+flowchart TD
+    %% Define Google Colors for Sketchnote Style
+    classDef default fill:#f9f9f9,stroke:#333,stroke-width:2px,color:#333;
+    classDef phase fill:#ffffff,stroke:#4285F4,stroke-width:2px,color:#333;
+    classDef human fill:#ffffff,stroke:#EA4335,stroke-width:2px,color:#333,stroke-dasharray: 5 5;
+    classDef agent fill:#ffffff,stroke:#34A853,stroke-width:2px,color:#333;
+    classDef artifact fill:#ffffff,stroke:#FBBC05,stroke-width:2px,color:#333;
+    classDef orchestrator fill:#ffffff,stroke:#4285F4,stroke-width:3px,color:#333;
+
+    Start((Start: /feature)) --> P1
+
+    subgraph "Phase 1: Strategic Discovery"
+        P1[Orchestration Engine: Chat & Clarify]:::orchestrator
+        H1{Human Approval}:::human
+        A1[\01_PRD.md\]:::artifact
+        P1 --> H1
+        H1 -- Approve --> A1
     end
 
-    subgraph Execution & Delivery
-        Supervisor2[Supervisor: Worktree]
-        Engineer[Engineer: Implement]
-        Auditor[Auditor: Verify]
-        Supervisor3[Supervisor: PR]
+    subgraph "Phase 2: Research Briefing"
+        A1 --> P2
+        P2[Orchestration Engine: Generate Brief]:::orchestrator
+        R_Brief[\Research Brief\]:::artifact
+        P2 --> R_Brief
     end
 
-    %% Flow
-    Start([User Start]) --> Supervisor1
-    Supervisor1 --> Scout
-    Scout --> Architect1
-    Architect1 --> Architect2
-    Architect2 --> Architect3
-    Architect3 --> Review{User Approval}
-    
-    Review -- Reject --> Architect3
-    Review -- Approve --> Supervisor2
-    
-    Supervisor2 --> Engineer
-    Engineer --> Auditor
-    
-    %% The Three-Way Fork
-    Auditor -- Code Broken? --> Engineer
-    Auditor -- Plan Wrong? --> Architect3
-    Auditor -- Verified --> Commit([Git Commit])
-    
-    Commit --> Supervisor3
-    Supervisor3 --> End([Done])
+    subgraph "Phase 3: Factual Research"
+        R_Brief --> P3
+        P3[/Dispatch Specialized Engines\]:::agent
+        P3_1(Context Mapping)
+        P3_2(Codebase Analysis)
+        P3_3(Pattern Finder)
+        P3 --> P3_1 & P3_2 & P3_3
+        P3_1 & P3_2 & P3_3 --> A2[\02_EXTRACTION.md\]:::artifact
+    end
+
+    subgraph "Phase 4: Design"
+        A1 & A2 --> P4
+        P4[/Dispatch @architect\]:::agent
+        A3[\03_SPEC.md\]:::artifact
+        P4 --> A3
+    end
+
+    subgraph "Phase 5: Structure & Planning"
+        A3 --> P5
+        P5[/Dispatch @architect\]:::agent
+        A4[\04_PLAN.md\]:::artifact
+        P5 --> A4
+    end
+
+    subgraph "Phase 6: Human Review Gate"
+        A4 --> H2{Human Approval}:::human
+    end
+
+    subgraph "Phase 7: Implementation Loop"
+        H2 -- Approve --> L_Start((Start Loop))
+        L_Start --> P7_1
+        P7_1[/Dispatch @engineer\]:::agent
+        P7_2[/Dispatch @auditor\]:::agent
+        P7_1 --> P7_2
+        
+        P7_2 -- "Fail (Code)" --> P7_1
+        P7_2 -- "Fail (Plan)" --> P5
+        P7_2 -- "Pass" --> P7_3
+        
+        P7_3[Orchestration Engine: Update Plan]:::orchestrator
+        H3{Human Approval: Commit?}:::human
+        P7_3 --> H3
+        H3 -- Approve --> P7_4[(Git Commit)]
+        
+        P7_4 -- "More Tasks" --> L_Start
+        P7_4 -- "All Done" --> A5[\05_VERIFICATION.md\]:::artifact
+    end
+
+    subgraph "Phase 8: Walkthrough"
+        A5 --> P8
+        P8[/Dispatch @browser_agent\]:::agent
+        A6[\06_WALKTHROUGH.md\]:::artifact
+        P8 --> A6
+    end
+
+    subgraph "Phase 9: Delivery"
+        A6 --> P9
+        P9[Orchestration Engine: Push & PR]:::orchestrator
+        End((Pull Request Created))
+        P9 --> End
+    end
 ```
 
-### Workspace Maintenance: Archiving Plans
-As the Swarm executes tasks, your `plans/` directory will accumulate executed task files, research reports, and review feedback. To keep the agent's context window clean and focused, you can archive completed items:
+### 1. The Head Barista (Supervisor) [CORE]
+The heart of the extension is the `bean-to-cup.md` file. It acts as the **Head Barista** and **Guardian of the Protocol**. It ensures that "Intent" (PRD) is separated from "Extraction" (Research) to prevent bias.
 
-```bash
-/swarm:archive
-```
-**What it does:**
-1. Reads your Master Roadmap to identify completed campaigns and tasks.
-2. Moves all corresponding completed files into a `plans/archive/` directory.
-3. Automatically updates your project's `.geminiignore` to ensure archived files are hidden from the AI's context in future turns.
-
-### Extending the Swarm (Optional)
-The core swarm is agnostic. To add deep codebase intelligence (like a Graph Database), install a specialized skill/agent in your project and update your project's `GEMINI.md` to instruct the swarm to use it:
-
-```markdown
-# Swarm Routing & Delegation Rules (Add to your project's GEMINI.md)
-- For codebase investigation, you MUST delegate to the `scout` agent. Do NOT use the built-in investigator.
-- The `auditor` agent MUST utilize the `graphdb` skill for verifying changes.
-```
+**Key Mandates:**
+*   **PRD over Specs:** Every feature starts with a machine-parsable `01_PRD.md` including **Non-Goals** and **SLIs/SLOs**.
+*   **UI/UX Alignment:** The Architect (@architect) explicitly searches for an existing `design.md` in your root to ensure UI/UX consistency.
+*   **SRE-Ready:** Requirements include initial telemetry and monitoring constraints for Day 2 operations.
 
 ---
 
-## 🏗️ 2. DDD Refactoring Commands
-A specialized workflow for refactoring legacy code (specifically SQL) into a modern **.NET, Domain-Driven Design (DDD)** architecture.
+## 🤖 The Brewing Swarm (Agents)
 
-**Architecture:** .NET 10, C# 14, MediatR (CQRS), EF Core (Code-First).
-**Methodology:** Domain-Driven Design (DDD) via Test-Driven Development (TDD).
+Invoke specialized sub-agents using `@<name>` in your prompts:
 
-### The Workflow
-**CRITICAL:** This pipeline is state-sensitive. After every step, review the output artifact, then type `/clear` to reset the context window to prevent "Context Pollution."
+| Agent | Role | Expertise | Status |
+| :--- | :--- | :--- | :--- |
+| **`@architect`** | The Planner | Design patterns, Spec generation, and UI/UX alignment. | **CORE** |
+| **`@engineer`** | The Builder | TDD implementation and production code. | **CORE** |
+| **`@auditor`** | The Gatekeeper | Verification, Cupping, and protocol enforcement. | **CORE** |
+| **`@scout`** | The Investigator | Factual codebase mapping and technical extraction. | **CORE** |
+| **`@browser_agent`** | The Browser | Automated UI walkthroughs and visual verification. | **CORE** |
+| **`@codebase-analyzer`** | The Cartographer | Deep surgical analysis of implementation details. | **CORE** |
+| **`@codebase-locator`** | The Navigator | Rapidly mapping component locations. | **CORE** |
+| **`@codebase-pattern-finder`** | The Librarian | Finding existing code examples and patterns. | **CORE** |
+| **`@security-auditor`** | The Sentry | Hunting for vulnerabilities and logic flaws. | **WIP** |
+| **`@code-review`** | The Critic | Deep architectural and logic reviews. | **WIP** |
 
-#### Step 0: User Story Generation (Optional)
-*Generates agile user stories from existing code to help understand the current system.*
-*   **Command:** `/ddd:create-user-stories {{path/to/code}}`
-*   **Output:** `user-stories.md`
+---
 
-#### Step 1: Deep Analysis (SQL)
-*Deep analysis of legacy Stored Procedures. Extracts business rules, data dictionaries, and test cases.*
-*   **Command:** `/sql:analyze {{path/to/legacy_proc.sql}}`
-*   **Output:** `ANALYSIS_[ProcName].md`
+## ⌨️ Custom Commands
 
-#### Step 2: Logical Architecture
-*Transforms the Analysis into a pure Domain Model (Aggregates, Entities, Rules).*
-*   **Command:** `/ddd:logical {{ANALYSIS_[ProcName].md}}`
-*   **Output:** `LOGICAL_ARCHITECTURE.md`
+### Core Lifecycle
+*   **`/feature <goal>`** [CORE]: Initiates the 9-phase protocol starting with an AI-Ready PRD.
+*   **`/research <query>`** [CORE]: Spawns parallel agents for deep, factual technical extraction.
+*   **`/loop:start`** [WIP]: Starts an infinite, self-correcting development loop (Ralph).
 
-#### Step 3: Physical Architecture
-*Maps the Domain Model to .NET 10, MediatR, and EF Core patterns.*
-*   **Command:** `/ddd:physical {{LOGICAL_ARCHITECTURE.md}}`
-*   **Output:** `PHYSICAL_ARCHITECTURE.md`
+### Workspace Management
+*   **`/brew:init`** [CORE]: Bootstraps your project by copying the protocol to `.gemini/system.md`.
+*   **`/brew:archive`** [CORE]: Clears away 'spent grounds' (completed tasks) to keep context clean.
 
-#### Step 4: Implementation Planning
-*Generates a step-by-step TDD execution plan.*
-*   **Command:** `/ddd:plan {{PHYSICAL_ARCHITECTURE.md}}`
-*   **Output:** `IMPLEMENTATION_PLAN.md`
+### Specialized Pipelines
+*   **`/sql:analyze`** [WIP]: Deep analysis of legacy stored procedures.
+*   **`/ddd:*`** [WIP]: A 7-step pipeline (Logical -> Physical -> Plan -> Implement -> Review -> Fix).
 
-#### Step 5: Build & Implementation
-*Executes the plan using strict Red-Green-Refactor TDD.*
-*   **Command:** `/ddd:implement {{IMPLEMENTATION_PLAN.md}}`
-*   **Output:** Actual C# code in `src/` and tests in `tests/`.
+---
 
-### The Quality Assurance Loop
-Once the code is built, do not ship it. Enter the **Review/Fix Loop**.
+## 🛠️ Reusable Skills & Hooks
 
-#### Step 6: Code Review (Quality Gate)
-*Audits the code for "Laziness", Stubbing, and missing Business Rules.*
-*   **Command:** `/ddd:review`
-*   **Output:** `REVIEW_REPORT.md` (Look for `🔴 REJECT` or `🟢 PASS`)
+### Skills
+*   **`write-specs`** [CORE]: Transforming ideas into rigorous requirements (Phase 1).
+*   **`github-workflow`** [CORE]: Standardized PR creation using `gh` (Phase 9).
+*   **`chaos-mitigation`** [WIP]: SRE/Ops troubleshooting based on logs and runbooks.
 
-#### Step 7: Remediation (Self-Healing)
-*If Step 6 failed, this command fixes the specific issues listed in the report.*
-*   **Command:** `/ddd:fix {{REVIEW_REPORT.md}}`
-*   **Next Step:** Go back to **Step 6** (`/ddd:review`). Repeat until **PASS**.
+### Automated Hooks
+*   **`lint-on-change`** [CORE]: Automatically runs your linter whenever a file is modified.
+*   **`coffee-and-git`** [CORE]: Provides a coffee tip and git history at session start.
+*   **`git-status`** [CORE]: Keeps your current branch and workspace state visible.
+
+---
+
+## 🚀 Installation & Quickstart
+
+1.  **Install the Extension**:
+    ```bash
+    gemini extensions install https://github.com/sapientcoffee/bean-to-cup
+    ```
+
+2.  **Initialize your Workspace**:
+    ```bash
+    /brew:init
+    ```
+
+3.  **Start your first Brew**:
+    ```bash
+    /feature "Add a search bar to the coffee bean catalog"
+    ```
+
+---
+
+**Credits**: [@dandobrin](https://github.com/dandobrin), [@jjdelorme](https://github.com/jjdelorme), [@cedricyao](https://github.com/cedricyao), [Dex Horthy](https://x.com/dexhorthy).
+
+*Created with ❤️ for demo/example pruposes only.*

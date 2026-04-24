@@ -6,13 +6,13 @@
 ## 📋 Prerequisites
 
 1.  **Command Setup:** Save the 7 prompts into your Gemini CLI configuration folder under a `ddd` directory (e.g., `~/.gemini/commands/ddd/`).
-    *   `analyze.toml` (SQL Analysis)
-    *   `logical.toml` (Logical Arch)
-    *   `physical.toml` (Physical Arch)
-    *   `plan.toml` (Implementation Plan)
-    *   `implement.toml` (Build Agent)
-    *   `review.toml` (Quality Gate)
-    *   `fix.toml` (Remediation)
+    *   `analyze.toml` (Logic Extraction)
+    *   `logical.toml` (Logical Design)
+    *   `physical.toml` (Structural Design)
+    *   `plan.toml` (Implementation Planning)
+    *   `implement.toml` (Implementation Engine)
+    *   `review.toml` (Quality Verification)
+    *   `fix.toml` (Remediation Engine)
 2.  **Target Environment:** .NET 10 SDK, Docker, VS Code/Rider.
 
 ## 🔄 The Workflow Overview
@@ -21,7 +21,7 @@
 
 ---
 
-### Step 1: Deep Analysis
+### Step 1: Logic Extraction
 *Extracts business rules and test cases from the legacy Stored Procedure.*
 
 *   **Command:** `/ddd:analyze {{path/to/legacy_proc.sql}}`
@@ -30,7 +30,7 @@
 *   **Human Action:** Review the "Data Dictionary" and "Verification/Test Cases" sections. Ensure no business logic was missed.
 *   **Reset:** `/clear`
 
-### Step 2: Logical Architecture
+### Step 2: Logical Design
 *Transforms the Analysis into a pure Domain Model (Aggregates, Entities, Rules).*
 
 *   **Command:** `/ddd:logical {{ANALYSIS_[ProcName].md}}`
@@ -39,7 +39,7 @@
 *   **Human Action:** Check the **Traceability Matrix**. Ensure every `BR-###` from Step 1 has a home in the new design.
 *   **Reset:** `/clear`
 
-### Step 3: Physical Architecture
+### Step 3: Structural Design
 *Maps the Domain Model to .NET 10, MediatR, and EF Core patterns.*
 
 *   **Command:** `/ddd:physical {{LOGICAL_ARCHITECTURE.md}}`
@@ -63,17 +63,17 @@
 *   **Command:** `/ddd:implement {{IMPLEMENTATION_PLAN.md}}`
 *   **Input:** The Plan, plus read-access to all 3 Architecture/Analysis docs.
 *   **Output:** Actual C# code in `src/` and tests in `tests/`.
-*   **Human Action:** Monitor the TDD loop. The agent should output "Tests Passed" after every task.
+*   **Human Action:** Monitor the TDD loop. The engine should output "Tests Passed" after every task.
 *   **Reset:** `/clear`
 
 ---
 
 ## 🛡️ The Quality Assurance Loop
 
-Once the code is built, do not ship it. Enter the **Review/Fix Loop**.
+Once the code is built, do not ship it. Enter the **Quality Verification Loop**.
 
-### Step 6: Code Review (Quality Gate)
-*Audits the code for "Laziness", Stubbing, and missing Business Rules.*
+### Step 6: Quality Verification
+*Audits the code for placeholders, stubbing, and missing Business Rules.*
 
 *   **Command:** `/ddd:review`
 *   **Input:** The full codebase + `ANALYSIS.md`.
@@ -82,12 +82,12 @@ Once the code is built, do not ship it. Enter the **Review/Fix Loop**.
 *   **Reset:** `/clear`
 
 ### Step 7: Remediation (Self-Healing)
-*If Step 6 failed, this agent fixes the specific issues listed in the report.*
+*If Step 6 failed, the Remediation Engine fixes the specific issues listed in the report.*
 
 *   **Command:** `/ddd:fix {{REVIEW_REPORT.md}}`
 *   **Input:** The Review Report.
 *   **Output:** Modified C# code.
-*   **Next Step:** Go back to **Step 6** (`/ddd:review`) and run the Review again. Repeat until **PASS**.
+*   **Next Step:** Go back to **Step 6** (`/ddd:review`) and run the verification again. Repeat until **PASS**.
 *   **Reset:** `/clear`
 
 ---
@@ -98,11 +98,11 @@ Once the code is built, do not ship it. Enter the **Review/Fix Loop**.
 | :--- | :--- | :--- |
 | `ANALYSIS_*.md` | Legacy Deconstruction | **Test Data** (Inputs/Outputs) |
 | `LOGICAL_*.md` | Domain Design | **Business Rules** (Invariants) |
-| `PHYSICAL_*.md` | Tech Spec | **Structure** (Classes, MediatR) |
+| `PHYSICAL_*.md` | Structural Spec | **Structure** (Classes, MediatR) |
 | `IMPLEMENTATION_*.md` | Task List | **Sequence** (What to do next) |
 | `REVIEW_REPORT.md` | Audit Log | **Defects** (What to fix) |
 
 ## 💡 Pro Tips for Best Results
 1.  **Read the Analysis:** The quality of the entire build depends on Step 1. If the Analysis misses a rule, the code will miss it too.
-2.  **Don't Combine Contexts:** Always `/clear`. If you feed the Implementation Agent (`/ddd:implement`) the raw SQL from Step 1, it might hallucinate legacy patterns (like `DataSet`) into your clean .NET 10 code.
-3.  **Code-First:** If the agent tries to write SQL scripts, stop it. Point to the `PHYSICAL_ARCHITECTURE.md` which mandates `IEntityTypeConfiguration`.
+2.  **Don't Combine Contexts:** Always `/clear`. If you feed the Implementation Engine (`/ddd:implement`) the raw SQL from Step 1, it might hallucinate legacy patterns into your clean .NET 10 code.
+3.  **Code-First:** If the engine tries to write SQL scripts, stop it. Point to the `PHYSICAL_ARCHITECTURE.md` which mandates `IEntityTypeConfiguration`.

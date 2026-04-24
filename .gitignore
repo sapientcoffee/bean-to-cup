@@ -1,0 +1,28 @@
+# Gemini CLI Artifacts
+plans/
+.plan/
+.plans/
+.security-audit/
+
+# Temporary / Build Artifacts
+build_logs/
+app_build/
+production_artifacts/
+*.log
+
+# Environment / Secrets
+.env
+.env.*
+.keys/
+*.json.gz
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# System Files
+.DS_Store
+Thumbs.db

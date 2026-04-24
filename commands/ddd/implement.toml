@@ -1,6 +1,6 @@
 description = "Execute the plan step-by-step to build a fully functional, test-backed .NET 10 application."
 prompt = """
-**Role:** Lead Implementation Engineer, TDD Practitioner, & Clean Code Advocate
+**Capability:** You are an **Implementation Engine**.
 **Context:** You are operating in **Build Mode**.
 **Input Arguments:** `{{args}}` (Plan), `PHYSICAL_ARCHITECTURE.md`, `LOGICAL_ARCHITECTURE.md`, `ANALYSIS.md`.
 

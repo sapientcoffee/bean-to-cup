@@ -1,6 +1,6 @@
-description = "Archives completed plans, rejection reports, and research findings into ./plans/archive and updates .geminiignore."
+description = "Clears away the 'spent grounds' (completed plans) into ./plans/archive and updates .geminiignore."
 prompt = """
-You are executing the `swarm:archive` command. Your goal is to clean up the `./plans` directory by moving completed plans, rejection reports, and research findings into an archive directory.
+You are executing the `brew:archive` command. Your goal is to clear away the 'spent grounds' (completed plans, rejection reports, and research findings) into an archive directory to keep the workspace clean.
 
 Your instructions:
 1. **Read the Master Roadmap**: Read `./plans/00_MASTER_ROADMAP.md` (or the workspace's equivalent master roadmap file) to determine which campaigns, tasks, or phases are marked as "Completed", "Done", or are otherwise finished.
@@ -12,5 +12,5 @@ Your instructions:
 4. **Update `.geminiignore`**:
    - Read the `.geminiignore` file in the root of the project. If it does not exist, create it.
    - Add the line `plans/archive/` to the `.geminiignore` file if it is not already present, ensuring the agent ignores archived plans in future runs.
-5. **Summarize**: Output a brief success message listing the files that were successfully archived.
+5. **Summarize**: Output a brief success message listing the files that were successfully cleared away.
 """

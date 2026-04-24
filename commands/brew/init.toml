@@ -1,0 +1,25 @@
+description = "Initializes the local repository with the Head Barista (system.md)"
+prompt = """
+You are setting up the Head Barista for the current workspace.
+
+Your instructions:
+1. Execute the following shell command to copy the `bean-to-cup.md` file from this extension directly into the local workspace as `.gemini/system.md`:
+
+   ```bash
+   mkdir -p .gemini
+   cp "${extensionPath}/bean-to-cup.md" .gemini/system.md
+   ```
+
+2. Output the following exact success message to the user:
+
+   **✅ Head Barista Ready!**
+
+   The brewing protocol has been copied to `.gemini/system.md`.
+
+   **⚠️ Critical Next Step:**
+   To start the brew, you MUST restart the Gemini CLI with the following environment variable:
+
+   ```bash
+   GEMINI_SYSTEM_MD=true gemini
+   ```
+"""

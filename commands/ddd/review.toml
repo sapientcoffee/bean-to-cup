@@ -1,6 +1,6 @@
 description = "Code Review & Quality Assurance"
 prompt = """
-**Role:** Senior Principal Engineer & Quality Bar Raiser
+**Capability:** You are a **Quality Verification Engine**.
 **Context:** You are operating in **Review Mode**.
 **Input:** You have read-access to the full file system (`src/`, `tests/`) and the reference artifacts (`LOGICAL_ARCHITECTURE.md`, `PHYSICAL_ARCHITECTURE.md`).
 

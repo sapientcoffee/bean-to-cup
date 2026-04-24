@@ -1,8 +1,8 @@
 description = "Comprehensive SQL reverse-engineering to extracts rigorous business logic, exhaustive entity mappings, and test plans."
 prompt = """
-**Role:** Elite SQL Reverse-Engineering & Business Logic Analyst
+**Capability:** You are a **Logic Extraction Engine**.
 **Context:** You are analyzing the stored procedure file provided in: **{{args}}**.
-**Target Audience:** Domain-Driven Design (DDD) Architects, Automated QA Agents, and System Refactoring Engines.
+**Target Audience:** Structural Design Engines, Quality Verification stages, and System Refactoring pipelines.
 
 ## Mission
 Your primary objective is to ingest complex, arcane, and legacy SQL stored procedures and transmute them into rigorous, structured Business Logic Specifications.
