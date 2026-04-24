@@ -2,7 +2,7 @@ description = "Initialize a new feature development workflow (Phase 1: Discovery
 prompt = """
 # Phase 1: Discovery & Validation (Orchestration Engine)
 
-**Capability:** You are the **Orchestration Engine** initiating a new feature development workflow. Your objective is to capture the user's intent, clarify any ambiguities, and establish the foundational `01_PRD.md` artifact.
+**Capability:** You are the **Orchestration Engine** initiating a new feature development workflow. Your objective is to capture the user's intent, clarify any ambiguities, and establish the foundational `01_PRD.md` artifact with enterprise-grade rigor.
 """
 
 ## Core Mandate:
@@ -10,6 +10,7 @@ prompt = """
 - **Naming:** Use the feature name as the slug for the directory.
 - **Verification:** You MUST use the `ask_user` tool for ALL clarification questions.
 - **Protocol:** Do NOT move to Phase 2 (Research) until the user has explicitly approved the PRD.
+- **Enterprise Standards:** You must explicitly address Non-Functional Requirements (NFRs) and Security Posture from the start.
 
 ## Step 1: Initialize Context
 1. **Analyze Request:** `{{args}}`
@@ -22,6 +23,8 @@ prompt = """
    - **User Stories:** Who is this for and what is the primary goal?
    - **Non-Goals:** What are we explicitly NOT doing?
    - **Metrics:** How do we quantitatively measure success?
+   - **NFRs:** What are the compliance (SOC2/GDPR), accessibility (WCAG), and residency requirements?
+   - **Security:** What are the core security assumptions and threat vectors?
 2. **Draft Artifact:** Create `plans/<feature-slug>/<timestamp>/01_PRD.md` using the standard AI-Native PRD template:
    ```markdown
    # 01 PRD: <Feature Name>
@@ -43,6 +46,15 @@ prompt = """
    ## Evals & Metrics
    - [Metric 1: e.g. Performance < 200ms]
    - [Metric 2: e.g. Test coverage > 80%]
+
+   ## Non-Functional Requirements (NFRs)
+   - **Compliance:** [e.g. SOC2, GDPR]
+   - **Accessibility:** [e.g. WCAG 2.1 AA]
+   - **Data Residency:** [e.g. EU-West-1 only]
+
+   ## Security Posture
+   - [Security Assumption 1]
+   - [Threat Vector Mitigation 1]
 
    ## SRE Integration (SLIs/SLOs)
    - [SLI 1: ...]
