@@ -169,8 +169,10 @@ Invoke specialized sub-agents using `@<name>` in your prompts:
 | **`@codebase-analyzer`** | The Cartographer | Deep surgical analysis of implementation details. | **CORE** |
 | **`@codebase-locator`** | The Navigator | Rapidly mapping component locations. | **CORE** |
 | **`@codebase-pattern-finder`** | The Librarian | Finding existing code examples and patterns. | **CORE** |
-| **`@security-auditor`** | The Sentry | Hunting for vulnerabilities and logic flaws. | **WIP** |
-| **`@code-review`** | The Critic | Deep architectural and logic reviews. | **WIP** |
+| **`@security-auditor`** | The Sentry | Hunting for vulnerabilities and logic flaws. | **CORE** |
+| **`@code-review`** | The Critic | Deep architectural and logic reviews. | **CORE** |
+| **`@msbuild`** | The Compiler | MSBuild and .NET specialized compilation tasks. | **CORE** |
+| **`@pipeline-expert`** | The CI/CD | Pipeline stages and delivery automation. | **CORE** |
 
 ---
 
@@ -179,15 +181,19 @@ Invoke specialized sub-agents using `@<name>` in your prompts:
 ### Core Lifecycle
 *   **`/feature <goal>`** [CORE]: Initiates the 9-phase protocol starting with an AI-Ready PRD.
 *   **`/research <query>`** [CORE]: Spawns parallel agents for deep, factual technical extraction.
-*   **`/loop:start`** [WIP]: Starts an infinite, self-correcting development loop (Ralph).
+*   **`/loop:start`** [CORE]: Starts an infinite, self-correcting development loop (Ralph).
 
 ### Workspace Management
 *   **`/brew:init`** [CORE]: Bootstraps your project by copying the protocol to `.gemini/system.md`.
 *   **`/brew:archive`** [CORE]: Clears away 'spent grounds' (completed tasks) to keep context clean.
+*   **`/dev <task>`** [CORE]: General-purpose development helper for quick tasks.
+*   **`/startcycle`** [CORE]: Logic for starting or resuming development cycles.
 
 ### Specialized Pipelines
-*   **`/sql:analyze`** [WIP]: Deep analysis of legacy stored procedures.
-*   **`/ddd:*`** [WIP]: A 7-step pipeline (Logical -> Physical -> Plan -> Implement -> Review -> Fix).
+*   **`/sql:analyze`** [CORE]: Deep analysis of legacy stored procedures and schema.
+*   **`/ddd:*`** [CORE]: A 7-step pipeline (`logical`, `physical`, `plan`, `implement`, `review`, `fix`, `create-user-stories`) for SQL-to-DDD refactoring.
+*   **`/test:api`** [CORE]: Specialized API testing and validation pipeline.
+*   **`/build:production`** [CORE]: Production-ready build and packaging automation.
 
 ---
 
@@ -196,7 +202,10 @@ Invoke specialized sub-agents using `@<name>` in your prompts:
 ### Skills
 *   **`write-specs`** [CORE]: Transforming ideas into rigorous requirements (Phase 1).
 *   **`github-workflow`** [CORE]: Standardized PR creation using `gh` (Phase 9).
-*   **`chaos-mitigation`** [WIP]: SRE/Ops troubleshooting based on logs and runbooks.
+*   **`chaos-mitigation`** [CORE]: SRE/Ops troubleshooting based on logs and runbooks.
+*   **`audit-code`** [CORE]: Automated quality gates and architectural compliance checks.
+*   **`deploy-app`** [CORE]: Environment deployment and orchestration.
+*   **`generate-code`** [CORE]: Boilerplate and scaffolding generation for common patterns.
 
 ### Automated Hooks
 *   **`lint-on-change`** [CORE]: Automatically runs your linter whenever a file is modified.
