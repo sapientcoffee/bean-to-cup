@@ -14,4 +14,4 @@
 # limitations under the License.
 
 # Consolidate shared cleanup logic
-bash "$(dirname "$0")/ralph-cleanup.sh" "$@"
+bash "$(dirname "${BASH_SOURCE[0]}")/ralph-cleanup.sh" "$@"
