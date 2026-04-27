@@ -1,3 +1,6 @@
+> [!WARNING]
+> **Demo/Illustrative Purpose Only**: This project is intended for inspiration and demonstration of AI-assisted development techniques. It should **not** be deployed to production environments without thorough testing, security audits, and validation. Use as a starting point for your own implementations.
+
 # ☕ Bean-to-Cup: The Autonomous Barista Swarm
 
 **Bean-to-Cup** is a comprehensive Gemini CLI extension designed to automate the entire Software Development Lifecycle (SDLC). It transforms the AI from a simple code generator into a structured **Autonomous Brewing Team** (Blueprint Forge) that follows a rigorous, multi-phase protocol to deliver high-quality, verified software.
