@@ -216,20 +216,37 @@ Invoke specialized sub-agents using `@<name>` in your prompts:
 
 ## 🚀 Installation & Quickstart
 
-1.  **Install the Extension**:
-    ```bash
-    gemini extensions install https://github.com/sapientcoffee/bean-to-cup
-    ```
+### 1. Install the Extension
 
-2.  **Initialize your Workspace**:
-    ```bash
-    /brew:init
-    ```
+You can install the **Bean-to-Cup** extension directly from GitHub or from a local clone.
 
-3.  **Start your first Brew**:
-    ```bash
-    /feature "Add a search bar to the coffee bean catalog"
-    ```
+**Via GitHub (Recommended):**
+```bash
+gemini extensions install https://github.com/sapientcoffee/bean-to-cup.git
+```
+
+**Via Local Path (For Development):**
+```bash
+# Clone the repository
+git clone https://github.com/sapientcoffee/bean-to-cup.git
+
+# Link the extension
+gemini extensions link ./bean-to-cup
+```
+
+### 2. Initialize your Workspace
+
+Once installed, bootstrap your project to copy the protocol and set up the environment:
+```bash
+/brew:init
+```
+
+### 3. Start your first Brew
+
+Begin the 9-phase protocol for a new feature:
+```bash
+/feature "Add a search bar to the coffee bean catalog"
+```
 
 ---
 
