@@ -11,7 +11,7 @@ An LLM will perform better on a task when its' context window is full of focused
 * Include unique instructions or team etiquette (branch naming, PR conventions)
 * Consider what the model can workout and what it can't (and will) work out by reviewing the codebase; reduce the risk of confusing it -->
 
-# Project: Workstation Portal
+# Project: xyz
 <!-- agents operate best on rigid, operational guardrails and specific constraints rather than polite requests or general guidelines. Stick to concrete "Do X, Never do Y" statements. -->
 This file describes common mistakes and confusion points that agents might encounter as they work in this project. If you ever encounter something in the project that surprises you please alert the developer working with you and indicate that this is the case in GEMINI.MD file to help prevent future agents from having the same issue
 
