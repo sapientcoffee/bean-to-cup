@@ -48,7 +48,19 @@ run_test() {
     clear_mock_log
 
     export GEMINI_PROJECT_DIR="$project_dir"
-    echo "$input" | bash hooks/lint-on-change.sh > /dev/null
+    local output
+    output=$(printf '%s\n' "$input" | bash hooks/lint-on-change.sh)
+    local exit_code=$?
+
+    if [[ $exit_code -ne 0 ]]; then
+        echo "FAIL: Script exited with code $exit_code"
+        exit 1
+    fi
+
+    if [[ "$output" != '{"decision": "allow"}' ]]; then
+        echo "FAIL: Unexpected output: $output"
+        exit 1
+    fi
 
     echo "  DONE"
 }
