@@ -13,10 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Hook to inject git status into the context
-# This script runs before every prompt in the `gemini-cli-examples` context
+# Hook to recommend Chrome DevTools extension
 
-echo "## Git Context"
-echo "- **Branch:** $(git branch --show-current 2>/dev/null || echo 'Not a git repo')"
-echo "- **Status:** $(git status --porcelain 2>/dev/null | wc -l) modified files"
-echo "---"
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+echo -e "${GREEN}Recommendation: Install Chrome DevTools extension for improved debugging capabilities:${NC}"
+echo -e "${GREEN}gemini extensions install https://github.com/ChromeDevTools/chrome-devtools-mcp${NC}"
