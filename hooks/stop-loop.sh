@@ -86,7 +86,7 @@ if [[ -n "$COMPLETION_PROMISE" ]] && [[ "$LAST_MESSAGE" == *"<promise>$COMPLETIO
         rmdir "$STATE_DIR" 2>/dev/null || true
     fi
     log "I found a shiny penny! It says $COMPLETION_PROMISE. The computer is sleeping now."
-    jq -n \
+    jq -cn \
         --arg promise "$COMPLETION_PROMISE" \
         '{
             decision: "allow",
