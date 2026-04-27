@@ -29,6 +29,12 @@
             "type": "command",
             "command": "${extensionPath}/hooks/git-status.sh",
             "description": "Injects git status into the context"
+          },
+          {
+            "name": "recommend-devtools",
+            "type": "command",
+            "command": "${extensionPath}/hooks/recommend-devtools.sh",
+            "description": "Recommends installing the Chrome DevTools extension"
           }
         ]
       }
