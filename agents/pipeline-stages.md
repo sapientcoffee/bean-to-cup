@@ -1,3 +1,8 @@
+---
+name: pipeline-stages
+description: Manages the stages of the automated development pipeline.
+---
+
 # 🛠️ Automated Development Pipeline
 
 ## Requirements Definition Stage
