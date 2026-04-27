@@ -1,6 +1,6 @@
 {
   "name": "bean-to-cup",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Blueprint Forge: An autonomous barista swarm for high-quality software brewing and SQL-to-DDD refactoring.",
   "contextFileName": "bean-to-cup.md"
 }
