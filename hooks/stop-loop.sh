@@ -59,7 +59,13 @@ if [[ "$CURRENT_PROMPT" != "$ORIGINAL_PROMPT" ]]; then
         if [[ -d "$STATE_DIR" ]]; then
             rmdir "$STATE_DIR" 2>/dev/null || true
         fi
-        echo "{\"decision\": \"allow\", \"systemMessage\": \"🚨 Ralph detected a prompt mismatch.\\nExpected: '$CLEAN_ORIGINAL'\\nGot:      '$CLEAN_CURRENT'\"}"
+        jq -cn \
+            --arg original "$CLEAN_ORIGINAL" \
+            --arg current "$CLEAN_CURRENT" \
+            '{
+                decision: "allow",
+                systemMessage: "🚨 Ralph detected a prompt mismatch.\nExpected: '\''\($original)'\''\nGot:      '\''\($current)'\''"
+            }'
         exit 0
     fi
 fi
@@ -80,7 +86,14 @@ if [[ -n "$COMPLETION_PROMISE" ]] && [[ "$LAST_MESSAGE" == *"<promise>$COMPLETIO
         rmdir "$STATE_DIR" 2>/dev/null || true
     fi
     log "I found a shiny penny! It says $COMPLETION_PROMISE. The computer is sleeping now."
-    echo '{"decision": "allow", "continue": false, "stopReason": "✅ Ralph found the completion promise: '"$COMPLETION_PROMISE"'", "systemMessage": "✅ Ralph found the completion promise: '"$COMPLETION_PROMISE"'"}'
+    jq -cn \
+        --arg promise "$COMPLETION_PROMISE" \
+        '{
+            decision: "allow",
+            continue: false,
+            stopReason: "✅ Ralph found the completion promise: \($promise)",
+            systemMessage: "✅ Ralph found the completion promise: \($promise)"
+        }'
     exit 0
 fi
 
@@ -114,15 +127,16 @@ log "I'm doing a circle! Iteration $CURRENT_ITERATION is done."
 ORIGINAL_PROMPT=$(jq -r '.original_prompt' "$STATE_FILE")
 
 # Clear conversation history (LLM memory)
-cat <<EOF
-{
-  "decision": "deny",
-  "reason": "$ORIGINAL_PROMPT",
-  "systemMessage": "🔄 Ralph is starting iteration $NEW_ITERATION...",
-  "hookSpecificOutput": {
-    "clearContext": true
-  }
-}
-EOF
+jq -n \
+    --arg reason "$ORIGINAL_PROMPT" \
+    --arg systemMessage "🔄 Ralph is starting iteration $NEW_ITERATION..." \
+    '{
+        decision: "deny",
+        reason: $reason,
+        systemMessage: $systemMessage,
+        hookSpecificOutput: {
+            clearContext: true
+        }
+    }'
 
 exit 0
