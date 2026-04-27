@@ -14,13 +14,11 @@ export -f npx
 # Assertion helpers
 assert_npx_called() {
     local expected=$1
-    local log_content
-    log_content=$(cat "$MOCK_NPX_LOG")
-    if [[ ! "$log_content" =~ "$expected" ]]; then
+    if ! grep -qxF "$expected" "$MOCK_NPX_LOG"; then
         echo "FAIL: npx command not found"
         echo "  Expected: $expected"
         echo "  Actual log content:"
-        echo "$log_content"
+        cat "$MOCK_NPX_LOG"
         exit 1
     fi
 }
