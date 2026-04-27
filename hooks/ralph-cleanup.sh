@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # Setup paths
-STATE_DIR=".gemini/ralph"
+STATE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/.gemini/ralph"
 STATE_FILE="$STATE_DIR/state.json"
 
 if [[ -f "$STATE_FILE" ]]; then
