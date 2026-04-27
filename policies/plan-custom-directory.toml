@@ -6,7 +6,7 @@ decision = "ask_user"
 modes = ["plan"]
 # Allows writing to '.plan/', '.plans/', 'plan/', or 'plans/'
 # Handles optional whitespace, both 'file_path' and 'path' keys, and both relative/absolute paths.
-argsPattern = '"(?:file_path|path)":\s*"([^"]*/)?\.?plans?[^"]*"'
+argsPattern = '"(?:file_path|path)":\s*"[^"]*plans?[^"]*"'
 
 # Allow tools used by conductor to set up conductor dir
 [[rule]]

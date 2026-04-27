@@ -4,16 +4,16 @@
 [[rule]]
 toolName = "write_file"
 toolAnnotations = { agentName = "security-auditor" }
-argsPattern = '"file_path":\s*"(\./)?\.security-audit/'
-decision = "allow"
+argsPattern = '"file_path":\s*"[^"]*\.security-audit/'
+decision = "ask_user"
 priority = 100
 
 # 2. Allow security-plan to write to .security-audit/
 [[rule]]
 toolName = "write_file"
 toolAnnotations = { agentName = "security-plan" }
-argsPattern = '"file_path":\s*"(\./)?\.security-audit/'
-decision = "allow"
+argsPattern = '"file_path":\s*"[^"]*\.security-audit/'
+decision = "ask_user"
 priority = 100
 
 # 3. Deny security-auditor from writing anywhere else
