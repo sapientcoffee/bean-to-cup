@@ -59,7 +59,7 @@ if [[ "$CURRENT_PROMPT" != "$ORIGINAL_PROMPT" ]]; then
         if [[ -d "$STATE_DIR" ]]; then
             rmdir "$STATE_DIR" 2>/dev/null || true
         fi
-        jq -n \
+        jq -cn \
             --arg original "$CLEAN_ORIGINAL" \
             --arg current "$CLEAN_CURRENT" \
             '{
