@@ -219,9 +219,33 @@ Invoke specialized sub-agents using `@<name>` in your prompts:
 
 ## 🚀 Installation & Quickstart
 
-### 1. Install the Extension
+This repository is **dual-compatible**: it functions seamlessly as both a modern **Antigravity Plugin** and a legacy **Gemini CLI Extension**. 
 
-You can install the **Bean-to-Cup** extension directly from GitHub or from a local clone.
+You can use either harness (or both simultaneously) to run the Bean-to-Cup barista swarm; they will coexist peacefully using their respective manifest files (`plugin.json` and `gemini-extension.json`).
+
+---
+
+### Option A: Running as an Antigravity Plugin (Modern)
+
+Antigravity natively scans your project or user home directory to discover plugins and registers all included subagents, skills, and rules automatically.
+
+#### 1. Place the Plugin
+To install this plugin locally, you can clone or copy it to one of Antigravity's designated plugin discovery paths:
+
+*   **Workspace-level (Recommended)**: Place it inside `/.agents/plugins/` or `/_agents/plugins/` at the root of your active workspace directory.
+*   **Global-level**: Clone it into `~/.gemini/antigravity-cli/plugins/bean-to-cup/` in your user home directory.
+
+#### 2. Verify Discovery
+Start your Antigravity session. The platform automatically scans `plugin.json` and loads the custom skills and subagents:
+*   View your active agents by listing them in your developer panel (or using the `/agents` helper).
+*   Any skills inside the `skills/` directory (like `audit-code` or `github-workflow`) are instantly accessible to your active agent.
+
+---
+
+### Option B: Running as a Gemini CLI Extension (Legacy)
+
+#### 1. Install the Extension
+You can install or link the extension directly using the Gemini CLI.
 
 **Via GitHub (Recommended):**
 ```bash
@@ -237,15 +261,13 @@ git clone https://github.com/sapientcoffee/bean-to-cup.git
 gemini extensions link ./bean-to-cup
 ```
 
-### 2. Initialize your Workspace
-
+#### 2. Initialize your Workspace
 Once installed, bootstrap your project to copy the protocol and set up the environment:
 ```bash
 /brew:init
 ```
 
-### 3. Start your first Brew
-
+#### 3. Start your first Brew
 Begin the 9-phase protocol for a new feature:
 ```bash
 /feature "Add a search bar to the coffee bean catalog"

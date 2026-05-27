@@ -1,0 +1,10 @@
+{
+  "name": "bean-to-cup",
+  "version": "1.0.6",
+  "description": "Blueprint Forge: An autonomous barista swarm for high-quality software brewing and SQL-to-DDD refactoring.",
+  "author": {
+    "name": "sapientcoffee"
+  },
+  "repository": "https://github.com/sapientcoffee/bean-to-cup",
+  "license": "Apache-2.0"
+}
