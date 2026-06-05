@@ -227,15 +227,47 @@ You can use either harness (or both simultaneously) to run the Bean-to-Cup baris
 
 ### Option A: Running as an Antigravity Plugin (Modern)
 
-Antigravity natively scans your project or user home directory to discover plugins and registers all included subagents, skills, and rules automatically.
+Antigravity natively scans your active workspace or user home directory to discover plugins and registers all included subagents, skills, and rules automatically.
 
-#### 1. Place the Plugin
-To install this plugin locally, you can clone or copy it to one of Antigravity's designated plugin discovery paths:
+We provide an automated, dependency-free Bash installer script (`install.sh`) at the root of the repository to set up the plugin.
 
-*   **Workspace-level (Recommended)**: Place it inside `/.agents/plugins/` or `/_agents/plugins/` at the root of your active workspace directory.
-*   **Global-level**: Clone it into `~/.gemini/antigravity-cli/plugins/bean-to-cup/` in your user home directory.
+#### 1. One-Line Installation (No local clone required)
+If you are on a new machine and don't have the repository cloned locally, you can stream the installer directly via `curl` to clone and register the plugin in one step:
 
-#### 2. Verify Discovery
+*   **Global-Level Installation** (Active across all of your projects):
+    ```bash
+    curl -sSL https://raw.githubusercontent.com/sapientcoffee/bean-to-cup/main/install.sh | bash
+    ```
+*   **Workspace-Level Installation** (Active only in the current workspace directory):
+    ```bash
+    curl -sSL https://raw.githubusercontent.com/sapientcoffee/bean-to-cup/main/install.sh | bash -s -- --workspace
+    ```
+
+#### 2. Local Clone Installation (Symlinked for Active Development)
+If you are actively developing the plugin, or already have a local clone of this repository, run the installer script from the root of your clone. This creates a **symlink** to your development directory:
+
+*   **Global Symlink** (Registers your local clone for all projects):
+    ```bash
+    ./install.sh
+    ```
+*   **Workspace-Level Symlink** (Registers your local clone inside the current project):
+    ```bash
+    ./install.sh --workspace
+    ```
+
+#### 3. How to Update the Plugin (`git pull`)
+Updates are clean and simple depending on how the plugin was installed:
+
+*   **If installed via Local Symlink (Development)**:
+    Just run `git pull` inside your local clone. Since the plugin directory is symlinked, Antigravity picks up changes instantly.
+*   **If installed via One-Line Curl (Direct Clones)**:
+    The installer clones the real Git repository directly into the target location. You can fetch updates by navigating into that directory and pulling:
+    ```bash
+    cd ~/.gemini/antigravity-cli/plugins/bean-to-cup
+    git pull
+    ```
+
+#### 4. Verify Discovery
 Start your Antigravity session. The platform automatically scans `plugin.json` and loads the custom skills and subagents:
 *   View your active agents by listing them in your developer panel (or using the `/agents` helper).
 *   Any skills inside the `skills/` directory (like `audit-code` or `github-workflow`) are instantly accessible to your active agent.

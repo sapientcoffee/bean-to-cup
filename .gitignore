@@ -3,6 +3,7 @@ plans/
 .plan/
 .plans/
 .security-audit/
+.agents/
 
 # Temporary / Build Artifacts
 build_logs/
