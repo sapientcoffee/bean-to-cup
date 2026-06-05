@@ -53,13 +53,17 @@ In our initial design, the custom commands were organized into nested subdirecto
 To solve this natively in `agy`:
 1.  **Flattened Directory Structure**: All command `.toml` files were relocated directly to the root `commands/` directory.
 2.  **Namespace Mapping (Colon Notation)**: We renamed the files using a colon (`:`) notation (e.g., `commands/brew:init.toml`, `commands/loop:start.toml`, `commands/ddd:plan.toml`). Linux and the Antigravity parser natively support colons in filenames.
-3.  **Clean Validation**: Running `agy plugin validate .` now successfully registers and compiles all **20 commands** (converted to skills) with 100% schema compliance:
+3.  **Clean Validation**: Running `agy plugin validate .` now successfully registers and compiles all **20 commands** (converted to skills) and **7 skills** with 100% schema compliance:
     ```text
-    ✔ skills      : 6 processed
+    ✔ skills      : 7 processed
     ✔ agents      : 13 processed
     ✔ commands    : 20 processed (converted to skills)
     ✔ hooks       : 10 processed
     ```
 
 You can now type flat namespace commands directly (such as `/brew:init`, `/loop:start`, `/ddd:plan`, etc.), and `agy` will parse and map them to their corresponding agent prompts seamlessly.
+
+### 4. Conversion of `feature.toml` to a Reusable Skill
+The `/feature` command initialization logic has been refactored into a reusable skill (`skills/feature/SKILL.md`). This modularizes the Discovery & Validation protocol, allowing any agent inside the swarm to load and reference the Phase 1 PRD generation requirements contextually. The `commands/feature.toml` command has been simplified to a clean delegation wrapper that points to the new skill.
+
 
