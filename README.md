@@ -170,12 +170,12 @@ Invoke specialized sub-agents using `@<name>` in your prompts:
 | **`@scout`** | The Investigator | Factual codebase mapping and technical extraction. | **CORE** |
 | **`@browser_agent`** | The Browser | Automated UI walkthroughs and visual verification. | **CORE** |
 | **`@codebase-analyzer`** | The Cartographer | Deep surgical analysis of implementation details. | **CORE** |
-| **`@codebase-locator`** | The Navigator | Rapidly mapping component locations. | **CORE** |
-| **`@codebase-pattern-finder`** | The Librarian | Finding existing code examples and patterns. | **CORE** |
+| **`@context-mapping`** | The Navigator | Rapidly mapping component locations. | **CORE** |
+| **`@pattern-recognition`** | The Librarian | Finding existing code examples and patterns. | **CORE** |
 | **`@security-auditor`** | The Sentry | Hunting for vulnerabilities and logic flaws. | **CORE** |
 | **`@code-review`** | The Critic | Deep architectural and logic reviews. | **CORE** |
 | **`@msbuild`** | The Compiler | MSBuild and .NET specialized compilation tasks. | **CORE** |
-| **`@pipeline-expert`** | The CI/CD | Pipeline stages and delivery automation. | **CORE** |
+| **`@pipeline-stages`** | The CI/CD | Pipeline stages and delivery automation. | **CORE** |
 
 ---
 
