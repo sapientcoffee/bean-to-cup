@@ -46,10 +46,20 @@ The plugin registers **13 specialized personas** in the workspace:
 
 ---
 
-## 🚀 Native Command Registration
-All custom commands are successfully parsed and registered in `agy`:
-*   **`/feature`**: Boots Phase 1 (Discovery & PRD drafting).
-*   **`/research`**: Context-free codebase extraction.
-*   **`/loop:start`**: Enters the Ralph self-correcting development loop.
+## 🚀 Native Command Registration (Subcommand Resolution)
 
-All hooks are schema-compliant and validate cleanly with `agy plugin validate .`.
+In our initial design, the custom commands were organized into nested subdirectories (e.g., `commands/brew/init.toml`, `commands/ddd/plan.toml`), which is not supported natively by `agy` and resulted in ignored commands. 
+
+To solve this natively in `agy`:
+1.  **Flattened Directory Structure**: All command `.toml` files were relocated directly to the root `commands/` directory.
+2.  **Namespace Mapping (Colon Notation)**: We renamed the files using a colon (`:`) notation (e.g., `commands/brew:init.toml`, `commands/loop:start.toml`, `commands/ddd:plan.toml`). Linux and the Antigravity parser natively support colons in filenames.
+3.  **Clean Validation**: Running `agy plugin validate .` now successfully registers and compiles all **20 commands** (converted to skills) with 100% schema compliance:
+    ```text
+    ✔ skills      : 6 processed
+    ✔ agents      : 13 processed
+    ✔ commands    : 20 processed (converted to skills)
+    ✔ hooks       : 10 processed
+    ```
+
+You can now type flat namespace commands directly (such as `/brew:init`, `/loop:start`, `/ddd:plan`, etc.), and `agy` will parse and map them to their corresponding agent prompts seamlessly.
+
