@@ -66,12 +66,12 @@ Invoke specialized sub-agents using `@<name>`:
 ## 🛠️ Reusable Skills
 
 Skills are specialized instructions pulled into the agent's context as needed:
-*   **`audit-code`**: QA assessment against technical specs.
-*   **`write-specs`**: Transforming vague ideas into rigorous technical specifications.
-*   **`generate-code`**: Full-stack scaffolding and implementation.
-*   **`deploy-app`**: Stack detection and automated local hosting.
-*   **`github-workflow`**: Standardized branch management and PR creation using `gh`.
-*   **`chaos-mitigation`**: Observability-driven troubleshooting for degraded states.
+*   **`audit-code`**: Phase 7: QA assessment against technical specs.
+*   **`write-specs`**: Phase 1: Transforming vague ideas into rigorous technical specifications.
+*   **`generate-code`**: Phase 7: Full-stack scaffolding and implementation.
+*   **`deploy-app`**: Phase 7: Stack detection and automated local hosting.
+*   **`github-workflow`**: Phase 9: Standardized branch management and PR creation using `gh`.
+*   **`chaos-mitigation`**: Phase 7: Observability-driven troubleshooting for degraded states.
 
 ---
 

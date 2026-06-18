@@ -203,12 +203,12 @@ Invoke specialized sub-agents using `@<name>` in your prompts:
 ## 🛠️ Reusable Skills & Hooks
 
 ### Skills
-*   **`write-specs`** [CORE]: Transforming ideas into rigorous requirements (Phase 1).
-*   **`github-workflow`** [CORE]: Standardized PR creation using `gh` (Phase 9).
-*   **`chaos-mitigation`** [CORE]: SRE/Ops troubleshooting based on logs and runbooks.
-*   **`audit-code`** [CORE]: Automated quality gates and architectural compliance checks.
-*   **`deploy-app`** [CORE]: Environment deployment and orchestration.
-*   **`generate-code`** [CORE]: Boilerplate and scaffolding generation for common patterns.
+*   **`write-specs`** [CORE]: Phase 1: Transforming ideas into rigorous requirements.
+*   **`github-workflow`** [CORE]: Phase 9: Standardized PR creation using `gh`.
+*   **`chaos-mitigation`** [CORE]: Phase 7: SRE/Ops troubleshooting based on logs and runbooks.
+*   **`audit-code`** [CORE]: Phase 7: Automated quality gates and architectural compliance checks.
+*   **`deploy-app`** [CORE]: Phase 7: Environment deployment and orchestration.
+*   **`generate-code`** [CORE]: Phase 7: Boilerplate and scaffolding generation for common patterns.
 
 ### Automated Hooks
 *   **`lint-on-change`** [CORE]: Automatically runs your linter whenever a file is modified.

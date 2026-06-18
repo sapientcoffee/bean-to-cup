@@ -1,6 +1,6 @@
 ---
 name: write-specs
-description: Acts as a Product Manager to turn raw user ideas into rigorous technical specifications, saving the output and managing the user approval process.
+description: Phase 1: Acts as a Product Manager to turn raw user ideas into rigorous technical specifications, saving the output and managing the user approval process.
 ---
 
 # Skill: Write Specs

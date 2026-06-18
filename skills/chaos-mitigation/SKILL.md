@@ -1,6 +1,6 @@
 ---
 name: chaos-mitigation
-description: Detects, analyzes, and mitigates active chaos events in the `press-service` using logs and runbooks.
+description: Phase 7: Detects, analyzes, and mitigates active chaos events in the `press-service` using logs and runbooks.
 ---
 
 # Chaos Mitigation Skill

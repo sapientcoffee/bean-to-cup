@@ -1,6 +1,6 @@
 ---
 name: generate-code
-description: Acts as a Full-Stack Engineer to generate all core backend and frontend application files based on the approved technical specification.
+description: Phase 7: Acts as a Full-Stack Engineer to generate all core backend and frontend application files based on the approved technical specification.
 ---
 
 # Skill: Generate Code
