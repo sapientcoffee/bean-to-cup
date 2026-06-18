@@ -170,12 +170,12 @@ Invoke specialized sub-agents using `@<name>` in your prompts:
 | **`@scout`** | The Investigator | Factual codebase mapping and technical extraction. | **CORE** |
 | **`@browser_agent`** | The Browser | Automated UI walkthroughs and visual verification. | **CORE** |
 | **`@codebase-analyzer`** | The Cartographer | Deep surgical analysis of implementation details. | **CORE** |
-| **`@codebase-locator`** | The Navigator | Rapidly mapping component locations. | **CORE** |
-| **`@codebase-pattern-finder`** | The Librarian | Finding existing code examples and patterns. | **CORE** |
+| **`@context-mapping`** | The Navigator | Rapidly mapping component locations. | **CORE** |
+| **`@pattern-recognition`** | The Librarian | Finding existing code examples and patterns. | **CORE** |
 | **`@security-auditor`** | The Sentry | Hunting for vulnerabilities and logic flaws. | **CORE** |
 | **`@code-review`** | The Critic | Deep architectural and logic reviews. | **CORE** |
 | **`@msbuild`** | The Compiler | MSBuild and .NET specialized compilation tasks. | **CORE** |
-| **`@pipeline-expert`** | The CI/CD | Pipeline stages and delivery automation. | **CORE** |
+| **`@pipeline-stages`** | The CI/CD | Pipeline stages and delivery automation. | **CORE** |
 
 ---
 
@@ -219,23 +219,55 @@ Invoke specialized sub-agents using `@<name>` in your prompts:
 
 ## 🚀 Installation & Quickstart
 
-This repository is **dual-compatible**: it functions seamlessly as both a modern **Antigravity Plugin** and a legacy **Gemini CLI Extension**. 
+This repository is **multi-compatible**: it functions seamlessly as a modern **Antigravity Plugin**, a standard **Agent Skills Package** via the `skills` CLI, and a legacy **Gemini CLI Extension**. 
 
-You can use either harness (or both simultaneously) to run the Bean-to-Cup barista swarm; they will coexist peacefully using their respective manifest files (`plugin.json` and `gemini-extension.json`).
+You can use whichever harness or tool matches your workflow; they will coexist peacefully using their respective manifest files (`plugin.json` and `gemini-extension.json`) and standard layouts.
 
 ---
 
 ### Option A: Running as an Antigravity Plugin (Modern)
 
-Antigravity natively scans your project or user home directory to discover plugins and registers all included subagents, skills, and rules automatically.
+Antigravity natively scans your active workspace or user home directory to discover plugins and registers all included subagents, skills, and rules automatically.
 
-#### 1. Place the Plugin
-To install this plugin locally, you can clone or copy it to one of Antigravity's designated plugin discovery paths:
+We provide an automated, dependency-free Bash installer script (`install.sh`) at the root of the repository to set up the plugin.
 
-*   **Workspace-level (Recommended)**: Place it inside `/.agents/plugins/` or `/_agents/plugins/` at the root of your active workspace directory.
-*   **Global-level**: Clone it into `~/.gemini/antigravity-cli/plugins/bean-to-cup/` in your user home directory.
+#### 1. One-Line Installation (No local clone required)
+If you are on a new machine and don't have the repository cloned locally, you can stream the installer directly via `curl` to clone and register the plugin in one step:
 
-#### 2. Verify Discovery
+*   **Global-Level Installation** (Active across all of your projects):
+    ```bash
+    curl -sSL https://raw.githubusercontent.com/sapientcoffee/bean-to-cup/main/install.sh | bash
+    ```
+*   **Workspace-Level Installation** (Active only in the current workspace directory):
+    ```bash
+    curl -sSL https://raw.githubusercontent.com/sapientcoffee/bean-to-cup/main/install.sh | bash -s -- --workspace
+    ```
+
+#### 2. Local Clone Installation (Symlinked for Active Development)
+If you are actively developing the plugin, or already have a local clone of this repository, run the installer script from the root of your clone. This creates a **symlink** to your development directory:
+
+*   **Global Symlink** (Registers your local clone for all projects):
+    ```bash
+    ./install.sh
+    ```
+*   **Workspace-Level Symlink** (Registers your local clone inside the current project):
+    ```bash
+    ./install.sh --workspace
+    ```
+
+#### 3. How to Update the Plugin (`git pull`)
+Updates are clean and simple depending on how the plugin was installed:
+
+*   **If installed via Local Symlink (Development)**:
+    Just run `git pull` inside your local clone. Since the plugin directory is symlinked, Antigravity picks up changes instantly.
+*   **If installed via One-Line Curl (Direct Clones)**:
+    The installer clones the real Git repository directly into the target location. You can fetch updates by navigating into that directory and pulling:
+    ```bash
+    cd ~/.gemini/skills/bean-to-cup
+    git pull
+    ```
+
+#### 4. Verify Discovery
 Start your Antigravity session. The platform automatically scans `plugin.json` and loads the custom skills and subagents:
 *   View your active agents by listing them in your developer panel (or using the `/agents` helper).
 *   Any skills inside the `skills/` directory (like `audit-code` or `github-workflow`) are instantly accessible to your active agent.
@@ -271,6 +303,30 @@ Once installed, bootstrap your project to copy the protocol and set up the envir
 Begin the 9-phase protocol for a new feature:
 ```bash
 /feature "Add a search bar to the coffee bean catalog"
+```
+
+---
+
+### Option C: Installing Individual Skills via the Open Skills CLI (Universal)
+
+Each capability inside our `skills/` directory complies with the open **Agent Skills specification** designed by Vercel Labs. This means you can install, manage, and use these skills across **over 40 supported local coding agents** (including Claude Code, Cursor, Windsurf, Roo Code, and more) using the universal `skills` CLI.
+
+#### 1. List Available Skills in this Repository
+You can query this repository directly using the `skills` CLI to see all discovered modular capabilities:
+```bash
+npx skills add sapientcoffee/bean-to-cup --list
+```
+
+#### 2. Install a Specific Skill
+To add an individual skill (such as our high-performance code auditor) to your current project:
+```bash
+npx skills add sapientcoffee/bean-to-cup --skill audit-code
+```
+
+#### 3. Install All Skills Globally
+To make the entire suite of `bean-to-cup` skills available globally across all of your local AI coding agents:
+```bash
+npx skills add sapientcoffee/bean-to-cup -g
 ```
 
 ---

@@ -1,5 +1,8 @@
-description = "Document codebase as-is without evaluation or recommendations"
-prompt = """
+---
+name: research
+description: Document codebase as-is without evaluation or recommendations
+---
+
 # Research Codebase
 
 You are tasked with conducting comprehensive research across the codebase to answer user questions by spawning parallel sub-agents and synthesizing their findings.
@@ -192,4 +195,3 @@ I'm ready to research the codebase. Please provide your research question or are
   - Update frontmatter when adding follow-up research.
   - Use snake_case for multi-word field names (e.g., `last_updated`, `git_commit`).
   - Tags should be relevant to the research topic and components studied.
-"""
