@@ -1,6 +1,6 @@
 ---
 name: github-workflow
-description: Provides the process for raising git commits, checking branches, and creating PRs using the gh CLI. Use this when the user needs to commit code or open a pull request.
+description: Phase 9: Provides the process for raising git commits, checking branches, and creating PRs using the gh CLI. Use this when the user needs to commit code or open a pull request.
 ---
 
 ## 1. Branch Management & Context Awareness

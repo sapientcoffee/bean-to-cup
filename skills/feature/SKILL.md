@@ -1,18 +1,18 @@
 ---
 name: feature
-description: Initialize a new feature development workflow (Phase 1: Discovery & Validation)
+description: Stage 2: Initialize a new feature development workflow (Discovery & Validation)
 ---
 
-# Skill: Feature Discovery & Validation (Phase 1)
+# Skill: Feature Discovery & Validation (Stage 2)
 
 ## Objective
-Your goal is to act as the **Orchestration Engine** to initiate a new feature development workflow. You must capture the user's intent, clarify any ambiguities, and establish the foundational `01_PRD.md` artifact with enterprise-grade rigor.
+Your goal is to act as the **Orchestration Engine** to initiate a new feature development workflow. You must capture the user's intent, clarify any ambiguities, and establish the foundational `02_PRD.md` artifact with enterprise-grade rigor.
 
 ## Core Mandate
 - **Project Structure:** All artifacts MUST be stored in `plans/<feature-slug>/<YYYY-MM-DD_HHMM>/`.
 - **Naming:** Use the feature name as the slug for the directory.
 - **Verification:** You MUST use the `ask_user` tool for ALL clarification questions.
-- **Protocol:** Do NOT move to Phase 2 (Research) until the user has explicitly approved the PRD.
+- **Protocol:** Do NOT move to Stage 3 (Extraction/Research) until the user has explicitly approved the PRD.
 - **Enterprise Standards:** You must explicitly address Non-Functional Requirements (NFRs) and Security Posture from the start.
 
 ## Instructions
@@ -25,15 +25,15 @@ Your goal is to act as the **Orchestration Engine** to initiate a new feature de
 
 ### Step 2: Discovery & PRD
 1. **Clarify Intent:** If the request is vague, ask focused discovery questions via the `ask_user` tool to uncover:
-   - **User Stories:** Who is this for and what is the primary goal?
-   - **Non-Goals:** What are we explicitly NOT doing?
-   - **Metrics:** How do we quantitatively measure success?
-   - **NFRs:** What are the compliance (SOC2/GDPR), accessibility (WCAG), and residency requirements?
-   - **Security:** What are the core security assumptions and threat vectors?
-2. **Draft Artifact:** Create `plans/<feature-slug>/<timestamp>/01_PRD.md` using the standard AI-Native PRD template:
+    - **User Stories:** Who is this for and what is the primary goal?
+    - **Non-Goals:** What are we explicitly NOT doing?
+    - **Metrics:** How do we quantitatively measure success?
+    - **NFRs:** What are the compliance (SOC2/GDPR), accessibility (WCAG), and residency requirements?
+    - **Security:** What are the core security assumptions and threat vectors?
+2. **Draft Artifact:** Create `plans/<feature-slug>/<timestamp>/02_PRD.md` using the standard AI-Native PRD template:
 
    ```markdown
-   # 01 PRD: <Feature Name>
+   # 02 PRD: <Feature Name>
 
    ## Objective
    [High-level summary of the feature's goal]
@@ -69,4 +69,4 @@ Your goal is to act as the **Orchestration Engine** to initiate a new feature de
 ### Step 3: Present and Gate
 1. **Report Progress:** Inform the user that the directory and PRD have been created.
 2. **Ask for Approval:** Ask the user to review the generated PRD:
-   "Please review `plans/<feature-slug>/<timestamp>/01_PRD.md`. Does this accurately reflect your vision? (Type 'approve' to move to Phase 2: Extraction Briefing)"
+   "Please review `plans/<feature-slug>/<timestamp>/02_PRD.md`. Does this accurately reflect your vision? (Type 'approve' to move to Stage 3: Context Extraction)"

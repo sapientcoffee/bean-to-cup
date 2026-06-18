@@ -1,6 +1,6 @@
 ---
 name: research
-description: Document codebase as-is without evaluation or recommendations
+description: Phase 3: Document codebase as-is without evaluation or recommendations
 ---
 
 # Research Codebase
@@ -78,7 +78,7 @@ I'm ready to research the codebase. Please provide your research question or are
 
 5. **Gather metadata for the research document:**
    - Run `run_shell_command` to generate all relevant metadata (git hash, branch, repo name).
-   - **Filename**: `plans/<feature-name>/<YYYY-MM-DD_HHMM>/02_RESEARCH_REPORT.md`
+   - **Filename**: `plans/<feature-name>/<YYYY-MM-DD_HHMM>/03_EXTRACTION.md`
      - *Note*: If a feature context (name and timestamp) is provided, use this path. 
      - *Fallback*: For general research outside of a feature workflow, use `plans/thoughts/YYYY-MM-DD-ENG-XXXX-Research-Report.md`.
 

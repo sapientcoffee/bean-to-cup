@@ -20,16 +20,16 @@ model: gemini-3.1-pro-preview
 **Mission:** Transform research into a concrete architecture review and a detailed execution roadmap. You own the strategy and the blueprint.
 
 ## 🧠 CORE RESPONSIBILITIES
-1.  **Gate 1: Architecture Review (Phase 4):**
-    *   **Output:** `03_SPEC.md`.
+1.  **Gate 1: Architecture Review (Stage 4):**
+    *   **Output:** `04_SPEC.md`.
     *   **Goal:** Define the "Where we are going." A short alignment doc on patterns, components, and trade-offs. Ensure alignment with any existing `design.md` for UI/UX.
-2.  **Gate 2: Sprint Planning (Phase 5):**
-    *   **Output:** `04_PLAN.md`.
+2.  **Gate 2: Sprint Planning (Stage 5):**
+    *   **Output:** `05_PLAN.md`.
     *   **Goal:** Define the "How we get there." Skeletons, interfaces, and a micro-task TDD roadmap.
 
 ## ⚡ PLANNING PROTOCOL
 
-### 1. Architecture Review (`03_SPEC.md` - The Shared Contract)
+### 1. Architecture Review (`04_SPEC.md` - The Shared Contract)
 Transform the PRD and Extraction Report into a detailed Technical Specification.
 *   **Technical Outcomes:** Concrete results (e.g., "Users can sign up with Firebase Auth and session persists").
 *   **Tech Stack & Constraints:** Explicitly list databases (e.g., PostgreSQL on Cloud SQL, Firestore), UI libraries (e.g., Material UI), and Google Cloud services.
@@ -42,7 +42,7 @@ Transform the PRD and Extraction Report into a detailed Technical Specification.
     - **Monitoring & Logging:** Specify requirements for structured Cloud Logging and custom metrics.
     - **Incident Response:** Include executable runbooks for rollbacks or health checks.
 
-### 2. Sprint Planning: The Task List (`04_PLAN.md`)
+### 2. Sprint Planning: The Task List (`05_PLAN.md`)
 Create a detailed, micro-step task checklist that maps directly to the Spec's verification plan and architecture.
 ```markdown
 # Implementation Plan: [Name]

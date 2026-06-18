@@ -1,21 +1,30 @@
-# Developer Rules and Guidelines
+---
+trigger: always_on
+---
 
-Welcome to the Workstation Portal project! As a Platform Engineer, our goal is to eliminate friction and provide an excellent developer experience (DX). Please adhere to these rules when working on this project:
+# ☕ Bean-to-Cup: General Developer Rules
 
-## 1. Code Quality & Formatting
-*   **ES Modules:** This project uses ECMAScript Modules (`"type": "module"` in `package.json`). Ensure all new Node.js files use `.mjs` or ES6 `import`/`export` syntax.
-*   **Linting:** Run `npm run lint` before finalizing any PR or workflow. Code must be clean and free of ESLint warnings.
-*   **License Headers:** All new source code files MUST include the appropriate Google Apache 2.0 license header. Use the `google-license-manager` skill to automatically append these headers when creating new files.
+Welcome to the **Bean-to-Cup** CLI plugin repository! This is an autonomous barista swarm designed to automate the software development lifecycle under the **Antigravity CLI (`agy`)**. 
 
-## 2. Frontend Development (React & Vite)
-*   **Vite First:** We use Vite for lightning-fast HMR. Do not introduce Webpack or other bundlers.
-*   **No Heavy Dependencies:** Avoid adding large third-party libraries unless absolutely necessary. Keep the bundle size small.
-*   **UX/UI Excellence:** As a user-facing portal, aesthetics are highly important. Ensure elements are responsive, accessible, and visually aligned with Google/modern design standards (using `lucide-react` for icons).
+To maintain the highest standards of code and architectural discipline, always adhere to the following rules:
 
-## 3. Backend Development (Express)
-*   **Error Handling:** Always use the `asyncHandler` pattern for Express routes to ensure caught promise rejections are passed to the global error handler.
-*   **Graceful Degradation:** The GCP SDK (`@google-cloud/workstations`) can sometimes be slow or rate-limited. Architect APIs to fail gracefully and return clear, actionable error messages to the frontend.
+## 1. The Perfect Brew (Stage 0 to Stage 9 SDLC Protocol)
+*   **Strict State Machine:** We treat software tasks as "Brews." You must follow the Stage 0-9 document-driven protocol:
+    0.  **Discovery/Ideation (Optional - `00_IDEATION.md`):** Formulate raw ideas, persona friction, and data schemas.
+    1.  **Socratic Alignment (`01_GLOSSARY.md`):** Engage in Socratic requirements gathering and build the Ubiquitous Glossary.
+    2.  **PRD (`02_PRD.md`):** Establish requirements, non-goals, target personas, metrics, and acceptance criteria.
+    3.  **Extraction (`03_EXTRACTION.md`):** Conduct blind, factual codebase research using specialized sub-agents.
+    4.  **Specification (`04_SPEC.md`):** Design the architecture aligned with local `design.md`, including threat model and telemetry.
+    5.  **Execution Planning (`05_PLAN.md`):** Establish physical contracts and cut vertical slices into checklist items.
+    6.  **Human Review Gate (🛑 STOP):** Present design discussion & contracts to the user for explicit approval.
+    7.  **TDD Implementation (`07_VERIFICATION.md`):** Execute code incrementally using TDD via `/tdd` (silent on success).
+    8.  **Walkthrough (`08_WALKTHROUGH.md`):** Capture visual or technical proof via browser agent walkthrough.
+    9.  **PR Delivery:** Push branches and open PRs using `gh` CLI, maintaining codebase hygiene with `/improve-codebase-architecture`.
 
-## 4. Git & GitHub Workflow
-*   **Clear Commits:** Use the `github-workflow` skill to ensure commits are well-documented, atomic, and PRs are cleanly structured with testing walkthroughs.
-*   **Walkthroughs:** Any significant feature addition should include an Antigravity walkthrough (`walkthrough.md`) attached to the pull request to demonstrate testing and validation.
+## 2. Plugin Validation & Schema Compliance
+*   **Continuous Validation:** All commands (`commands/*.toml`), skills (`skills/*/SKILL.md`), and hook files (`hooks.json`) must comply with the `agy 2.0` schema.
+*   **Schema Checks:** Run `agy plugin validate .` to verify compilation, namespace mappings, and command declarations before finalizing any work.
+
+## 3. Core Discipline (No Spec, No Code)
+*   **Zero Improvisation:** Never write code directly without a corresponding and approved specification and implementation plan.
+*   **Licensing:** All new source files must contain the standard Google Apache 2.0 license header. Use the `google-license-manager` skill to automate this.

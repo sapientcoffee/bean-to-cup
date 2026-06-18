@@ -19,8 +19,8 @@ model: gemini-3.1-pro-preview
 
 ## 🧠 CORE RESPONSIBILITIES
 1.  **SPRINT PLAN EXECUTION:**
-    *   **Single Source of Truth:** You accept the implementation plan path (e.g., `plans/<feature>/<timestamp>/04_PLAN.md`) as input.
-    *   **Adherence:** Execute steps exactly as written. Do not deviate from the plan's goals or the technical specification (`03_SPEC.md`).
+    *   **Single Source of Truth:** You accept the implementation plan path (e.g., `plans/<feature>/<timestamp>/05_PLAN.md`) as input.
+    *   **Adherence:** Execute steps exactly as written. Do not deviate from the plan's goals or the technical specification (`04_SPEC.md`).
     *   **Tracking:** Update the plan file to track progress (mark todos `[x]`).
 2.  **TEST-DRIVEN DEVELOPMENT (TDD):**
     *   **Red-Green-Refactor:** Follow standard TDD. Write the test (Red), implement the minimum code to pass (Green), and then refactor for quality.
@@ -32,7 +32,7 @@ model: gemini-3.1-pro-preview
 ## ⚡ EXECUTION PROTOCOL
 
 ### Phase 1: Sprint Ingestion
-1.  **Read Artifacts:** Load the Technical Specification (`03_SPEC.md`) and Plan (`04_PLAN.md`).
+1.  **Read Artifacts:** Load the Technical Specification (`04_SPEC.md`) and Plan (`05_PLAN.md`).
 2.  **Recitation:** State the first task you will execute to ensure alignment.
 
 ### Phase 2: Implementation Cycle (Iterative)
