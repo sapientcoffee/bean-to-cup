@@ -165,20 +165,22 @@ The heart of the extension is the `bean-to-cup.md` file. It acts as the **Head B
 
 The Bean-to-Cup plugin manages an autonomous network of **13 specialized sub-agents**. You can invoke them in your chat prompts using `@<name>`. For a detailed description of each agent's config file and target SDLC stage, see the [Swarm & Command Registry](docs/swarm-registry.md#-2-specialized-agents--swarm-13-total).
 
-| Agent | Role | Expertise | Status |
+| Agent | Role | Expertise & Focus | Status |
 | :--- | :--- | :--- | :--- |
-| **`@architect`** | The Planner | Design patterns, Spec generation, and UI/UX alignment. | **CORE** |
-| **`@engineer`** | The Builder | TDD implementation and production code. | **CORE** |
-| **`@auditor`** | The Gatekeeper | Verification, Cupping, and protocol enforcement. | **CORE** |
-| **`@scout`** | The Investigator | Factual codebase mapping and technical extraction. | **CORE** |
-| **`@browser_agent`** | The Browser | Automated UI walkthroughs and visual verification. | **CORE** |
-| **`@codebase-analyzer`** | The Cartographer | Deep surgical analysis of implementation details. | **CORE** |
-| **`@context-mapping`** | The Navigator | Rapidly mapping component locations. | **CORE** |
-| **`@pattern-recognition`** | The Librarian | Finding existing code examples and patterns. | **CORE** |
-| **`@security-auditor`** | The Sentry | Hunting for vulnerabilities and logic flaws. | **CORE** |
-| **`@code-review`** | The Critic | Deep architectural and logic reviews. | **CORE** |
-| **`@msbuild`** | The Compiler | MSBuild and .NET specialized compilation tasks. | **CORE** |
-| **`@pipeline-stages`** | The CI/CD | Pipeline stages and delivery automation. | **CORE** |
+| **`@architect`** | The Planner | Strategic design patterns, `04_SPEC.md` specs, and `05_PLAN.md` roadmaps. | **CORE** |
+| **`@engineer`** | The Builder | TDD implementation, Red-Green-Refactor, and production logic. | **CORE** |
+| **`@auditor`** | The Gatekeeper | Spec validation, regression checking, and QA cupping. | **CORE** |
+| **`@scout`** | The Investigator | Context-isolated codebase queries and raw context extraction. | **CORE** |
+| **`@browser_agent`** | The Browser | Automated browser walkthroughs and visual UI/UX verification. | **CORE** |
+| **`@codebase-analyzer`** | The Cartographer | Deep structural mapping and component tracing. | **CORE** |
+| **`@context-mapping`** | The Navigator | Entrypoint mapping and rapid workspace discovery. | **CORE** |
+| **`@pattern-recognition`** | The Librarian | Locating and mirroring existing architectural code patterns. | **CORE** |
+| **`@security-auditor`** | The Planner Sentry | Secure architecture specifications and threat remediation plans. | **CORE** |
+| **`@security-remediator`** | The Builder Sentry | Implementing isolated patches and correcting security vulnerabilities. | **CORE** |
+| **`@vulnerability-scanner`** | The Scanner Sentry | Running static analysis scans to detect exposed secrets or flaws. | **CORE** |
+| **`@code-review`** | The Critic | Line-by-line quality reviews and static code smells analysis. | **CORE** |
+| **`@msbuild`** | The Compiler | MSBuild/compiler feedback compressor for rapid .NET builds. | **CORE** |
+| **`@pipeline-stages`** | The CI/CD | automated release validation and delivery pipeline stages. | **CORE** |
 
 ---
 
