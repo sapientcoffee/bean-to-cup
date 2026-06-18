@@ -24,14 +24,18 @@ This extension implements emerging standards for AI-assisted development:
 
 ![The Artifact Filter](docs/images/artifact-filter.png)
 
-| SDLC Phase | Standard / Convention | Artifact File | extension Role |
+| SDLC Stage | Standard / Convention | Artifact File | extension Role |
 | :--- | :--- | :--- | :--- |
-| **Product** | AI-PRD | `01_PRD.md` | Machine-parsable requirements & non-goals. |
-| **Extraction** | Context Mapping | `02_EXTRACTION.md` | Factual codebase mapping (Blind Research). |
-| **Technical** | SPEC / design.md | `03_SPEC.md` | Tech spec aligned with local `design.md`. |
-| **Implementation** | Sequential Plan | `04_PLAN.md` | Phased execution roadmap. |
-| **Verification** | Audit & Cupping | `05_VERIFICATION.md` | Static & dynamic verification results. |
-| **Delivery** | Service Walkthrough | `06_WALKTHROUGH.md` | Visual & technical proof of success. |
+| **Stage 0 (Optional)** | Product Discovery | `00_IDEATION.md` | Formulate raw ideas, persona friction, and data schemas. |
+| **Stage 1** | Socratic Alignment | `01_GLOSSARY.md` | Engage in Socratic interview & Ubiquitous Glossary. |
+| **Stage 2** | Product Requirements | `02_PRD.md` | Machine-parsable requirements, NFRs, & non-goals. |
+| **Stage 3** | Context Extraction | `03_EXTRACTION.md` | Factual codebase mapping (Blind Research). |
+| **Stage 4** | Technical Specification | `04_SPEC.md` | Tech spec, Threat Model, SRE telemetry. |
+| **Stage 5** | Execution Planning | `05_PLAN.md` | Slices, TDD checklist, & physical contracts. |
+| **Stage 6** | Human Review Gate | *None (Halt)* | STOP. Verify contracts & specs before implementation. |
+| **Stage 7** | Test-Driven Implementation | `07_VERIFICATION.md` | Incrementally execute code under TDD loop. |
+| **Stage 8** | Automated Walkthrough | `08_WALKTHROUGH.md` | Visual & technical browser-based proof. |
+| **Stage 9** | PR Delivery & Maintenance | *PR Description* | Push branch, submit PR with walkthrough report. |
 
 ---
 
@@ -43,13 +47,13 @@ Transitioning to SDD requires a shift in how you work with agents. If specificat
 The "fundamental test" of a spec is whether a human can review it effectively. If a specification change is too long to review in 5 minutes, the feature is too large. We keep specifications concise and focused on intentionality.
 
 #### B. Solve the "Lost in the Middle" Problem
-LLMs often struggle with information buried in the middle of long documents. We keep `03_SPEC.md` and `04_PLAN.md` files modular and use **Plan Mode** guardrails to iterate in a read-only state before generating any code.
+LLMs often struggle with information buried in the middle of long documents. We keep `04_SPEC.md` and `05_PLAN.md` files modular and use **Plan Mode** guardrails to iterate in a read-only state before generating any code.
 
 #### C. Use "Boundary Specs" (What NOT to build)
 Agents are prone to "over-implementing." Our artifacts explicitly list **Constraints** and **Non-Goals** (e.g., "Do not upgrade existing dependencies" or "Do not add authentication logic") to prevent scope drift.
 
 #### D. Agentic Validation (Evals)
-Don't just write tests; write Evals. In your `03_SPEC.md`, we define what "Success" looks like for the AI using measurable criteria (SLIs/SLOs), such as "The generated API must have a response time < 100ms."
+Don't just write tests; write Evals. In your `04_SPEC.md`, we define what "Success" looks like for the AI using measurable criteria (SLIs/SLOs), such as "The generated API must have a response time < 100ms."
 
 ---
 
@@ -68,81 +72,80 @@ flowchart TD
     classDef artifact fill:#ffffff,stroke:#FBBC05,stroke-width:2px,color:#333;
     classDef orchestrator fill:#ffffff,stroke:#4285F4,stroke-width:3px,color:#333;
 
+    subgraph "Stage 0: Product Discovery (Optional)"
+        P0[ideator: Stage 0 Discovery]:::agent
+        A0[\00_IDEATION.md\]:::artifact
+        P0 --> A0
+    end
+
+    Start_Raw((Start: Raw Idea)) --> P0
+    A0 --> P1
     Start((Start: /feature)) --> P1
 
-    subgraph "Phase 1: Strategic Discovery"
+    subgraph "Stage 1: Socratic Alignment"
         P1[Orchestration Engine: Chat & Clarify]:::orchestrator
         H1{Human Approval}:::human
-        A1[\01_PRD.md\]:::artifact
+        A1_Glossary[\01_GLOSSARY.md\]:::artifact
         P1 --> H1
-        H1 -- Approve --> A1
+        H1 -- Approve --> A1_Glossary
     end
 
-    subgraph "Phase 2: Research Briefing"
-        A1 --> P2
-        P2[Orchestration Engine: Generate Brief]:::orchestrator
-        R_Brief[\Research Brief\]:::artifact
-        P2 --> R_Brief
+    subgraph "Stage 2: Product Requirements"
+        A1_Glossary --> P2[Orchestration Engine: PRD Generation]:::orchestrator
+        A1[\02_PRD.md\]:::artifact
+        P2 --> A1
     end
 
-    subgraph "Phase 3: Factual Research"
-        R_Brief --> P3
-        P3[/Dispatch Specialized Engines\]:::agent
+    subgraph "Stage 3: Context Extraction"
+        A1 --> P3[/Dispatch Specialized Engines\]:::agent
         P3_1(Context Mapping)
         P3_2(Codebase Analysis)
         P3_3(Pattern Finder)
         P3 --> P3_1 & P3_2 & P3_3
-        P3_1 & P3_2 & P3_3 --> A2[\02_EXTRACTION.md\]:::artifact
+        P3_1 & P3_2 & P3_3 --> A2[\03_EXTRACTION.md\]:::artifact
     end
 
-    subgraph "Phase 4: Design"
-        A1 & A2 --> P4
-        P4[/Dispatch @architect\]:::agent
-        A3[\03_SPEC.md\]:::artifact
+    subgraph "Stage 4: Technical Specification"
+        A1 & A2 --> P4[/Dispatch @architect\]:::agent
+        A3[\04_SPEC.md\]:::artifact
         P4 --> A3
     end
 
-    subgraph "Phase 5: Structure & Planning"
-        A3 --> P5
-        P5[/Dispatch @architect\]:::agent
-        A4[\04_PLAN.md\]:::artifact
+    subgraph "Stage 5: Execution Planning"
+        A3 --> P5[/Dispatch @architect\]:::agent
+        A4[\05_PLAN.md\]:::artifact
         P5 --> A4
     end
 
-    subgraph "Phase 6: Human Review Gate"
+    subgraph "Stage 6: Human Review Gate"
         A4 --> H2{Human Approval}:::human
     end
 
-    subgraph "Phase 7: Implementation Loop"
+    subgraph "Stage 7: Test-Driven Implementation"
         H2 -- Approve --> L_Start((Start Loop))
-        L_Start --> P7_1
-        P7_1[/Dispatch @engineer\]:::agent
-        P7_2[/Dispatch @auditor\]:::agent
-        P7_1 --> P7_2
+        L_Start --> P7_1[/Dispatch @engineer\]:::agent
+        P7_1 --> P7_2[/Dispatch @auditor\]:::agent
         
         P7_2 -- "Fail (Code)" --> P7_1
         P7_2 -- "Fail (Plan)" --> P5
-        P7_2 -- "Pass" --> P7_3
+        P7_2 -- "Pass" --> P7_3[Orchestration Engine: Update Plan]:::orchestrator
         
-        P7_3[Orchestration Engine: Update Plan]:::orchestrator
         H3{Human Approval: Commit?}:::human
         P7_3 --> H3
         H3 -- Approve --> P7_4[(Git Commit)]
         
         P7_4 -- "More Tasks" --> L_Start
-        P7_4 -- "All Done" --> A5[\05_VERIFICATION.md\]:::artifact
+        P7_4 -- "All Done" --> A5[\07_VERIFICATION.md\]:::artifact
     end
 
-    subgraph "Phase 8: Walkthrough"
-        A5 --> P8
-        P8[/Dispatch @browser_agent\]:::agent
-        A6[\06_WALKTHROUGH.md\]:::artifact
+    subgraph "Stage 8: Automated Walkthrough"
+        A5 --> P8[/Dispatch @browser_agent\]:::agent
+        A6[\08_WALKTHROUGH.md\]:::artifact
         P8 --> A6
     end
 
-    subgraph "Phase 9: Delivery"
-        A6 --> P9
-        P9[Orchestration Engine: Push & PR]:::orchestrator
+    subgraph "Stage 9: PR Delivery & Maintenance"
+        A6 --> P9[Orchestration Engine: Push & PR]:::orchestrator
         End((Pull Request Created))
         P9 --> End
     end
@@ -152,7 +155,7 @@ flowchart TD
 The heart of the extension is the `bean-to-cup.md` file. It acts as the **Head Barista** and **Guardian of the Protocol**. It ensures that "Intent" (PRD) is separated from "Extraction" (Research) to prevent bias.
 
 **Key Mandates:**
-*   **PRD over Specs:** Every feature starts with a machine-parsable `01_PRD.md` including **Non-Goals** and **SLIs/SLOs**.
+*   **PRD over Specs:** Every feature starts with a machine-parsable `02_PRD.md` including **Non-Goals** and **SLIs/SLOs**.
 *   **UI/UX Alignment:** The Architect (@architect) explicitly searches for an existing `design.md` in your root to ensure UI/UX consistency.
 *   **SRE-Ready:** Requirements include initial telemetry and monitoring constraints for Day 2 operations.
 
@@ -187,7 +190,7 @@ Invoke specialized sub-agents using `@<name>` in your prompts:
 *   **`/loop:start`** [CORE]: Starts an infinite, self-correcting development loop (Ralph).
 
 ### Workspace Management
-*   **`/brew:init`** [CORE]: Bootstraps your project by copying the protocol to `.gemini/system.md`.
+*   **`/brew:init`** [CORE] *(Deprecated)*: Legacy command to bootstrap your project. This setup is now handled automatically.
 *   **`/brew:archive`** [CORE]: Clears away 'spent grounds' (completed tasks) to keep context clean.
 *   **`/dev <task>`** [CORE]: General-purpose development helper for quick tasks.
 *   **`/startcycle`** [CORE]: Logic for starting or resuming development cycles.
@@ -203,6 +206,9 @@ Invoke specialized sub-agents using `@<name>` in your prompts:
 ## 🛠️ Reusable Skills & Hooks
 
 ### Skills
+*   **`ideator`** [CORE]: **Stage 0 (Optional)**: Generates a product discovery and technical architecture draft from any raw hackathon prompt, writing the results to `.plans/CONTEXT_DRAFT.md`.
+*   **`domain-modeling`** [CORE]: Phase 4/5: Builds, refines, and maintains the project ubiquitous language and glossary in `CONTEXT.md` during design.
+*   **`grill` / `grilling`** [CORE]: Phase 6: Relentless interactive interview and plan stress-testing before code is touched.
 *   **`write-specs`** [CORE]: Phase 1: Transforming ideas into rigorous requirements.
 *   **`github-workflow`** [CORE]: Phase 9: Standardized PR creation using `gh`.
 *   **`chaos-mitigation`** [CORE]: Phase 7: SRE/Ops troubleshooting based on logs and runbooks.
@@ -294,11 +300,14 @@ git clone https://github.com/sapientcoffee/bean-to-cup.git
 gemini extensions link ./bean-to-cup
 ```
 
-#### 2. Initialize your Workspace
-Once installed, bootstrap your project to copy the protocol and set up the environment:
-```bash
-/brew:init
-```
+#### 2. Initialize your Workspace (Deprecated)
+> [!NOTE]
+> This step is deprecated under Antigravity 2.0. Workspace bootstrapping is now managed automatically upon plugin registration.
+>
+> If running on legacy Gemini CLI, you can still optionally run:
+> ```bash
+> /brew:init
+> ```
 
 #### 3. Start your first Brew
 Begin the 9-phase protocol for a new feature:

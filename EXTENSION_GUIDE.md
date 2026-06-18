@@ -19,16 +19,17 @@ Just as a master barista follows a precise recipe—from selecting the beans to 
 ### 1. The Head Barista (Main Context)
 The heart of the extension is the `bean-to-cup.md` file (merged into the model's context). It acts as the **Supervisor** and **Guardian of the Protocol**. It does not write code; it orchestrates the swarm.
 
-**The 9-Phase Protocol:**
-*   **Phase 1: Bean Selection**: Discovery & Requirements (`01_REQUIREMENTS.md`).
-*   **Phase 2: Extraction Briefing**: Defining what technical knowledge is missing.
-*   **Phase 3: Technical Extraction**: Factual codebase research (`02_RESEARCH_REPORT.md`).
-*   **Phase 4: The Roast**: High-level architectural design (`03_DESIGN.md`).
-*   **Phase 5: The Recipe**: Detailed TDD implementation planning (`04_IMPLEMENTATION_PLAN.md`).
-*   **Phase 6: The Tasting Gate**: Mandatory human approval of the plan.
-*   **Phase 7: Brewing Loop**: Iterative Implement (Engineer) ⇄ Verify (Auditor).
-*   **Phase 8: Service & Evidence**: Automated walkthrough and documentation (`06_WALKTHROUGH.md`).
-*   **Phase 9: Final Delivery**: Branch pushing and PR creation.
+**The Stage 0 to Stage 9 SDLC Protocol:**
+*   **Stage 0: Discovery / Ideation (Optional)**: Brainstorming and drafting ideas (`00_IDEATION.md`).
+*   **Stage 1: Socratic Alignment (The Grill)**: Gathering requirements, compiling glossary, and ADRs (`01_GLOSSARY.md`).
+*   **Stage 2: Product Requirements**: Structuring PRD with personas and NFRs (`02_PRD.md`).
+*   **Stage 3: Context Extraction**: Context-firewall factual research via sub-agents (`03_EXTRACTION.md`).
+*   **Stage 4: Technical Specification**: High-level design, SRE telemetry, Threat Model (`04_SPEC.md`).
+*   **Stage 5: Execution Planning**: Slices, checklist plan, and physical contracts (`05_PLAN.md`).
+*   **Stage 6: Human Review Gate**: Mandatory STOP for user approval of contracts/specs before code execution.
+*   **Stage 7: Test-Driven Implementation**: Incremental CDD TDD iteration loop (`07_VERIFICATION.md`).
+*   **Stage 8: Automated Walkthrough**: Browser-agent walkthrough and visual evidence (`08_WALKTHROUGH.md`).
+*   **Stage 9: PR Delivery & Maintenance**: Push branches and create PRs via `gh` CLI.
 
 ---
 
@@ -53,7 +54,7 @@ Invoke specialized sub-agents using `@<name>`:
 | Command | Namespace | Purpose |
 | :--- | :--- | :--- |
 | **`/feature`** | Core | Initiates the 9-phase brewing protocol for a new feature. |
-| **`/brew:init`** | Brew | Bootstraps a local project with the Head Barista protocol. |
+| **`/brew:init`** | Brew | *(Deprecated)* Bootstraps a local project with the Head Barista protocol (now handled automatically in AGY 2.0). |
 | **`/brew:archive`** | Brew | Clears away 'spent grounds' (completed tasks) to keep context clean. |
 | **`/research`** | Core | Spawns parallel agents for deep, factual codebase extraction. |
 | **`/loop:start`** | Loop | Starts an infinite, self-correcting development loop (Ralph). |
@@ -110,7 +111,9 @@ bean-to-cup/
     ```bash
     gemini extensions link /path/to/bean-to-cup
     ```
-2.  **Initialize your Workspace**:
+2.  **Initialize your Workspace (Deprecated)**:
+    > [!NOTE]
+    > Under Antigravity 2.0, bootstrapping is handled automatically upon registration. If you are on the legacy Gemini CLI, you can still optionally run:
     ```bash
     /brew:init
     ```

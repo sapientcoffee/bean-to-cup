@@ -1,27 +1,27 @@
 ---
 name: kanban
-description: "Phase 7: Generates an interactive Kanban board (Markdown & HTML) and Mermaid flow to visualize and track the status of implementation slices."
+description: "Stage 7: Generates an interactive Kanban board (Markdown & HTML) and Mermaid flow to visualize and track the status of implementation slices."
 ---
 
-# Skill: Kanban & Implementation Tracker (Phase 7)
+# Skill: Kanban & Implementation Tracker (Stage 7)
 
 ## Objective
-Your goal is to act as the **Orchestration Engine** to generate a local, interactive Kanban board and a visual Mermaid diagram representing the progress state of the current feature development's vertical slices. This enables real-time visual progress tracking during the active development (Phase 7: Brewing Loop).
+Your goal is to act as the **Orchestration Engine** to generate a local, interactive Kanban board and a visual Mermaid diagram representing the progress state of the current feature development's vertical slices. This enables real-time visual progress tracking during active TDD implementation (Stage 7).
 
 ## Rules of Engagement
 - **Artifact Generation:** Always output:
-  1. `plans/<feature-slug>/<timestamp>/04_KANBAN.md` - Clean Markdown Kanban board and Mermaid flow diagram.
+  1. `plans/<feature-slug>/<timestamp>/05_KANBAN.md` - Clean Markdown Kanban board and Mermaid flow diagram.
   2. `plans/<feature-slug>/<timestamp>/kanban.html` - Premium interactive local progress tracking application.
 - **Visual Design Mandate:** The generated HTML MUST follow a top-tier premium visual aesthetic (sleek, futuristic mocha dark theme, glowing glassmorphism cards, micro-animations, and full-screen layout). No placeholders allowed.
-- **Dynamic Coupling:** The HTML file must contain a built-in parser that can load and display the contents of the local `04_PLAN.md` file, while also offering an "Import/Export" zone where developers can copy-paste their Markdown and interactively manage state.
+- **Dynamic Coupling:** The HTML file must contain a built-in parser that can load and display the contents of the local `05_PLAN.md` file, while also offering an "Import/Export" zone where developers can copy-paste their Markdown and interactively manage state.
 
 ## Instructions
 
 ### Step 1: Locate Active Plan
 1. Find the active plan directory `plans/<feature-slug>/<timestamp>/` for the feature currently being implemented.
-2. Read the `04_PLAN.md` (or `04_IMPLEMENTATION_PLAN.md`) file to extract the checklist tasks and implementation details.
+2. Read the `05_PLAN.md` (or `05_IMPLEMENTATION_PLAN.md`) file to extract the checklist tasks and implementation details.
 
-### Step 2: Generate 04_KANBAN.md
+### Step 2: Generate 05_KANBAN.md
 Create a visual overview of the vertical slices in Markdown:
 1. **Mermaid Flowchart:** Map out each Phase and Step as node blocks. Style the nodes dynamically based on status:
    - Completed slices: Fill with green (`#a6e3a1`), stroke with dark green.
@@ -647,7 +647,7 @@ Write a gorgeous, self-contained interactive web page inside `plans/<feature-slu
         </div>
       </div>
 
-      <button class="btn btn-primary" onclick="openModal('importModal')">📥 Import Plan (04_PLAN.md)</button>
+      <button class="btn btn-primary" onclick="openModal('importModal')">📥 Import Plan (05_PLAN.md)</button>
       <button class="btn" onclick="exportMarkdown()">📤 Export Updated Plan</button>
       <button class="btn" onclick="loadLocalPlan()" style="margin-top: auto; border-color: rgba(166, 227, 161, 0.3);">🔄 Fetch Local Plan</button>
     </div>
@@ -659,7 +659,7 @@ Write a gorgeous, self-contained interactive web page inside `plans/<feature-slu
       <div class="header-dashboard">
         <div class="header-info">
           <h2 id="featureTitle">Feature Slices Implementation</h2>
-          <p id="featurePath">plans/feature-slug/04_PLAN.md</p>
+          <p id="featurePath">plans/feature-slug/05_PLAN.md</p>
         </div>
         <div>
           <span class="badge-status badge-status-progress" id="sprintBadge">Brewing Active</span>
@@ -732,10 +732,10 @@ flowchart TD
   <div class="modal" id="importModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title">Import 04_PLAN.md Markdown</h3>
+        <h3 class="modal-title">Import 05_PLAN.md Markdown</h3>
         <button class="modal-close" onclick="closeModal('importModal')">&times;</button>
       </div>
-      <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 0.75rem;">Paste the contents of your `04_PLAN.md` file below. The system will parse your vertical slices, checklist items, and descriptions automatically!</p>
+      <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 0.75rem;">Paste the contents of your `05_PLAN.md` file below. The system will parse your vertical slices, checklist items, and descriptions automatically!</p>
       <textarea class="editor-textarea" id="importArea" placeholder="# Implementation Plan: ..."></textarea>
       <div class="modal-footer">
         <button class="btn" onclick="closeModal('importModal')">Cancel</button>
@@ -748,10 +748,10 @@ flowchart TD
   <div class="modal" id="exportModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title">Export Updated 04_PLAN.md</h3>
+        <h3 class="modal-title">Export Updated 05_PLAN.md</h3>
         <button class="modal-close" onclick="closeModal('exportModal')">&times;</button>
       </div>
-      <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 0.75rem;">Here is your updated Markdown implementation plan reflecting the new card statuses. Copy this and paste it back into your `04_PLAN.md` file!</p>
+      <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 0.75rem;">Here is your updated Markdown implementation plan reflecting the new card statuses. Copy this and paste it back into your `05_PLAN.md` file!</p>
       <textarea class="editor-textarea" id="exportArea" readonly onclick="this.select()"></textarea>
       <div class="modal-footer">
         <button class="btn btn-primary" onclick="copyExportText()">Copy Markdown</button>
@@ -852,7 +852,7 @@ flowchart TD
 
     // Load Plan from standard location relative to the html file
     function loadLocalPlan() {
-      fetch('04_PLAN.md')
+      fetch('05_PLAN.md')
         .then(response => {
           if (!response.ok) throw new Error('Not found');
           return response.text();
@@ -860,10 +860,10 @@ flowchart TD
         .then(text => {
           document.getElementById('importArea').value = text;
           parseMarkdownPlan(text);
-          document.getElementById('featurePath').innerText = 'plans/.../04_PLAN.md (Loaded From Disk)';
+          document.getElementById('featurePath').innerText = 'plans/.../05_PLAN.md (Loaded From Disk)';
         })
         .catch(err => {
-          console.log("Local 04_PLAN.md not found directly; using interactive demo.");
+          console.log("Local 05_PLAN.md not found directly; using interactive demo.");
         });
     }
 
@@ -875,7 +875,7 @@ flowchart TD
       closeModal('importModal');
     };
 
-    // Parser for 04_PLAN.md
+    // Parser for 05_PLAN.md
     function parseMarkdownPlan(markdown) {
       originalMarkdown = markdown;
       tasks = [];
@@ -1185,7 +1185,7 @@ flowchart TD
       });
 
       if (tasks.length === 0) {
-        code = 'flowchart TD\n  Empty([Import a valid 04_PLAN.md to generate dependency tree])\n';
+        code = 'flowchart TD\n  Empty([Import a valid 05_PLAN.md to generate dependency tree])\n';
       }
 
       const outputDiv = document.getElementById('mermaidOutput');
@@ -1202,7 +1202,7 @@ flowchart TD
       }
     }
 
-    // Export Updated Plan Markdown back to 04_PLAN.md
+    // Export Updated Plan Markdown back to 05_PLAN.md
     window.exportMarkdown = function() {
       if (!originalMarkdown) return;
       
@@ -1234,7 +1234,7 @@ flowchart TD
       const area = document.getElementById('exportArea');
       area.select();
       document.execCommand('copy');
-      alert('Copied updated 04_PLAN.md Markdown to clipboard! Paste it directly back into your file.');
+      alert('Copied updated 05_PLAN.md Markdown to clipboard! Paste it directly back into your file.');
     };
   </script>
 </body>
@@ -1244,6 +1244,6 @@ flowchart TD
 ### Step 4: Present Result
 1. Render a clean visual summary of the generated assets.
 2. Provide direct clickable file:/// links to:
-   - `plans/<feature-slug>/<timestamp>/04_KANBAN.md`
+   - `plans/<feature-slug>/<timestamp>/05_KANBAN.md`
    - `plans/<feature-slug>/<timestamp>/kanban.html`
 3. Instruct the user on how they can double-click `kanban.html` to open it locally and track the live state of implementation slices interactively.

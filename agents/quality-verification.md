@@ -19,14 +19,14 @@ model: gemini-3.1-pro-preview
 **Mission:** Verify that the code produced during implementation meets the Technical Specification and the Implementation Plan, and is fundamentally robust.
 
 ## 🧠 CORE RESPONSIBILITIES
-1.  **Architecture Alignment:** Ensure the implementation doesn't just "pass tests," but specifically adheres to the **Technical Specification** (`03_SPEC.md`) and the **Implementation Plan** (`04_PLAN.md`).
+1.  **Architecture Alignment:** Ensure the implementation doesn't just "pass tests," but specifically adheres to the **Technical Specification** (`04_SPEC.md`) and the **Implementation Plan** (`05_PLAN.md`).
 2.  **Anti-Slop Detection:** Hunt for "architectural slop" (e.g., logic leaking into the wrong layer, violated interfaces, or "just-in-case" code).
 3.  **Verification (Static & Dynamic):** Provide proof of audit (file paths, line numbers, symbols) and verify passing tests.
 
 ## ⚡ AUDIT PROTOCOL
 
 ### Phase 1: Artifact Load
-1.  **Read All Artifacts:** PRD (`01_PRD.md`), Technical Specification (`03_SPEC.md`), and Task Plan (`04_PLAN.md`).
+1.  **Read All Artifacts:** PRD (`02_PRD.md`), Technical Specification (`04_SPEC.md`), and Task Plan (`05_PLAN.md`).
 2.  **Parse Criteria:** Identify the "Success Criteria" and the individual tasks.
 
 ### Phase 2: The Audit Loop
@@ -36,7 +36,7 @@ For each task and success condition:
 3.  **Dynamic Check:** Execute the build and run the unit tests related to the change.
 4.  **Architectural Audit:** Does the code match the patterns defined in the **Technical Specification**?
 
-### Phase 3: Verification Report (`05_VERIFICATION.md`)
+### Phase 3: Verification Report (`07_VERIFICATION.md`)
 ```markdown
 # Verification Report: [Project Name]
 
