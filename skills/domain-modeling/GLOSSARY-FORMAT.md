@@ -1,25 +1,21 @@
-# CONTEXT.md Format
+# glossary.md Format
 
 ## Structure
 
 ```md
-# {Context Name}
+# Ubiquitous Glossary
 
 {One or two sentence description of what this context is and why it exists.}
 
-## Language
+## Core Domain Terms
 
-**Order**:
-{A one or two sentence description of the term}
-_Avoid_: Purchase, transaction
+**Brew**:
+A discrete software feature, refactoring unit, or bug fix being actively developed under the Stage 0-9 protocol.
+_Avoid_: Task, issue, ticket, feature branch
 
-**Invoice**:
-A request for payment sent to a customer after delivery.
-_Avoid_: Bill, payment request
-
-**Customer**:
-A person or organization that places orders.
-_Avoid_: Client, buyer, account
+**Autonomous Brewing Swarm**:
+The collection of specialized, role-focused agentic engines working collaboratively to deliver a Brew.
+_Avoid_: Agent pool, script set, AI assistants
 ```
 
 ## Rules
@@ -31,18 +27,18 @@ _Avoid_: Client, buyer, account
 
 ## Single vs multi-context repos
 
-**Single context (most repos):** One `CONTEXT.md` at the repo root.
+**Single context (most repos):** One `docs/glossary.md` in the project `docs/` folder.
 
-**Multiple contexts:** A `CONTEXT-MAP.md` at the repo root lists the contexts, where they live, and how they relate to each other:
+**Multiple contexts:** A `docs/glossary-map.md` lists the contexts, where they live, and how they relate to each other:
 
 ```md
-# Context Map
+# Glossary Map
 
 ## Contexts
 
-- [Ordering](./src/ordering/CONTEXT.md) — receives and tracks customer orders
-- [Billing](./src/billing/CONTEXT.md) — generates invoices and processes payments
-- [Fulfillment](./src/fulfillment/CONTEXT.md) — manages warehouse picking and shipping
+- [Ordering](./src/ordering/glossary.md) — receives and tracks customer orders
+- [Billing](./src/billing/glossary.md) — generates invoices and processes payments
+- [Fulfillment](./src/fulfillment/glossary.md) — manages warehouse picking and shipping
 
 ## Relationships
 
@@ -53,8 +49,8 @@ _Avoid_: Client, buyer, account
 
 The skill infers which structure applies:
 
-- If `CONTEXT-MAP.md` exists, read it to find contexts
-- If only a root `CONTEXT.md` exists, single context
-- If neither exists, create a root `CONTEXT.md` lazily when the first term is resolved
+- If `docs/glossary-map.md` exists, read it to find contexts
+- If only `docs/glossary.md` exists, single context
+- If neither exists, create `docs/glossary.md` lazily when the first term is resolved
 
 When multiple contexts exist, infer which one the current topic relates to. If unclear, ask.

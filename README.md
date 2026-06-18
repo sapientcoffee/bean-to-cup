@@ -212,7 +212,7 @@ The plugin implements **19 Custom Commands** mapped as flat namespace TOML decla
 Each modular skill in the `skills/` directory complies with the open **Agent Skills specification**, enabling deep reuse. For the complete skill-to-stage mappings and execution scripts, see the [Swarm & Command Registry](docs/swarm-registry.md#-3-modular-skills-13-total).
 
 ### Skills
-*   **`ideator`** [CORE]: **Stage 0 (Optional)**: Generates a product discovery and technical architecture draft from any raw hackathon prompt, writing the results to `.plans/CONTEXT_DRAFT.md`.
+*   **`ideator`** [CORE]: **Stage 0 (Optional)**: Generates a product discovery and technical architecture draft from any raw product idea, feature request, or prompt, writing the results to `00_IDEATION.md`.
 *   **`grill` / `grilling`** [CORE]: **Stage 1**: Relentless interactive interview and requirements stress-testing.
 *   **`domain-modeling`** [CORE]: **Stage 1, 4 & 5**: Builds, refines, and maintains the ubiquitous glossary and domain models.
 *   **`write-prd`** [CORE]: **Stage 2**: Standardizes requirements, non-goals, and KPIs into a machine-parsable `02_PRD.md`.

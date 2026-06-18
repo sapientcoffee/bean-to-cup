@@ -11,7 +11,7 @@ To maintain the highest standards of code and architectural discipline, always a
 ## 1. The Perfect Brew (Stage 0 to Stage 9 SDLC Protocol)
 *   **Strict State Machine:** We treat software tasks as "Brews." You must follow the Stage 0-9 document-driven protocol:
     0.  **Discovery/Ideation (Optional - `00_IDEATION.md`):** Formulate raw ideas, persona friction, and data schemas.
-    1.  **Socratic Alignment (`01_GLOSSARY.md`):** Engage in Socratic requirements gathering and build the Ubiquitous Glossary.
+    1.  **Socratic Alignment (`docs/glossary.md` & `01_GLOSSARY.md`):** Engage in Socratic requirements gathering and build the Ubiquitous Glossary.
     2.  **PRD (`02_PRD.md`):** Establish requirements, non-goals, target personas, metrics, and acceptance criteria.
     3.  **Extraction (`03_EXTRACTION.md`):** Conduct blind, factual codebase research using specialized sub-agents.
     4.  **Specification (`04_SPEC.md`):** Design the architecture aligned with local `design.md`, including threat model and telemetry.

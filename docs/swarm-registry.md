@@ -63,10 +63,10 @@ Skills are functional bundles of instructions, scripts, and examples found in th
 
 | Skill Name | Primary SDLC Stage | Targeted Scope & Responsibility | Status |
 | :--- | :--- | :--- | :--- |
-| **[`ideator`](file:///home/robedwards/workspace/bean-to-cup/skills/ideator/SKILL.md)** | **Stage 0 (Optional)** | Brainstorms raw hackathon ideas, maps out persona friction points, and outputs `00_IDEATION.md`. | **Active** |
+| **[`ideator`](file:///home/robedwards/workspace/bean-to-cup/skills/ideator/SKILL.md)** | **Stage 0 (Optional)** | Brainstorms raw product ideas and feature requests, maps out persona friction points, and outputs `00_IDEATION.md`. | **Active** |
 | **[`grill`](file:///home/robedwards/workspace/bean-to-cup/skills/grill/SKILL.md)** | **Stage 1** | Coordinates Socratic alignment interviews, managing glossary compilation and ADRs. | **Active** |
 | **[`grilling`](file:///home/robedwards/workspace/bean-to-cup/skills/grilling/SKILL.md)** | **Stage 1** | Relentlessly questions the user on edge cases, scope boundaries, and personas to clarify the brief. | **Active** |
-| **[`domain-modeling`](file:///home/robedwards/workspace/bean-to-cup/skills/domain-modeling/SKILL.md)** | **Stage 1, 4 & 5** | Compiles and updates the Ubiquitous Glossary in `01_GLOSSARY.md` on-the-fly during requirements design. | **Active** |
+| **[`domain-modeling`](file:///home/robedwards/workspace/bean-to-cup/skills/domain-modeling/SKILL.md)** | **Stage 1, 4 & 5** | Compiles and updates the project-wide Ubiquitous Glossary in `docs/glossary.md` (and `01_GLOSSARY.md`) on-the-fly during requirements design. | **Active** |
 | **[`feature`](file:///home/robedwards/workspace/bean-to-cup/skills/feature/SKILL.md)** | **Stage 2** | Prepares feature contexts and slugs, bootstraps versioned subdirectories, and launches Socratic alignment. | **Active** |
 | **[`write-prd`](file:///home/robedwards/workspace/bean-to-cup/skills/write-prd/SKILL.md)** | **Stage 2** | Compiles requirements, KPIs, and in/out-of-scope boundaries into machine-parsable `02_PRD.md`. | **Active** |
 | **[`research`](file:///home/robedwards/workspace/bean-to-cup/skills/research/SKILL.md)** | **Stage 3** | Coordinates context-isolated parallel codebase mapping and aggregates facts into `03_EXTRACTION.md`. | **Active** |
