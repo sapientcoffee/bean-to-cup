@@ -17,7 +17,7 @@ Just as a master barista follows a precise recipe—from selecting the beans to 
 
 ![The Control Funnel](docs/images/control-funnel.png)
 
-This extension is a formal implementation of the **QRSPI method** (Questions, Research, Structure, Plan, Implement). This workflow, pioneered as the RPI technique by **Dex Horthy** at HumanLayer and evolved into an emerging approach for agentic pipelines, ensures that the human remains the "director" while the AI handles the "execution." It is designed to prevent "outsourcing thinking" by creating high-fidelity checkpoints where you and the AI must align.
+This extension is a formal implementation of the **QRSPI method** (Questions, Research, Structure, Plan, Implement). This workflow combines the **RPI technique** (pioneered by **Dex Horthy** at HumanLayer) and the **Socratic Spec / AI-assisted product design** philosophies (pioneered by **Matt Pocock** at [AI Hero](https://www.aihero.dev/)). Together, these evolved into a state-of-the-art agentic pipeline protocol that ensures the human remains the "director" while the AI handles the "execution." It is designed to prevent "outsourcing thinking" by creating high-fidelity checkpoints where you and the AI must align.
 
 ### The AI-Native SDLC Stack
 This extension implements emerging standards for AI-assisted development:
@@ -163,7 +163,7 @@ The heart of the extension is the `bean-to-cup.md` file. It acts as the **Head B
 
 ## 🤖 The Brewing Swarm (Agents)
 
-Invoke specialized sub-agents using `@<name>` in your prompts:
+The Bean-to-Cup plugin manages an autonomous network of **13 specialized sub-agents**. You can invoke them in your chat prompts using `@<name>`. For a detailed description of each agent's config file and target SDLC stage, see the [Swarm & Command Registry](docs/swarm-registry.md#-2-specialized-agents--swarm-13-total).
 
 | Agent | Role | Expertise | Status |
 | :--- | :--- | :--- | :--- |
@@ -183,6 +183,8 @@ Invoke specialized sub-agents using `@<name>` in your prompts:
 ---
 
 ## ⌨️ Custom Commands
+
+The plugin implements **19 Custom Commands** mapped as flat namespace TOML declarations. For a comprehensive overview of every specialized command and its stage alignment, see the [Swarm & Command Registry](docs/swarm-registry.md#-1-custom-commands-19-total).
 
 ### Core Lifecycle
 *   **`/feature <goal>`** [CORE]: Initiates the 9-phase protocol starting with an AI-Ready PRD.
@@ -205,17 +207,20 @@ Invoke specialized sub-agents using `@<name>` in your prompts:
 
 ## 🛠️ Reusable Skills & Hooks
 
+Each modular skill in the `skills/` directory complies with the open **Agent Skills specification**, enabling deep reuse. For the complete skill-to-stage mappings and execution scripts, see the [Swarm & Command Registry](docs/swarm-registry.md#-3-modular-skills-13-total).
+
 ### Skills
 *   **`ideator`** [CORE]: **Stage 0 (Optional)**: Generates a product discovery and technical architecture draft from any raw hackathon prompt, writing the results to `.plans/CONTEXT_DRAFT.md`.
-*   **`domain-modeling`** [CORE]: Phase 4/5: Builds, refines, and maintains the project ubiquitous language and glossary in `CONTEXT.md` during design.
-*   **`grill` / `grilling`** [CORE]: Phase 6: Relentless interactive interview and plan stress-testing before code is touched.
-*   **`write-specs`** [CORE]: Phase 1: Transforming ideas into rigorous requirements.
-*   **`github-workflow`** [CORE]: Phase 9: Standardized PR creation using `gh`.
-*   **`chaos-mitigation`** [CORE]: Phase 7: SRE/Ops troubleshooting based on logs and runbooks.
-*   **`audit-code`** [CORE]: Phase 7: Automated quality gates and architectural compliance checks.
-*   **`deploy-app`** [CORE]: Phase 7: Environment deployment and orchestration.
-*   **`generate-code`** [CORE]: Phase 7: Boilerplate and scaffolding generation for common patterns.
-*   **`kanban`** [CORE]: Phase 7: Interactive progress tracking (HTML & Mermaid visualizer) for vertical slices.
+*   **`grill` / `grilling`** [CORE]: **Stage 1**: Relentless interactive interview and requirements stress-testing.
+*   **`domain-modeling`** [CORE]: **Stage 1, 4 & 5**: Builds, refines, and maintains the ubiquitous glossary and domain models.
+*   **`write-prd`** [CORE]: **Stage 2**: Standardizes requirements, non-goals, and KPIs into a machine-parsable `02_PRD.md`.
+*   **`research`** [CORE]: **Stage 3**: Guides context-isolated codebase extraction into factual `03_EXTRACTION.md`.
+*   **`audit-code`** [CORE]: **Stage 7**: Runs architectural compliance checks, QA gates, and executes minor commits.
+*   **`generate-code`** [CORE]: **Stage 7**: Generates boilerplate and components according to Spec contracts.
+*   **`kanban`** [CORE]: **Stage 7**: Progress tracking (HTML & Mermaid visualizer) for vertical sprint slices.
+*   **`chaos-mitigation`** [CORE]: **Stage 7**: Handles SRE log inspection and runs automated mitigation playbooks.
+*   **`deploy-app`** [CORE]: **Stage 7**: Resolves dependencies, compiles packages, and serves local webservers.
+*   **`github-workflow`** [CORE]: **Stage 9**: Automates branch pushes and PR compilation with the GitHub CLI (`gh`).
 
 ### Automated Hooks
 *   **`lint-on-change`** [CORE]: Automatically runs your linter whenever a file is modified.
@@ -341,6 +346,6 @@ npx skills add sapientcoffee/bean-to-cup -g
 
 ---
 
-**Credits**: [@dandobrin](https://github.com/dandobrin), [@jjdelorme](https://github.com/jjdelorme), [@cedricyao](https://github.com/cedricyao), [Dex Horthy](https://x.com/dexhorthy).
+**Credits**: [@dandobrin](https://github.com/dandobrin), [@jjdelorme](https://github.com/jjdelorme), [@cedricyao](https://github.com/cedricyao), [Dex Horthy](https://x.com/dexhorthy), [Matt Pocock](https://www.aihero.dev/).
 
-*Created with ❤️ for demo/example pruposes only.*
+*Created with ❤️ for demo/example purposes only.*
