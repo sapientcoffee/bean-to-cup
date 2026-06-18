@@ -219,9 +219,9 @@ Invoke specialized sub-agents using `@<name>` in your prompts:
 
 ## 🚀 Installation & Quickstart
 
-This repository is **dual-compatible**: it functions seamlessly as both a modern **Antigravity Plugin** and a legacy **Gemini CLI Extension**. 
+This repository is **multi-compatible**: it functions seamlessly as a modern **Antigravity Plugin**, a standard **Agent Skills Package** via the `skills` CLI, and a legacy **Gemini CLI Extension**. 
 
-You can use either harness (or both simultaneously) to run the Bean-to-Cup barista swarm; they will coexist peacefully using their respective manifest files (`plugin.json` and `gemini-extension.json`).
+You can use whichever harness or tool matches your workflow; they will coexist peacefully using their respective manifest files (`plugin.json` and `gemini-extension.json`) and standard layouts.
 
 ---
 
@@ -263,7 +263,7 @@ Updates are clean and simple depending on how the plugin was installed:
 *   **If installed via One-Line Curl (Direct Clones)**:
     The installer clones the real Git repository directly into the target location. You can fetch updates by navigating into that directory and pulling:
     ```bash
-    cd ~/.gemini/antigravity-cli/plugins/bean-to-cup
+    cd ~/.gemini/skills/bean-to-cup
     git pull
     ```
 
@@ -303,6 +303,30 @@ Once installed, bootstrap your project to copy the protocol and set up the envir
 Begin the 9-phase protocol for a new feature:
 ```bash
 /feature "Add a search bar to the coffee bean catalog"
+```
+
+---
+
+### Option C: Installing Individual Skills via the Open Skills CLI (Universal)
+
+Each capability inside our `skills/` directory complies with the open **Agent Skills specification** designed by Vercel Labs. This means you can install, manage, and use these skills across **over 40 supported local coding agents** (including Claude Code, Cursor, Windsurf, Roo Code, and more) using the universal `skills` CLI.
+
+#### 1. List Available Skills in this Repository
+You can query this repository directly using the `skills` CLI to see all discovered modular capabilities:
+```bash
+npx skills add sapientcoffee/bean-to-cup --list
+```
+
+#### 2. Install a Specific Skill
+To add an individual skill (such as our high-performance code auditor) to your current project:
+```bash
+npx skills add sapientcoffee/bean-to-cup --skill audit-code
+```
+
+#### 3. Install All Skills Globally
+To make the entire suite of `bean-to-cup` skills available globally across all of your local AI coding agents:
+```bash
+npx skills add sapientcoffee/bean-to-cup -g
 ```
 
 ---

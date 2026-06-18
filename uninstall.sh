@@ -21,8 +21,8 @@ show_help() {
     echo -e "Usage: $0 [OPTIONS]"
     echo ""
     echo -e "Options:"
-    echo -e "  -g, --global      Uninstall from global plugins (~/.gemini/antigravity-cli/plugins/) (Default)"
-    echo -e "  -w, --workspace   Uninstall from the current workspace (.agents/plugins/)"
+    echo -e "  -g, --global      Uninstall from global plugins (~/.gemini/skills/) (Default)"
+    echo -e "  -w, --workspace   Uninstall from the current workspace (.agents/skills/)"
     echo -e "  -h, --help        Show this help message"
     echo ""
     echo -e "Examples:"
@@ -61,7 +61,7 @@ done
 
 # Resolve paths
 if [[ "$SCOPE" == "global" ]]; then
-    TARGET_DIR="$HOME/.gemini/antigravity-cli/plugins"
+    TARGET_DIR="$HOME/.gemini/skills"
 else
     # Find active workspace root (first directory up that has .git, or current directory)
     CURRENT_DIR="$PWD"
@@ -76,7 +76,7 @@ else
     if [[ -z "$WORKSPACE_ROOT" ]]; then
         WORKSPACE_ROOT="$PWD"
     fi
-    TARGET_DIR="$WORKSPACE_ROOT/.agents/plugins"
+    TARGET_DIR="$WORKSPACE_ROOT/.agents/skills"
 fi
 
 # Function to extract plugin name from plugin.json

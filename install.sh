@@ -21,14 +21,18 @@ show_help() {
     echo -e "Usage: $0 [GIT_URL] [OPTIONS]"
     echo ""
     echo -e "Options:"
-    echo -e "  -g, --global      Install globally into ~/.gemini/antigravity-cli/plugins/ (Default)"
-    echo -e "  -w, --workspace   Install into the current workspace (.agents/plugins/)"
+    echo -e "  -g, --global      Install globally into ~/.gemini/skills/ (Default)"
+    echo -e "  -w, --workspace   Install into the current workspace (.agents/skills/)"
+    echo -e "  -l, --link        Create a symlink for local development instead of copying files"
     echo -e "  -f, --force       Overwrite any existing plugin installation without prompting"
     echo -e "  -h, --help        Show this help message"
     echo ""
     echo -e "Examples:"
-    echo -e "  Install the local directory globally:"
+    echo -e "  Install the local directory globally (copies files):"
     echo -e "    $0"
+    echo ""
+    echo -e "  Link the local directory globally for development (symlinks):"
+    echo -e "    $0 --link"
     echo ""
     echo -e "  Install from a remote git repository globally:"
     echo -e "    $0 https://github.com/sapientcoffee/bean-to-cup.git"
@@ -41,6 +45,7 @@ show_help() {
 GIT_URL=""
 SCOPE="global"
 FORCE=false
+LINK=false
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -55,6 +60,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         -w|--workspace)
             SCOPE="workspace"
+            shift
+            ;;
+        -l|--link)
+            LINK=true
             shift
             ;;
         -f|--force)
@@ -76,7 +85,7 @@ done
 
 # Resolve paths
 if [[ "$SCOPE" == "global" ]]; then
-    TARGET_DIR="$HOME/.gemini/antigravity-cli/plugins"
+    TARGET_DIR="$HOME/.gemini/skills"
 else
     # Find active workspace root (first directory up that has .git, or current directory)
     CURRENT_DIR="$PWD"
@@ -91,7 +100,7 @@ else
     if [[ -z "$WORKSPACE_ROOT" ]]; then
         WORKSPACE_ROOT="$PWD"
     fi
-    TARGET_DIR="$WORKSPACE_ROOT/.agents/plugins"
+    TARGET_DIR="$WORKSPACE_ROOT/.agents/skills"
 fi
 
 # Function to extract plugin name from plugin.json
@@ -187,9 +196,22 @@ if [[ "$SOURCE_MODE" == "git" ]]; then
     # Nullify TMP_DIR so cleanup doesn't try to rm it
     TMP_DIR=""
 else
-    echo -e "${BLUE}Linking local plugin '$PLUGIN_NAME' to $FINAL_TARGET...${NC}"
-    # Create symlink pointing to the local directory
-    ln -sfn "$SOURCE_DIR" "$FINAL_TARGET"
+    if [[ "$LINK" == "true" ]]; then
+        echo -e "${BLUE}Linking local plugin '$PLUGIN_NAME' to $FINAL_TARGET...${NC}"
+        # Create symlink pointing to the local directory
+        ln -sfn "$SOURCE_DIR" "$FINAL_TARGET"
+    else
+        echo -e "${BLUE}Copying local plugin '$PLUGIN_NAME' to $FINAL_TARGET...${NC}"
+        mkdir -p "$FINAL_TARGET"
+        # Copy files robustly, excluding git/temporary folders if present
+        if command -v rsync &>/dev/null; then
+            rsync -a --exclude='.git' --exclude='.plans' --exclude='.plan' --exclude='scratch' "$SOURCE_DIR/" "$FINAL_TARGET/"
+        else
+            cp -R "$SOURCE_DIR"/. "$FINAL_TARGET/"
+            # Clean up git/scratch folders if they got copied
+            rm -rf "$FINAL_TARGET/.git" "$FINAL_TARGET/.plans" "$FINAL_TARGET/.plan" "$FINAL_TARGET/scratch"
+        fi
+    fi
 fi
 
 # 5. Native agy CLI registration
@@ -216,7 +238,11 @@ echo -e "Plugin Name:  ${BOLD}$PLUGIN_NAME${NC}"
 echo -e "Scope:        ${BOLD}$SCOPE${NC}"
 echo -e "Location:     ${BOLD}$FINAL_TARGET${NC}"
 if [[ "$SOURCE_MODE" == "local" ]]; then
-    echo -e "Type:         ${BLUE}Symlinked Local Directory${NC}"
+    if [[ "$LINK" == "true" ]]; then
+        echo -e "Type:         ${BLUE}Symlinked Local Directory (Development)${NC}"
+    else
+        echo -e "Type:         ${BLUE}Copied Local Directory${NC}"
+    fi
 else
     echo -e "Type:         ${BLUE}Cloned Remote Git Repository${NC}"
 fi

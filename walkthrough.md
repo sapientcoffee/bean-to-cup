@@ -66,4 +66,47 @@ You can now type flat namespace commands directly (such as `/brew:init`, `/loop:
 ### 4. Conversion of `feature.toml` to a Reusable Skill
 The `/feature` command initialization logic has been refactored into a reusable skill (`skills/feature/SKILL.md`). This modularizes the Discovery & Validation protocol, allowing any agent inside the swarm to load and reference the Phase 1 PRD generation requirements contextually. The `commands/feature.toml` command has been simplified to a clean delegation wrapper that points to the new skill.
 
+### 5. Unified Skill-Path Installation & Native Registration
+
+We refactored the installation/uninstallation pipelines to utilize the standard simple skill folders for maximum compatibility and discoverability:
+*   **Global Scope**: `~/.gemini/skills/`
+*   **Workspace Scope**: `<project-root>/.agents/skills/`
+
+#### Copy-by-Default (Standard Install)
+Running `./install.sh --global --force` copies all plugin code files (excluding development folders like `.git` or `scratch`) into the destination folder, and then executes native registration with the `agy` CLI pointing to the copied files:
+
+```text
+Copying local plugin 'bean-to-cup' to /home/robedwards/.gemini/skills/bean-to-cup...
+Registering plugin natively with Antigravity CLI...
+  [ok]    bean-to-cup
+          ✔ skills      : 8 processed
+          ✔ agents      : 13 processed
+          ✔ commands    : 19 processed (converted to skills)
+          - mcpServers  : skipped (not found)
+          ✔ hooks       : 1 processed
+Plugin registered successfully in agy!
+```
+
+#### Local Development Symlinking
+If you prefer a symlink for live edits during development, pass the `--link` (or `-l`) option:
+
+```text
+Linking local plugin 'bean-to-cup' to /home/robedwards/workspace/bean-to-cup/.agents/skills/bean-to-cup...
+Registering plugin natively with Antigravity CLI...
+  [ok]    bean-to-cup
+          ✔ skills      : 8 processed
+          ...
+```
+
+#### Native Uninstallation Clean-Up
+Running `./uninstall.sh --global` completely cleans up the target directory and natively unregisters the plugin:
+
+```text
+Removing plugin directory or symlink at /home/robedwards/.gemini/skills/bean-to-cup...
+Successfully removed plugin files from disk.
+Unregistering plugin natively from Antigravity CLI...
+Uninstalled plugin "bean-to-cup"
+Plugin unregistered successfully in agy!
+```
+
 
