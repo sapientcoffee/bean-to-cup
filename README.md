@@ -209,6 +209,7 @@ Invoke specialized sub-agents using `@<name>` in your prompts:
 *   **`audit-code`** [CORE]: Phase 7: Automated quality gates and architectural compliance checks.
 *   **`deploy-app`** [CORE]: Phase 7: Environment deployment and orchestration.
 *   **`generate-code`** [CORE]: Phase 7: Boilerplate and scaffolding generation for common patterns.
+*   **`kanban`** [CORE]: Phase 7: Interactive progress tracking (HTML & Mermaid visualizer) for vertical slices.
 
 ### Automated Hooks
 *   **`lint-on-change`** [CORE]: Automatically runs your linter whenever a file is modified.

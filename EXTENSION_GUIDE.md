@@ -72,6 +72,7 @@ Skills are specialized instructions pulled into the agent's context as needed:
 *   **`deploy-app`**: Phase 7: Stack detection and automated local hosting.
 *   **`github-workflow`**: Phase 9: Standardized branch management and PR creation using `gh`.
 *   **`chaos-mitigation`**: Phase 7: Observability-driven troubleshooting for degraded states.
+*   **`kanban`**: Phase 7: Interactive progress tracking (HTML & Mermaid visualizer) for vertical slices.
 
 ---
 
