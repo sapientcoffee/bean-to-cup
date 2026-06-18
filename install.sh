@@ -175,69 +175,99 @@ UPDATED_IN_PLACE=false
 
 # 3. Handle pre-existing installations
 if [[ -e "$FINAL_TARGET" || -L "$FINAL_TARGET" ]]; then
-    if [[ -L "$FINAL_TARGET" ]]; then
-        # Handle symlink
-        local_link_target=$(readlink "$FINAL_TARGET" || true)
-        if [[ "$LINK" == "true" && "$local_link_target" == "$SOURCE_DIR" ]]; then
-            echo -e "${GREEN}Plugin '$PLUGIN_NAME' is already symlinked correctly to $SOURCE_DIR.${NC}"
-            UPDATED_IN_PLACE=true
-        else
-            echo -e "${YELLOW}Symlink exists but points elsewhere or configuration changed. Re-linking...${NC}"
-            ln -sfn "$SOURCE_DIR" "$FINAL_TARGET"
-            UPDATED_IN_PLACE=true
-        fi
-    elif [[ -d "$FINAL_TARGET/.git" ]]; then
-        # Handle git repository pull
-        if [[ "$FORCE" == "true" ]]; then
-            echo -e "${YELLOW}Force option active. Overwriting existing repository...${NC}"
-            rm -rf "$FINAL_TARGET"
-        else
-            echo -e "${BLUE}Existing Git repository found at $FINAL_TARGET.${NC}"
-            echo -e "${BLUE}Attempting to update via git pull...${NC}"
-            set +e
-            git -C "$FINAL_TARGET" pull --quiet
-            PULL_STATUS=$?
-            set -e
-            if [[ $PULL_STATUS -eq 0 ]]; then
-                echo -e "${GREEN}Plugin successfully updated in-place via git pull!${NC}"
+    if [[ "$LINK" == "true" ]]; then
+        # Handle symlink request
+        if [[ -L "$FINAL_TARGET" ]]; then
+            local_link_target=$(readlink "$FINAL_TARGET" || true)
+            if [[ "$local_link_target" == "$SOURCE_DIR" ]]; then
+                echo -e "${GREEN}Plugin '$PLUGIN_NAME' is already symlinked correctly to $SOURCE_DIR.${NC}"
                 UPDATED_IN_PLACE=true
             else
-                echo -e "${YELLOW}Warning: git pull failed (possibly due to local conflicts).${NC}"
-                read -p "Do you want to force overwrite the existing folder? [y/N] " -n 1 -r
+                echo -e "${YELLOW}Symlink exists but points elsewhere. Re-linking...${NC}"
+                ln -sfn "$SOURCE_DIR" "$FINAL_TARGET"
+                UPDATED_IN_PLACE=true
+            fi
+        else
+            # It's a directory but user wants a symlink. We must replace it.
+            if [[ "$FORCE" == "true" ]]; then
+                echo -e "${YELLOW}Force option active. Replacing directory with symlink...${NC}"
+                rm -rf "$FINAL_TARGET"
+                ln -sfn "$SOURCE_DIR" "$FINAL_TARGET"
+                UPDATED_IN_PLACE=true
+            else
+                echo -e "${YELLOW}Warning: Directory already exists at $FINAL_TARGET but symlink requested.${NC}"
+                read -p "Do you want to replace the directory with a symlink? [y/N] " -n 1 -r
                 echo ""
                 if [[ $REPLY =~ ^[Yy]$ ]]; then
-                    echo -e "${YELLOW}Overwriting existing installation...${NC}"
                     rm -rf "$FINAL_TARGET"
+                    ln -sfn "$SOURCE_DIR" "$FINAL_TARGET"
+                    UPDATED_IN_PLACE=true
                 else
-                    echo -e "${RED}Update cancelled due to unresolved merge conflicts.${NC}"
-                    exit 1
+                    echo -e "${RED}Installation cancelled.${NC}"
+                    exit 0
                 fi
             fi
         fi
-    elif [[ "$SOURCE_MODE" == "local" && "$LINK" == "false" ]]; then
-        # Handle in-place copy update
-        if [[ "$FORCE" == "true" ]]; then
-            echo -e "${YELLOW}Force option active. Overwriting existing installation...${NC}"
-            rm -rf "$FINAL_TARGET"
-        else
-            echo -e "${BLUE}Existing directory found at $FINAL_TARGET.${NC}"
-            echo -e "${BLUE}Performing in-place file sync...${NC}"
-            # We skip deleting the folder, letting copying logic run in-place
-            UPDATED_IN_PLACE=false
-        fi
     else
-        # Fallback for plain remote folder without git repo or other mismatch
-        if [[ "$FORCE" == "true" ]]; then
-            rm -rf "$FINAL_TARGET"
-        else
-            echo -e "${YELLOW}Warning: Installation already exists at $FINAL_TARGET${NC}"
-            read -p "Do you want to overwrite it? [y/N] " -n 1 -r
-            echo ""
-            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-                echo -e "${RED}Installation cancelled.${NC}"
-                exit 0
+        # User wants a real directory (LINK == "false")
+        if [[ -L "$FINAL_TARGET" ]]; then
+            # Mismatch: Currently a symlink, but user wants a real directory.
+            echo -e "${YELLOW}Existing symlink found where real directory is requested. Removing symlink...${NC}"
+            rm -f "$FINAL_TARGET"
+            # Now FINAL_TARGET is clear, and we let the rest of the script install the files normally (UPDATED_IN_PLACE=false).
+        elif [[ -d "$FINAL_TARGET/.git" ]]; then
+            # Handle git repository pull
+            if [[ "$FORCE" == "true" ]]; then
+                echo -e "${YELLOW}Force option active. Overwriting existing repository...${NC}"
+                rm -rf "$FINAL_TARGET"
+            else
+                echo -e "${BLUE}Existing Git repository found at $FINAL_TARGET.${NC}"
+                echo -e "${BLUE}Attempting to update via git pull...${NC}"
+                set +e
+                git -C "$FINAL_TARGET" pull --quiet
+                PULL_STATUS=$?
+                set -e
+                if [[ $PULL_STATUS -eq 0 ]]; then
+                    echo -e "${GREEN}Plugin successfully updated in-place via git pull!${NC}"
+                    UPDATED_IN_PLACE=true
+                else
+                    echo -e "${YELLOW}Warning: git pull failed (possibly due to local conflicts).${NC}"
+                    read -p "Do you want to force overwrite the existing folder? [y/N] " -n 1 -r
+                    echo ""
+                    if [[ $REPLY =~ ^[Yy]$ ]]; then
+                        echo -e "${YELLOW}Overwriting existing installation...${NC}"
+                        rm -rf "$FINAL_TARGET"
+                    else
+                        echo -e "${RED}Update cancelled due to unresolved merge conflicts.${NC}"
+                        exit 1
+                    fi
+                fi
             fi
-            rm -rf "$FINAL_TARGET"
+        elif [[ "$SOURCE_MODE" == "local" ]]; then
+            # Handle in-place copy update
+            if [[ "$FORCE" == "true" ]]; then
+                echo -e "${YELLOW}Force option active. Overwriting existing installation...${NC}"
+                rm -rf "$FINAL_TARGET"
+            else
+                echo -e "${BLUE}Existing directory found at $FINAL_TARGET.${NC}"
+                echo -e "${BLUE}Performing in-place file sync...${NC}"
+                # We skip deleting the folder, letting copying logic run in-place
+                UPDATED_IN_PLACE=false
+            fi
+        else
+            # Fallback for plain remote folder without git repo or other mismatch
+            if [[ "$FORCE" == "true" ]]; then
+                rm -rf "$FINAL_TARGET"
+            else
+                echo -e "${YELLOW}Warning: Installation already exists at $FINAL_TARGET${NC}"
+                read -p "Do you want to overwrite it? [y/N] " -n 1 -r
+                echo ""
+                if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                    echo -e "${RED}Installation cancelled.${NC}"
+                    exit 0
+                fi
+                rm -rf "$FINAL_TARGET"
+            fi
         fi
     fi
 fi
