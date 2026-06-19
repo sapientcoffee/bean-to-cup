@@ -46,11 +46,12 @@ class Task:
         }
 
 def clean_markdown_inline(text):
-    """Removes leading/trailing bold, italic, list markers, or backticks from inline markdown."""
+    """Removes wrapping bold, italic, or backticks from inline markdown if they wrap the entire text."""
     text = text.strip()
-    text = re.sub(r'^[\s*_\-`\[*]+', '', text)
-    text = re.sub(r'[\s*_\-`\]*]+$', '', text)
-    return text.strip()
+    for wrapper in ('***', '**', '*', '`'):
+        if text.startswith(wrapper) and text.endswith(wrapper):
+            return text[len(wrapper):-len(wrapper)].strip()
+    return text
 
 def parse_plan_file(plan_path):
     """Parses 05_PLAN.md into a structured list of Task objects."""
@@ -114,9 +115,9 @@ def parse_plan_file(plan_path):
 
 def parse_details(task, lines):
     """Parses metadata lines and aggregates instruction lists."""
-    target_file_pattern = re.compile(r'^\s*[*\-\s]*target file:\s*(.+)$', re.IGNORECASE)
-    verification_pattern = re.compile(r'^\s*[*\-\s]*verification:\s*(.+)$', re.IGNORECASE)
-    depends_on_pattern = re.compile(r'^\s*[*\-\s]*depends on:\s*(.+)$', re.IGNORECASE)
+    target_file_pattern = re.compile(r'^\s*[*\-\s]*target file[*:\s]+\s*(.+)$', re.IGNORECASE)
+    verification_pattern = re.compile(r'^\s*[*\-\s]*verification[*:\s]+\s*(.+)$', re.IGNORECASE)
+    depends_on_pattern = re.compile(r'^\s*[*\-\s]*depends on[*:\s]+\s*(.+)$', re.IGNORECASE)
 
     instructions = []
     for line in lines:
@@ -155,18 +156,19 @@ def topological_sort(tasks):
             else:
                 sys.stderr.write(f"[WARN] Dependency '{dep}' for '{t.label}' is external to this plan.\n")
 
+    import heapq
     queue = [label for label, degree in in_degree.items() if degree == 0]
+    heapq.heapify(queue)
     sorted_labels = []
 
     while queue:
-        queue.sort()  # Keep alphabetical fallback ordering
-        curr = queue.pop(0)
+        curr = heapq.heappop(queue)
         sorted_labels.append(curr)
 
         for neighbor in adj[curr]:
             in_degree[neighbor] -= 1
             if in_degree[neighbor] == 0:
-                queue.append(neighbor)
+                heapq.heappush(queue, neighbor)
 
     if len(sorted_labels) != len(tasks):
         sys.stderr.write("[ERROR] Circular dependency detected in execution plan!\n")
@@ -186,8 +188,8 @@ def fetch_open_issues():
         )
         return json.loads(result.stdout)
     except subprocess.CalledProcessError as e:
-        sys.stderr.write(f"[WARN] Failed to fetch open issues from GitHub: {e.stderr.strip()}\n")
-        return []
+        sys.stderr.write(f"[ERROR] Failed to fetch open issues from GitHub: {e.stderr.strip()}\n")
+        sys.exit(1)
     except Exception as e:
         sys.stderr.write(f"[WARN] Failed to execute gh CLI command: {e}\n")
         return []
@@ -220,9 +222,10 @@ def create_task_issue(task, epic_number):
             [
                 "gh", "issue", "create",
                 "--title", title,
-                "--body", body,
+                "--body-file", "-",
                 "--label", "ready-for-dev"
             ],
+            input=body,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             check=True,
@@ -230,7 +233,7 @@ def create_task_issue(task, epic_number):
         )
         # Parse issue URL to extract number, e.g. "https://github.com/.../issues/145"
         output_url = result.stdout.strip()
-        match = re.search(r'/issues/(\d+)$', output_url)
+        match = re.search(r'/issues/(\d+)', output_url)
         if match:
             return int(match.group(1))
         return output_url
@@ -262,7 +265,8 @@ The task execution graph has been successfully compiled from [{plan_basename}](f
 """
     try:
         subprocess.run(
-            ["gh", "issue", "comment", str(epic_number), "--body", body],
+            ["gh", "issue", "comment", str(epic_number), "--body-file", "-"],
+            input=body,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             check=True,
