@@ -31,3 +31,5 @@ Thumbs.db
 # Scratch / Temp Directory
 scratch/
 
+# Git Worktree Isolation
+.worktrees/
