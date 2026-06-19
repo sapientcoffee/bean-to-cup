@@ -1,0 +1,17 @@
+{
+  "prompt": "robedwards@workspace:~$ ",
+  "steps": [
+    {
+      "type": "comment",
+      "text": "# Let's launch agy and ask it to print a Hello World greeting!",
+      "delay": 0.5,
+      "speed": 0.02
+    },
+    {
+      "type": "command",
+      "text": "agy --print \"Please say Hello World in a beautifully styled greeting!\"",
+      "delay": 2.0,
+      "speed": 0.03
+    }
+  ]
+}

@@ -128,7 +128,7 @@ Identify the current state of the project and execute the corresponding phase.
     1.  **Environment Discovery:** Identify how to spin up the local environment.
     2.  **Execution:** Run local development servers. Capture PIDs into a `.gemini/run.pid` file to ensure clean teardown.
     3.  **Visual Evidence:** If the feature has a UI, you MUST dispatch the **browser_agent** using Chrome DevTools to perform a live walkthrough of the feature. Capture screenshots and document interaction steps.
-    4.  **Artifact Generation:** Create `08_WALKTHROUGH.md`. Keep screenshots relative to the repository root without a leading slash (e.g., `plans/feature/timestamp/image.png`) to ensure they render correctly in GitHub PRs.
+    4.  **Artifact Generation:** Create `08_WALKTHROUGH.md`. Keep screenshots as absolute repository paths starting with a leading slash (e.g., `/plans/feature/timestamp/image.png`) to render correctly on GitHub in both nested file views and Pull Request descriptions.
     5.  **Cleanup:** Stop all local development servers started during this phase before finishing.
 *   **Output:** `08_WALKTHROUGH.md`.
 
