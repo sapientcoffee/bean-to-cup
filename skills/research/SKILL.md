@@ -81,6 +81,7 @@ I'm ready to research the codebase. Please provide your research question or are
    - **Filename**: `plans/<feature-name>/<YYYY-MM-DD_HHMM>/03_EXTRACTION.md`
      - *Note*: If a feature context (name and timestamp) is provided, use this path. 
      - *Fallback*: For general research outside of a feature workflow, use `plans/thoughts/YYYY-MM-DD-ENG-XXXX-Research-Report.md`.
+   - **UI Visibility / Artifact Mirroring**: In addition to saving the document in the workspace, you MUST write or copy it directly into the assistant's private system artifacts directory (`/home/robedwards/.gemini/antigravity-cli/brain/<conversation-id>/03_extraction.md`) with the correct ArtifactMetadata. This mirrors it inside the chat UI's persistent Artifacts viewer panel.
 
 6. **Generate research document:**
    - Use the metadata gathered in step 5.

@@ -19,3 +19,7 @@ Our goal is to build highly reliable, lightweight, and performant agent workflow
 
 ## 4. Resource Efficiency
 *   **Zero Bloat:** Keep dependencies and script footprints tiny. Avoid heavy third-party npm or system dependencies in hook scripts or subagent definitions to keep setup times fast.
+
+## 5. Artifact Mirroring (Dynamic UI Visibility)
+*   **Dual-Write Requirement:** Whenever any stage-linked planning or documentation file is created or updated in the workspace (such as `01_GLOSSARY.md`, `02_PRD.md`, `03_EXTRACTION.md`, `04_SPEC.md`, `05_PLAN.md`, `07_VERIFICATION.md`, `08_WALKTHROUGH.md`, `walkthrough.md`, or `walkthrough.html`), you MUST also write it directly into the assistant's private system artifacts directory (`/home/robedwards/.gemini/antigravity-cli/brain/<conversation-id>/`) as a user-facing artifact (using descriptive, lowercase filenames like `02_prd.md` or `04_spec.md`).
+*   **Purpose:** This mirrors workspace documentation inside the chat UI's persistent Artifacts viewer panel, making it incredibly easy to see and inspect what files have been created or modified without leaving the UI.
