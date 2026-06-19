@@ -1,11 +1,40 @@
+<!--
+Copyright 2026 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
 ---
-name: asciinema
+name: brew:record
 description: Record terminal interactions and compile them to animated GIFs. Use during walkthroughs or on-demand recording sessions.
 ---
 
 # Asciinema Terminal Recording Skill
 
 This skill allows agents to programmatically record terminal sessions, type out scenarios character-by-character, and render them as beautiful, high-quality animated `.gif` and `.cast` files.
+
+## 🔑 Parameters & Flags
+
+When invoking this skill, parse any command flags or arguments requested:
+*   `--scenario <path>`: Path to a scenario JSON file for automated playback.
+*   `--output <path>`: Optional destination path (without extension) for the recording.
+*   `--upload`: Optional flag to upload the session recording to asciinema.org.
+
+Execute the record orchestration script using python3:
+```bash
+python3 scripts/record.py [flags]
+```
+(Substitute any parsed flags into the bash execution). Confirm output file generation and display paths of the raw `.cast` file and rendered `.gif` file to the user.
 
 ## 1. Automated Playback Scenarios
 
@@ -55,9 +84,9 @@ When recording a verification walkthrough for an active Brew:
     ```bash
     agy brew:record --scenario plans/feature/<brew-timestamp-slug>/walkthrough_scenario.json --output plans/feature/<brew-timestamp-slug>/walkthrough
     ```
-3.  Once complete, embed the resulting `.gif` asset directly inside your `08_WALKTHROUGH.md` report:
+3.  Once complete, embed the resulting `.gif` asset directly inside your `08_WALKTHROUGH.md` report using a relative path:
     ```markdown
-    ![Walkthrough Demo](walkthrough.gif)
+    ![Walkthrough Demo](plans/feature/timestamp/walkthrough.gif)
     ```
 4.  Stage all generated files (`.cast`, `.gif`, `.json`) in Git:
     ```bash
