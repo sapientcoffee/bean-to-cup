@@ -1,0 +1,39 @@
+{
+  "prompt": "robedwards@workspace:~$ ",
+  "steps": [
+    {
+      "type": "comment",
+      "text": "# Let's validate that our newly added brew:sync command is registered under agy 2.0!",
+      "delay": 1.0,
+      "speed": 0.03
+    },
+    {
+      "type": "command",
+      "text": "agy plugin validate .",
+      "delay": 2.0
+    },
+    {
+      "type": "comment",
+      "text": "# Excellent! 21 commands successfully processed.",
+      "delay": 1.0,
+      "speed": 0.03
+    },
+    {
+      "type": "comment",
+      "text": "# Now let's execute our plan parser in dry-run mode to verify topological sorting!",
+      "delay": 1.0,
+      "speed": 0.03
+    },
+    {
+      "type": "command",
+      "text": "agy brew:sync --plan plans/feature/20260618-sync-automation/05_PLAN.md --dry-run",
+      "delay": 2.0
+    },
+    {
+      "type": "comment",
+      "text": "# Superb! Kahn's algorithm successfully sorted our DAG from Step 1.A down to Step 3.A.",
+      "delay": 1.0,
+      "speed": 0.03
+    }
+  ]
+}
