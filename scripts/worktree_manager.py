@@ -230,11 +230,11 @@ def action_clean():
         # Check .worktrees subdirectory
         cleaned_count = 0
         if os.path.exists(WORKTREES_DIR):
+            worktree_list = run_git_cmd(["git", "worktree", "list"])
             for item in os.listdir(WORKTREES_DIR):
                 item_path = os.path.join(WORKTREES_DIR, item)
                 if os.path.isdir(item_path):
                     # Check if git recognizes this worktree path
-                    worktree_list = run_git_cmd(["git", "worktree", "list"])
                     if item_path not in worktree_list:
                         print(f"[*] Found orphaned worktree folder: {item_path}. Force removing...")
                         import shutil
