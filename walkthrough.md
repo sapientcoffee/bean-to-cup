@@ -116,3 +116,34 @@ Plugin unregistered successfully in agy!
 ```
 
 
+
+
+## 🚀 Phase 2 Migration: Legacy Commands to Skills (June 2026)
+
+In June 2026, we completed the full migration of the remaining 10 legacy custom commands into native, self-contained Markdown Skills under Antigravity 2.0. This eliminates the double-indirection TOML wrappers and resolves registry loading overhead.
+
+### 1. Verification of Clean Schema Compilation
+Running `agy plugin validate .` now registers the entire workspace with exactly 0 active legacy commands and 20 native, self-contained skills:
+
+```text
+  [ok]    .
+  ✔ skills      : 20 processed
+  ✔ agents      : 8 processed
+  - commands    : skipped (not found)
+  - mcpServers  : skipped (not found)
+  ✔ hooks       : 1 processed
+```
+
+### 2. Consolidated Skills List
+All 9 remaining active commands have been successfully refactored into the following self-contained folders inside `skills/`:
+*   `/feature` -> `skills/feature/SKILL.md` (Consolidated)
+*   `/research` -> `skills/research/SKILL.md` (Consolidated)
+*   `/brew:record` -> `skills/brew-record/SKILL.md` (Renamed & Consolidated recording parameters)
+*   `/brew:archive` -> `skills/brew-archive/SKILL.md` (New native skill)
+*   `/brew:sync` -> `skills/brew-sync/SKILL.md` (New native skill)
+*   `/brew:worktree` -> `skills/brew-worktree/SKILL.md` (New native skill)
+*   `/dev` -> `skills/dev/SKILL.md` (New native skill)
+*   `/build:production` -> `skills/build-production/SKILL.md` (New native skill)
+*   `/test:api` -> `skills/test-api/SKILL.md` (New native skill)
+
+The obsolete bootstrapper `brew:init` has been successfully moved to `holding-pen/commands/brew:init.toml` to clean up the workspace. All changes are committed and validated.
