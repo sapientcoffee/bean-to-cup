@@ -23,17 +23,22 @@ If your output contains any of the following, **YOU HAVE FAILED**:
 - **Verification:** Before implementing functional logic, ensure all required Data Models, API Contracts, and Type Interfaces are physically present and match the Spec.
 - **Lock-in:** Do not deviate from the agreed-upon interfaces in `03_SPEC.md` without triggering a re-design phase.
 
-### 2. The Resilient Implementation Loop
-For every task in the plan, follow this loop:
+### 2. Isolated & Parallel Subagent Implementation
+- **Isolated Subagents:** For each task/slice in the implementation plan, you **MUST** spawn a separate, dedicated subagent to execute it. Never implement multiple distinct tasks in a single agent session.
+- **Parallel Swarm:** If independent tasks are marked as parallelizable with no mutual dependencies, spawn and run their subagents concurrently in parallel.
+- **Serial execution:** Tasks with dependencies or marked as serial must wait for their dependencies to finish and pass verification.
+
+### 3. The Resilient Implementation Loop (Per Subagent)
+For each task/slice, the spawned subagent must follow this loop:
 
 1. **TEST:** Write the xUnit test first (Red phase).
 2. **IMPLEMENT:** Write the FULL C# code (Green phase).
 3. **VERIFY:** Run `dotnet test`.
 4. **RETRY/ROLLBACK POLICY:**
-   - If tests fail, you have **3 attempts** to fix the implementation.
-   - If it still fails after 3 attempts, you MUST **ABORT**.
+   - If tests fail, the subagent has **3 attempts** to fix the implementation.
+   - If it still fails after 3 attempts, the subagent MUST **ABORT**.
    - **Rollback:** Execute `git restore .` to revert the workspace to the last clean state.
-   - **Escalate:** Inform the Orchestrator that the plan is blocked or flawed and requires a re-evaluation of `04_PLAN.md`.
+   - **Escalate:** Inform the Orchestrator that the task is blocked or flawed and requires a re-evaluation.
 
 ### 3. Architectural Standards
 *   **Pattern:** **MediatR** for all flow control.

@@ -44,21 +44,37 @@ Transform the PRD and Extraction Report into a detailed Technical Specification.
 
 ### 2. Sprint Planning: The Task List (`05_PLAN.md`)
 Create a detailed, micro-step task checklist that maps directly to the Spec's verification plan and architecture.
+*   **Dependency & Parallelism Analysis:**
+    - You MUST analyze the task graph to identify which tasks have mutual dependencies (and must run serially) and which are independent (and can run in parallel).
+    - Provide a clear dependency tree (using Mermaid flowchart if helpful) explaining the execution constraints.
+    - Categorize tasks into concurrent execution groups.
+*   **Explicit Labeling:** Every task/slice in the checklist MUST be clearly prefixed with `[Serial]` or `[Parallel]`.
+
 ```markdown
 # Implementation Plan: [Name]
 
+## 📋 Executive Summary & Parallelism Strategy
+- **Total Slices:** [Count]
+- **Parallel Slices:** [Count]
+- **Serial Bottlenecks:** [Description of key serial constraints]
+
+## 🔗 Dependency & Parallelism Analysis
+[Explain which tasks depend on other tasks. Map out concurrent execution groups. Use a Mermaid flowchart to visualize the dependencies.]
+
 ## 📋 Micro-Step Checklist
-- [ ] Phase 1: [Phase Name]
-  - [ ] Step 1.A: [Detailed Name]
-  - [ ] Step 1.B: [Detailed Name]
+- [ ] Phase 1: [Phase Name] - [Serial / Parallel]
+  - [ ] Step 1.A: [Detailed Name] - [Serial / Parallel] (Depends on: None)
+  - [ ] Step 1.B: [Detailed Name] - [Serial / Parallel] (Depends on: 1.A)
 
 ## 📝 Step-by-Step Implementation Details
 ### Phase [X]: [Name]
 #### Step [X].A (The Verification Harness):
+*   *Execution Mode:* [Serial / Parallel]
 *   *Target File:* `test/Path/To/Test.ext`
 *   *Verification:* Explicit assertions and tests to write FIRST (Red).
 
 #### Step [X].B (The Core Change):
+*   *Execution Mode:* [Serial / Parallel]
 *   *Target File:* `src/Path/To/File.ext`
 *   *Instructions:* Exact instructions for the implementation engine (logic, typing).
 *   *Verification:* Exact command to run (e.g., `dotnet test ...`).
