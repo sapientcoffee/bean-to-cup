@@ -127,11 +127,8 @@ def action_create(task_id, slug):
             print(f"[-] Error: Worktree mount point '{worktree_path}' already exists.")
             sys.exit(1)
             
-        # Create branch
-        run_git_cmd(["git", "branch", branch_name])
-        
-        # Add git worktree
-        run_git_cmd(["git", "worktree", "add", worktree_path, branch_name])
+        # Add git worktree and force-create/reset the branch to ensure a clean state
+        run_git_cmd(["git", "worktree", "add", "-B", branch_name, worktree_path])
         
         # Bootstrap dependencies inside the worktree
         run_bootstrap_restore(worktree_path)
