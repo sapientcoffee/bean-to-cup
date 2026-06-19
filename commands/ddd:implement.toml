@@ -23,13 +23,17 @@ If your output contains any of the following, **YOU HAVE FAILED**:
 - **Verification:** Before implementing functional logic, ensure all required Data Models, API Contracts, and Type Interfaces are physically present and match the Spec.
 - **Lock-in:** Do not deviate from the agreed-upon interfaces in `03_SPEC.md` without triggering a re-design phase.
 
-### 2. Isolated & Parallel Subagent Implementation
+### 2. Isolated & Parallel Subagent Implementation (Git Worktree Isolated Swarm)
 - **Isolated Subagents:** For each task/slice in the implementation plan, you **MUST** spawn a separate, dedicated subagent to execute it. Never implement multiple distinct tasks in a single agent session.
-- **Parallel Swarm:** If independent tasks are marked as parallelizable with no mutual dependencies, spawn and run their subagents concurrently in parallel.
+- **Git Worktree Isolation:** Before spawning each subagent, the Orchestrator must call the worktree manager:
+  `agy brew:worktree --action create --task <id> --slug <slug>`
+  This creates an isolated branch `task/<id>-<slug>` and mounts a separate worktree under `.worktrees/task-<id>/`.
+- **Target Cwd:** The spawned subagent must operate strictly within its dedicated worktree path: `.worktrees/task-<id>/`. All its tool executions and commands must use this directory as their working directory (`Cwd`).
+- **Parallel Swarm:** If independent tasks are marked as parallelizable with no mutual dependencies, spawn and run their subagents concurrently in parallel within their respective worktree paths.
 - **Serial execution:** Tasks with dependencies or marked as serial must wait for their dependencies to finish and pass verification.
 
-### 3. The Resilient Implementation Loop (Per Subagent)
-For each task/slice, the spawned subagent must follow this loop:
+### 3. The Resilient Implementation Loop (Per Isolated Subagent)
+For each task/slice, the spawned subagent must follow this loop within its dedicated worktree:
 
 1. **TEST:** Write the xUnit test first (Red phase).
 2. **IMPLEMENT:** Write the FULL C# code (Green phase).
@@ -37,10 +41,13 @@ For each task/slice, the spawned subagent must follow this loop:
 4. **RETRY/ROLLBACK POLICY:**
    - If tests fail, the subagent has **3 attempts** to fix the implementation.
    - If it still fails after 3 attempts, the subagent MUST **ABORT**.
-   - **Rollback:** Execute `git restore .` to revert the workspace to the last clean state.
-   - **Escalate:** Inform the Orchestrator that the task is blocked or flawed and requires a re-evaluation.
+   - **Isolated Rollback:** Execute `git restore .` inside the worktree path to revert the isolated workspace state without impacting any other parallel subagents.
+   - **Escalate:** Inform the Orchestrator that the task has failed or is blocked and requires re-evaluation.
+5. **INTEGRATE (Success):** Upon successful verification, the Orchestrator integrates the changes back into the main repository by calling:
+   `agy brew:worktree --action merge --task <id>`
+   This commits changes, merges the isolate branch into the main branch, prunes the worktree, and deletes the local branch.
 
-### 3. Architectural Standards
+### 4. Architectural Standards
 *   **Pattern:** **MediatR** for all flow control.
 *   **Persistence:** **EF Core Code-First**. No stubs; implement actual EF Core queries.
 *   **Syntax:** C# 14, Primary Constructors, File-scoped namespaces.
