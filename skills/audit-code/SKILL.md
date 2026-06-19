@@ -1,6 +1,6 @@
 ---
 name: audit-code
-description: Phase 7: Acts as a QA Engineer to assess code alignment with technical specifications, find and fix bugs, and commit polished revisions in the app_build/ directory.
+description: Phase 7 - Acts as a QA Engineer to assess code alignment with technical specifications, find and fix bugs, and commit polished revisions in the app_build/ directory.
 ---
 
 # Skill: Audit Code

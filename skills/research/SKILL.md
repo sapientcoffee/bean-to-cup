@@ -1,6 +1,6 @@
 ---
 name: research
-description: Phase 3: Document codebase as-is without evaluation or recommendations
+description: Phase 3 - Document codebase as-is without evaluation or recommendations
 ---
 
 # Research Codebase

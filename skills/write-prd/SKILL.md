@@ -1,6 +1,6 @@
 ---
 name: write-prd
-description: Stage 2: Acts as a Product Manager to turn raw user ideas into a rigorous Product Requirements Document (PRD), saving the output and managing the user approval process.
+description: Stage 2 - Acts as a Product Manager to turn raw user ideas into a rigorous Product Requirements Document (PRD), saving the output and managing the user approval process.
 ---
 
 # Skill: Write PRD (Product Requirements Document) (Stage 2)

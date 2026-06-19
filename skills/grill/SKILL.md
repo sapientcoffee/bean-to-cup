@@ -1,6 +1,6 @@
 ---
 name: grill
-description: Stage 1: A relentless Socratic interview to sharpen a plan or design, which also creates docs (ADR's and glossary) as we go.
+description: Stage 1 - A relentless Socratic interview to sharpen a plan or design, which also creates docs (ADR's and glossary) as we go.
 ---
 
 # Skill: Grill (Stage 1)

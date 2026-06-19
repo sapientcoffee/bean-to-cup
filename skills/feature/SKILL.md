@@ -1,6 +1,6 @@
 ---
 name: feature
-description: Stage 2: Initialize a new feature development workflow (Discovery & Validation)
+description: Stage 2 - Initialize a new feature development workflow (Discovery & Validation)
 ---
 
 # Skill: Feature Discovery & Validation (Stage 2)

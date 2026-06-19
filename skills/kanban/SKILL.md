@@ -1,6 +1,6 @@
 ---
 name: kanban
-description: "Stage 7: Generates an interactive Kanban board (Markdown & HTML) and Mermaid flow to visualize and track the status of implementation slices."
+description: "Stage 7 - Generates an interactive Kanban board (Markdown & HTML) and Mermaid flow to visualize and track the status of implementation slices."
 ---
 
 # Skill: Kanban & Implementation Tracker (Stage 7)
