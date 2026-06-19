@@ -38,19 +38,6 @@
           }
         ]
       }
-    ],
-    "AfterAgent": [
-      {
-        "matcher": ".*",
-        "hooks": [
-          {
-            "name": "implementation-loop",
-            "type": "command",
-            "command": "${extensionPath}/hooks/stop-loop.sh",
-            "description": "The Ralph infinite loop mechanism"
-          }
-        ]
-      }
     ]
   }
 }

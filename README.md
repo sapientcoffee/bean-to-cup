@@ -64,90 +64,148 @@ The extension follows a rigorous 9-phase protocol to move from initial idea to a
 
 ```mermaid
 flowchart TD
-    %% Define Google Colors for Sketchnote Style
+    %% Style Classes Definition
     classDef default fill:#f9f9f9,stroke:#333,stroke-width:2px,color:#333;
-    classDef phase fill:#ffffff,stroke:#4285F4,stroke-width:2px,color:#333;
-    classDef human fill:#ffffff,stroke:#EA4335,stroke-width:2px,color:#333,stroke-dasharray: 5 5;
-    classDef agent fill:#ffffff,stroke:#34A853,stroke-width:2px,color:#333;
-    classDef artifact fill:#ffffff,stroke:#FBBC05,stroke-width:2px,color:#333;
-    classDef orchestrator fill:#ffffff,stroke:#4285F4,stroke-width:3px,color:#333;
+    classDef stage fill:#ffffff,stroke:#4285F4,stroke-width:2.5px,color:#333,font-weight:bold;
+    classDef user fill:#eef2ff,stroke:#6366f1,stroke-width:2px,color:#312e81,font-weight:bold;
+    classDef component fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#14532d;
+    classDef artifact fill:#fffbeb,stroke:#d97706,stroke-width:2px,color:#78350f,font-style:italic;
+    classDef gate fill:#fef2f2,stroke:#dc2626,stroke-width:2.5px,color:#991b1b,font-weight:bold;
 
-    subgraph "Stage 0: Product Discovery (Optional)"
-        P0[ideator: Stage 0 Discovery]:::agent
-        A0[\00_IDEATION.md\]:::artifact
-        P0 --> A0
-    end
-
-    Start_Raw((Start: Raw Idea)) --> P0
-    A0 --> P1
-    Start((Start: /feature)) --> P1
-
-    subgraph "Stage 1: Socratic Alignment"
-        P1[Orchestration Engine: Chat & Clarify]:::orchestrator
-        H1{Human Approval}:::human
-        A1_Glossary[\01_GLOSSARY.md\]:::artifact
-        P1 --> H1
-        H1 -- Approve --> A1_Glossary
-    end
-
-    subgraph "Stage 2: Product Requirements"
-        A1_Glossary --> P2[Orchestration Engine: PRD Generation]:::orchestrator
-        A1[\02_PRD.md\]:::artifact
-        P2 --> A1
-    end
-
-    subgraph "Stage 3: Context Extraction"
-        A1 --> P3[/Dispatch Specialized Engines\]:::agent
-        P3_1(Context Mapping)
-        P3_2(Codebase Analysis)
-        P3_3(Pattern Finder)
-        P3 --> P3_1 & P3_2 & P3_3
-        P3_1 & P3_2 & P3_3 --> A2[\03_EXTRACTION.md\]:::artifact
-    end
-
-    subgraph "Stage 4: Technical Specification"
-        A1 & A2 --> P4[/Dispatch @architect\]:::agent
-        A3[\04_SPEC.md\]:::artifact
-        P4 --> A3
-    end
-
-    subgraph "Stage 5: Execution Planning"
-        A3 --> P5[/Dispatch @architect\]:::agent
-        A4[\05_PLAN.md\]:::artifact
-        P5 --> A4
-    end
-
-    subgraph "Stage 6: Human Review Gate"
-        A4 --> H2{Human Approval}:::human
-    end
-
-    subgraph "Stage 7: Test-Driven Implementation"
-        H2 -- Approve --> L_Start((Start Loop))
-        L_Start --> P7_1[/Dispatch @engineer\]:::agent
-        P7_1 --> P7_2[/Dispatch @auditor\]:::agent
+    %% STAGE 0: PRODUCT DISCOVERY
+    subgraph S0 ["Stage 0: Product Discovery (Optional)"]
+        S0_Title["Stage 0: Discovery"]:::stage
+        U0["User Types:<br>Brainstorm / request"]:::user
+        I0["Input:<br>Initial Prompt"]:::default
+        C0["Skill: ideator"]:::component
+        A0["Output:<br>00_IDEATION.md"]:::artifact
         
-        P7_2 -- "Fail (Code)" --> P7_1
-        P7_2 -- "Fail (Plan)" --> P5
-        P7_2 -- "Pass" --> P7_3[Orchestration Engine: Update Plan]:::orchestrator
-        
-        H3{Human Approval: Commit?}:::human
-        P7_3 --> H3
-        H3 -- Approve --> P7_4[(Git Commit)]
-        
-        P7_4 -- "More Tasks" --> L_Start
-        P7_4 -- "All Done" --> A5[\07_VERIFICATION.md\]:::artifact
+        U0 --> C0
+        I0 --> C0
+        C0 --> A0
     end
 
-    subgraph "Stage 8: Automated Walkthrough"
-        A5 --> P8[/Dispatch @browser_agent\]:::agent
-        A6[\08_WALKTHROUGH.md\]:::artifact
-        P8 --> A6
+    %% STAGE 1: SOCRATIC ALIGNMENT
+    subgraph S1 ["Stage 1: Socratic Alignment"]
+        S1_Title["Stage 1: Socratic Alignment"]:::stage
+        U1["User Types:<br><b>/feature [goal]</b><br>+ Answers Socratic Qs"]:::user
+        I1["Input:<br>00_IDEATION.md (Optional)"]:::artifact
+        C1["Skills: grill, grilling,<br>domain-modeling"]:::component
+        A1["Output:<br>01_GLOSSARY.md<br>(Glossary + ADRs)"]:::artifact
+        
+        A0 -.-> I1
+        U1 --> C1
+        I1 --> C1
+        C1 --> A1
     end
 
-    subgraph "Stage 9: PR Delivery & Maintenance"
-        A6 --> P9[Orchestration Engine: Push & PR]:::orchestrator
-        End((Pull Request Created))
-        P9 --> End
+    %% STAGE 2: PRODUCT REQUIREMENTS
+    subgraph S2 ["Stage 2: Product Requirements"]
+        S2_Title["Stage 2: Product Requirements"]:::stage
+        U2["User Action:<br>Reviews PRD in chat UI"]:::user
+        I2["Input:<br>01_GLOSSARY.md"]:::artifact
+        C2["Skill: write-prd"]:::component
+        A2["Output:<br>02_PRD.md<br>(Non-goals & KPIs)"]:::artifact
+        
+        A1 --> I2
+        U2 -.-> C2
+        I2 --> C2
+        C2 --> A2
+    end
+
+    %% STAGE 3: CONTEXT EXTRACTION
+    subgraph S3 ["Stage 3: Context Extraction"]
+        S3_Title["Stage 3: Context Extraction"]:::stage
+        U3["User Action:<br>Approves PRD<br>(or types <b>/research [query]</b>)"]:::user
+        I3["Input:<br>02_PRD.md / query"]:::artifact
+        C3["Command: <b>/research</b><br>➔ Skill: research<br>➔ Subagents: @scout,<br>@context-mapping,<br>@codebase-analyzer,<br>@pattern-recognition"]:::component
+        A3["Output:<br>03_EXTRACTION.md<br>(Factual Code Map)"]:::artifact
+        
+        A2 --> I3
+        U3 --> C3
+        I3 --> C3
+        C3 --> A3
+    end
+
+    %% STAGE 4 & 5: TECH SPEC & EXECUTION PLAN
+    subgraph S45 ["Stages 4 & 5: Spec & Plan"]
+        S45_Title["Stages 4 & 5: Spec & Plan"]:::stage
+        U45["User Action:<br>None (Automated)"]:::user
+        I45_1["Input 1:<br>02_PRD.md"]:::artifact
+        I45_2["Input 2:<br>03_EXTRACTION.md"]:::artifact
+        C45["Subagent: @architect<br>(system-design.md)"]:::component
+        A4["Output:<br>04_SPEC.md (Contracts)"]:::artifact
+        A5["Output:<br>05_PLAN.md (Checklist)"]:::artifact
+        
+        A2 -.-> I45_1
+        A3 --> I45_2
+        I45_1 --> C45
+        I45_2 --> C45
+        C45 --> A4
+        C45 --> A5
+    end
+
+    %% STAGE 6: HUMAN GATE
+    subgraph S6 ["Stage 6: Human Review Gate"]
+        S6_Title["Stage 6: Human Gate"]:::gate
+        U6["User Action:<br>Reviews 04_SPEC contracts<br>and types <b>'approve'</b>"]:::user
+        I6_1["Input 1:<br>04_SPEC.md"]:::artifact
+        I6_2["Input 2:<br>05_PLAN.md"]:::artifact
+        
+        A4 --> I6_1
+        A5 --> I6_2
+        I6_1 --> U6
+        I6_2 --> U6
+    end
+
+    %% STAGE 7: TEST-DRIVEN IMPLEMENTATION
+    subgraph S7 ["Stage 7: Test-Driven Implementation (TDD)"]
+        S7_Title["Stage 7: TDD Loop"]:::stage
+        U7["User Action:<br>Approves milestone commits<br>(Types 'yes' / 'approve')"]:::user
+        I7_1["Input 1:<br>04_SPEC.md (Contracts)"]:::artifact
+        I7_2["Input 2:<br>05_PLAN.md (Checklist)"]:::artifact
+        C7["Subagents: @engineer, @auditor,<br>@code-review<br>➔ Skills: generate-code, audit-code,<br>kanban, deploy-app<br>➔ Hook: lint-on-change.sh"]:::component
+        A7["Outputs:<br>- Working verified code<br>- 07_VERIFICATION.md (Logs)"]:::artifact
+        
+        U6 -->|Approved| C7
+        A4 -.-> I7_1
+        A5 -.-> I7_2
+        I7_1 --> C7
+        I7_2 --> C7
+        U7 -.-> C7
+        C7 --> A7
+    end
+
+    %% STAGE 8: AUTOMATED WALKTHROUGH
+    subgraph S8 ["Stage 8: Automated Walkthrough"]
+        S8_Title["Stage 8: Walkthrough"]:::stage
+        U8["User Types:<br><b>/brew:record</b>"]:::user
+        I8_1["Input 1:<br>07_VERIFICATION.md"]:::artifact
+        I8_2["Input 2:<br>walkthrough_scenario.json"]:::default
+        C8["Command: <b>/brew:record</b><br>➔ Skill: asciinema"]:::component
+        A8["Output:<br>08_WALKTHROUGH.md<br>(Terminal playbacks / GIF)"]:::artifact
+        
+        A7 --> I8_1
+        U8 --> C8
+        I8_1 --> C8
+        I8_2 --> C8
+        C8 --> A8
+    end
+
+    %% STAGE 9: PR DELIVERY & MAINTENANCE
+    subgraph S9 ["Stage 9: PR Delivery & Maintenance"]
+        S9_Title["Stage 9: Delivery & PR"]:::stage
+        U9["User Action:<br>Completes PR review<br>Optionally types:<br><b>/brew:archive</b>, <b>/brew:sync</b>,<br><b>/brew:worktree</b>, <b>/build:production</b>"]:::user
+        I9_1["Input 1:<br>Working code"]:::artifact
+        I9_2["Input 2:<br>08_WALKTHROUGH.md"]:::artifact
+        C9["Skill: github-workflow<br>(creates PR via <b>gh</b> CLI)"]:::component
+        A9["Output:<br>Active GitHub PR<br>& clean workspace"]:::artifact
+        
+        A8 --> I9_2
+        U9 --> C9
+        I9_1 --> C9
+        I9_2 --> C9
+        C9 --> A9
     end
 ```
 
@@ -163,47 +221,54 @@ The heart of the extension is the `bean-to-cup.md` file. It acts as the **Head B
 
 ## 🤖 The Brewing Swarm (Agents)
 
-The Bean-to-Cup plugin manages an autonomous network of **13 specialized sub-agents**. You can invoke them in your chat prompts using `@<name>`. For a detailed description of each agent's config file and target SDLC stage, see the [Swarm & Command Registry](docs/swarm-registry.md#-2-specialized-agents--swarm-13-total).
+The Bean-to-Cup plugin manages an autonomous network of **8 active specialized sub-agents** in the `agents/` directory (plus **5 archived agents** in the holding pen). You can invoke active agents in your chat prompts using `@<name>`. For a detailed description of each agent's config file and target SDLC stage, see the [Swarm & Command Registry](docs/swarm-registry.md#-2-specialized-agents--swarm-13-total).
 
 | Agent | Role | Expertise & Focus | Status |
 | :--- | :--- | :--- | :--- |
-| **`@architect`** | The Planner | Strategic design patterns, `04_SPEC.md` specs, and `05_PLAN.md` roadmaps. | **CORE** |
-| **`@engineer`** | The Builder | TDD implementation, Red-Green-Refactor, and production logic. | **CORE** |
-| **`@auditor`** | The Gatekeeper | Spec validation, regression checking, and QA cupping. | **CORE** |
-| **`@scout`** | The Investigator | Context-isolated codebase queries and raw context extraction. | **CORE** |
-| **`@browser_agent`** | The Browser | Automated browser walkthroughs and visual UI/UX verification. | **CORE** |
-| **`@codebase-analyzer`** | The Cartographer | Deep structural mapping and component tracing. | **CORE** |
-| **`@context-mapping`** | The Navigator | Entrypoint mapping and rapid workspace discovery. | **CORE** |
-| **`@pattern-recognition`** | The Librarian | Locating and mirroring existing architectural code patterns. | **CORE** |
-| **`@security-auditor`** | The Planner Sentry | Secure architecture specifications and threat remediation plans. | **CORE** |
-| **`@security-remediator`** | The Builder Sentry | Implementing isolated patches and correcting security vulnerabilities. | **CORE** |
-| **`@vulnerability-scanner`** | The Scanner Sentry | Running static analysis scans to detect exposed secrets or flaws. | **CORE** |
-| **`@code-review`** | The Critic | Line-by-line quality reviews and static code smells analysis. | **CORE** |
-| **`@msbuild`** | The Compiler | MSBuild/compiler feedback compressor for rapid .NET builds. | **CORE** |
-| **`@pipeline-stages`** | The CI/CD | automated release validation and delivery pipeline stages. | **CORE** |
+| **`@architect`** | The Planner | Strategic design patterns, `04_SPEC.md` specs, and `05_PLAN.md` roadmaps. | **CORE (Active)** |
+| **`@engineer`** | The Builder | TDD implementation, Red-Green-Refactor, and production logic. | **CORE (Active)** |
+| **`@auditor`** | The Gatekeeper | Spec validation, regression checking, and QA cupping. | **CORE (Active)** |
+| **`@scout`** | The Investigator | Context-isolated codebase queries and raw context extraction. | **CORE (Active)** |
+| **`@browser_agent`** | The Browser | Automated browser walkthroughs and visual UI/UX verification. | **CORE (Active)** |
+| **`@codebase-analyzer`** | The Cartographer | Deep structural mapping and component tracing. | **CORE (Active)** |
+| **`@context-mapping`** | The Navigator | Entrypoint mapping and rapid workspace discovery. | **CORE (Active)** |
+| **`@pattern-recognition`** | The Librarian | Locating and mirroring existing architectural code patterns. | **CORE (Active)** |
+| **`@code-review`** | The Critic | Line-by-line quality reviews and static code smells analysis. | **CORE (Active)** |
+
+> [!NOTE]
+> **Archived Sentry & Tooling Agents (Holding Pen):**
+> The following agents have been safely moved to `holding-pen/agents/` to keep the active workspace clean and efficient:
+> - `@security-auditor`, `@security-remediator`, `@vulnerability-scanner` (Sentry group)
+> - `@msbuild` (Compiler)
+> - `@pipeline-stages` (CI/CD)
 
 ---
 
 ## ⌨️ Custom Commands
 
-The plugin implements **19 Custom Commands** mapped as flat namespace TOML declarations. For a comprehensive overview of every specialized command and its stage alignment, see the [Swarm & Command Registry](docs/swarm-registry.md#-1-custom-commands-19-total).
+The plugin implements **10 active Custom Commands** mapped as flat namespace TOML declarations in the `commands/` directory.
 
 ### Core Lifecycle
-*   **`/feature <goal>`** [CORE]: Initiates the 9-phase protocol starting with an AI-Ready PRD.
-*   **`/research <query>`** [CORE]: Spawns parallel agents for deep, factual technical extraction.
-*   **`/loop:start`** [CORE]: Starts an infinite, self-correcting development loop (Ralph).
+*   **`/feature <goal>`** [CORE]: Initiates the 9-phase protocol starting with an AI-Ready PRD and versioned workspace setup.
+*   **`/research <query>`** [CORE]: Spawns parallel agents for deep, factual context-isolated codebase extraction.
 
-### Workspace Management
+### Workspace Management & Testing
 *   **`/brew:init`** [CORE] *(Deprecated)*: Legacy command to bootstrap your project. This setup is now handled automatically.
 *   **`/brew:archive`** [CORE]: Clears away 'spent grounds' (completed tasks) to keep context clean.
-*   **`/dev <task>`** [CORE]: General-purpose development helper for quick tasks.
-*   **`/startcycle`** [CORE]: Logic for starting or resuming development cycles.
+*   **`/brew:record`** [CORE]: Launches terminal recording and playback scenario capture.
+*   **`/brew:sync`** [CORE]: Synchronizes active branch and plans with upstream repo states.
+*   **`/brew:worktree`** [CORE]: Manages clean, isolated branch checkouts for development.
+*   **`/dev <task>`** [CORE]: General-purpose development helper for quick, minor inline requests.
+*   **`/test:api`** [CORE]: Specialized endpoint testing and compliance checks.
+*   **`/build:production`** [CORE]: Packages, compiles, and builds production release artifacts.
 
-### Specialized Pipelines
-*   **`/sql:analyze`** [CORE]: Deep analysis of legacy stored procedures and schema.
-*   **`/ddd:*`** [CORE]: A 7-step pipeline (`logical`, `physical`, `plan`, `implement`, `review`, `fix`, `create-user-stories`) for SQL-to-DDD refactoring.
-*   **`/test:api`** [CORE]: Specialized API testing and validation pipeline.
-*   **`/build:production`** [CORE]: Production-ready build and packaging automation.
+> [!NOTE]
+> **Archived Pipeline & Loop Commands (Holding Pen):**
+> The following commands have been safely archived to the `holding-pen/commands/` directory to prevent workspace clutter:
+> - `/loop:start`, `/loop:cancel`, `/loop:help` (Legacy loop control)
+> - `/sql:analyze` (Legacy database schema extraction)
+> - `/ddd:*` commands: `/ddd:logical`, `/ddd:physical`, `/ddd:plan`, `/ddd:implement`, `/ddd:review`, `/ddd:fix`, `/ddd:create-user-stories` (Legacy refactoring pipeline)
+> - `/startcycle` (Legacy cycle manager)
 
 ---
 
