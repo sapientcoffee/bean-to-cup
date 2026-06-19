@@ -129,11 +129,11 @@ if [[ "$UPDATED_IN_PLACE" == "false" ]]; then
             echo -e "${BLUE}Syncing/copying local plugin '$PLUGIN_NAME' to $FINAL_TARGET...${NC}"
             mkdir -p "$FINAL_TARGET"
             if command -v rsync &>/dev/null; then
-                rsync -a --exclude='.git' --exclude='.plans' --exclude='.plan' --exclude='scratch' "$SOURCE_DIR/" "$FINAL_TARGET/"
+                rsync -a --exclude='.git' --exclude='.agents' --exclude='.plans' --exclude='.plan' --exclude='plans' --exclude='scratch' "$SOURCE_DIR/" "$FINAL_TARGET/"
             else
                 cp -R "$SOURCE_DIR"/. "$FINAL_TARGET/"
                 # Clean up if copy introduced them
-                rm -rf "$FINAL_TARGET/.git" "$FINAL_TARGET/.plans" "$FINAL_TARGET/.plan" "$FINAL_TARGET/scratch"
+                rm -rf "$FINAL_TARGET/.git" "$FINAL_TARGET/.agents" "$FINAL_TARGET/.plans" "$FINAL_TARGET/.plan" "$FINAL_TARGET/plans" "$FINAL_TARGET/scratch"
             fi
         fi
     fi

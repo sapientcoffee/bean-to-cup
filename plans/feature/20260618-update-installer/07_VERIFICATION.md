@@ -36,3 +36,17 @@ Since this is a bash script, standard functional unit testing frameworks are not
   * Log outputs matched perfectly.
   * `my_custom_config.txt` was verified to be intact and unaffected.
 - **Status:** PASS
+
+### TC4: Symlink/Recursive Loop Prevention and Skill Compilation
+- **Action:**
+  1. Add `.agents` and `plans` exclusions to copy blocks in `install.sh`.
+  2. Wipe out previous corrupted folders under `~/.gemini/skills/` and `~/.gemini/config/plugins/`.
+  3. Execute `./install.sh` to perform a clean copy install.
+- **Expected Output:**
+  * No file name too long errors or recursive copying loops.
+  * Successfully registers 13 skills, 13 agents, 19 commands, and 1 hook with `exit 0`.
+  * Verify that all 13 compiled skills (including `ideator`) are successfully created inside `~/.gemini/config/plugins/bean-to-cup/skills/`.
+- **Result:**
+  * Compiled successfully with no warnings/errors.
+  * All 13 skills compiled cleanly, and `ideator` is verified to be fully loaded and functioning.
+- **Status:** PASS

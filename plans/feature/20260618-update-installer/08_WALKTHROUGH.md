@@ -35,3 +35,39 @@ A mock file `my_custom_config.txt` created inside the destination directory befo
   -rw-r----- 1 robedwards primarygroup 80 Jun 18 16:38 /home/robedwards/workspace/bean-to-cup/.agents/skills/bean-to-cup/my_custom_config.txt
   ```
 This confirms that custom subagents, plan files, and configs inside the destination are completely safe during updates!
+
+### 4. Verification of Symlink Loop Prevention & Skill Compilation
+With `.agents` and `plans` directories explicitly excluded, we run `./install.sh` to copy files cleanly. Native registration via `agy plugin install` completes successfully with no "file name too long" errors:
+
+```
+Copying local plugin 'bean-to-cup' to /home/robedwards/.gemini/skills/bean-to-cup...
+Registering plugin natively with Antigravity CLI...
+  [ok]    bean-to-cup
+          ✔ skills      : 13 processed
+          ✔ agents      : 13 processed
+          ✔ commands    : 19 processed (converted to skills)
+          - mcpServers  : skipped (not found)
+          ✔ hooks       : 1 processed
+Plugin registered successfully in agy!
+```
+
+Checking the compiled output in `~/.gemini/config/plugins/bean-to-cup/skills/` confirms that `ideator` and all other plugin skills are successfully compiled and present:
+
+```
+$ ls -la ~/.gemini/config/plugins/bean-to-cup/skills/
+drwxr-x--- 15 robedwards primarygroup 4096 Jun 18 17:05 .
+drwxr-x--- 11 robedwards primarygroup 4096 Jun 18 17:05 ..
+drwxr-x---  2 robedwards primarygroup 4096 Jun 18 17:05 audit-code
+drwxr-x---  2 robedwards primarygroup 4096 Jun 18 17:05 chaos-mitigation
+drwxr-x---  2 robedwards primarygroup 4096 Jun 18 17:05 deploy-app
+drwxr-x---  2 robedwards primarygroup 4096 Jun 18 17:05 domain-modeling
+drwxr-x---  2 robedwards primarygroup 4096 Jun 18 17:05 feature
+drwxr-x---  2 robedwards primarygroup 4096 Jun 18 17:05 generate-code
+drwxr-x---  2 robedwards primarygroup 4096 Jun 18 17:05 github-workflow
+drwxr-x---  2 robedwards primarygroup 4096 Jun 18 17:05 grill
+drwxr-x---  2 robedwards primarygroup 4096 Jun 18 17:05 grilling
+drwxr-x---  2 robedwards primarygroup 4096 Jun 18 17:05 ideator
+drwxr-x---  2 robedwards primarygroup 4096 Jun 18 17:05 kanban
+drwxr-x---  2 robedwards primarygroup 4096 Jun 18 17:05 research
+drwxr-x---  2 robedwards primarygroup 4096 Jun 18 17:05 write-prd
+```
