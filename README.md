@@ -296,6 +296,20 @@ Each modular skill in the `skills/` directory complies with the open **Agent Ski
 
 ---
 
+## 🧪 Testing & Verification
+
+Developing and maintaining an autonomous swarm requires a resilient testing protocol. We have established a comprehensive **5-layer isolation and behavioral testing suite** that operates entirely locally and independently of the Agent Development Kit (ADK).
+
+*   **Isolated Testing Strategy**: See our detailed **[Isolated Testing & Verification Strategy Guide](docs/testing_and_verification.md)** to learn how we isolate workspace states, mock stage inputs, execute deterministic validation gates, and run pseudo-terminal simulations.
+*   **End-to-End Audit Evidence**: View our live **[End-to-End Testing & Evaluation Report](docs/test_report.md)** which showcases real test execution traces, negative/positive gating checks, and a full behavior audit of over 700 step logs.
+
+### Why this is set up:
+*   **Deterministic Safety (Option 1)**: Traditional unit testing doesn't catch AI-specific failures like bracket placeholder leaks (`[TODO]`), missing licenses, or broken markdown structures.
+*   **Behavioral Assurance (Option 2)**: Programmatic transcript checking ensures subagents (such as `@architect` or `@engineer`) are spawned with exactly the correct arguments and that tools execute error-free.
+*   **Extreme Velocity**: Input mocking allows testing late stages (like Stage 7 TDD or Stage 8 Walkthrough) in a lightweight sandbox (`scratch/sandbox-app`) in seconds, without having to run through Stages 0 to 6 first.
+
+---
+
 ## 🚀 Installation & Quickstart
 
 This repository is **multi-compatible**: it functions seamlessly as a modern **Antigravity Plugin**, a standard **Agent Skills Package** via the `skills` CLI, and a legacy **Gemini CLI Extension**. 
