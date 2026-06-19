@@ -16,6 +16,7 @@
 import argparse
 import os
 import platform
+import shlex
 import shutil
 import subprocess
 import sys
@@ -59,12 +60,17 @@ def download_agg():
         )
         with urllib.request.urlopen(req) as response:
             with open(agg_path, "wb") as out_file:
-                out_file.write(response.read())
+                shutil.copyfileobj(response, out_file)
         os.chmod(agg_path, 0o755)
         print(f"[+] AGG static binary successfully saved to {agg_path}")
         return agg_path
     except Exception as e:
         print(f"[-] Failed to download AGG binary: {e}")
+        if os.path.exists(agg_path):
+            try:
+                os.remove(agg_path)
+            except Exception:
+                pass
         return None
 
 def main():
@@ -124,14 +130,13 @@ def main():
             # Ensure no stale TMUX session exists with this name before starting
             subprocess.run([tmux_bin, "kill-session", "-t", session_name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             
-            # Formulate tmux bash command that runs asciinema recording with forced 256 colors
-            # We use absolute paths to ensure it works inside the tmux session
-            recording_cmd = f"TERM=xterm-256color {asciinema_bin} rec -c 'python3 {playback_script} {scenario_abs}' {cast_path}"
+            # Safely escape paths for the shell command executed by asciinema's -c flag
+            playback_cmd = f"python3 {shlex.quote(playback_script)} {shlex.quote(scenario_abs)}"
             
-            # Start detached tmux session with standard 100x30 resolution
+            # Start detached tmux session with standard 100x30 resolution, setting TERM directly
             tmux_cmd = [
                 tmux_bin, "new-session", "-d", "-s", session_name, "-x", "100", "-y", "30",
-                f"bash -c \"{recording_cmd}\""
+                "env", "TERM=xterm-256color", asciinema_bin, "rec", "--overwrite", "-c", playback_cmd, cast_path
             ]
             
             subprocess.run(tmux_cmd, check=True)
@@ -149,7 +154,7 @@ def main():
         else:
             print("[!] TMUX not found. Running fallback direct PTY recording (Window sizing will match host)...")
             recording_cmd = [
-                asciinema_bin, "rec", "-c", f"python3 {playback_script} {scenario_abs}", cast_path
+                asciinema_bin, "rec", "--overwrite", "-c", f"python3 {shlex.quote(playback_script)} {shlex.quote(scenario_abs)}", cast_path
             ]
             subprocess.run(recording_cmd, check=True)
     else:
