@@ -1,0 +1,23 @@
+{
+  "prompt": "agy ☕ ",
+  "steps": [
+    {
+      "type": "comment",
+      "text": "# Verifying the brand new asciinema recording command",
+      "delay": 0.5,
+      "speed": 0.02
+    },
+    {
+      "type": "command",
+      "text": "echo 'Hello from isolated TMUX recording!'",
+      "delay": 0.5,
+      "speed": 0.02
+    },
+    {
+      "type": "command",
+      "text": "pwd",
+      "delay": 0.5,
+      "speed": 0.02
+    }
+  ]
+}

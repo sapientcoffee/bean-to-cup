@@ -58,8 +58,19 @@ For each task and success condition:
 [If FAIL, provide explicit, actionable recommendations for the implementation engine.]
 ```
 
+### Phase 4: Walkthrough & Evidence Capture (`08_WALKTHROUGH.md`)
+When auditing terminal or CLI-based tools, always consider and activate the **`asciinema`** skill (`brew:record`) to capture technical walkthroughs:
+1.  **Formulate Automated Scenarios:** Construct a playback scenario file (`plans/feature/<brew-timestamp-slug>/walkthrough_scenario.json`) detailing commentary and commands to execute.
+2.  **Record Session:** Run the command:
+    ```bash
+    agy brew:record --scenario plans/feature/<brew-timestamp-slug>/walkthrough_scenario.json --output plans/feature/<brew-timestamp-slug>/walkthrough
+    ```
+3.  **Embed Evidence:** Convert the recording to `.gif` and embed it in `08_WALKTHROUGH.md` or `walkthrough.md` using relative repository-root paths *without* a leading slash (e.g., `plans/feature/timestamp/walkthrough.gif`).
+4.  **Dynamic UI Synchronization:** Mirror the updated document inside the chat UI's persistent artifacts directory under `/home/robedwards/.gemini/antigravity-cli/brain/<conversation-id>/08_walkthrough.md` as required by the Artifact Mirroring protocol.
+
 ## 🚫 CONSTRAINTS
 1.  **NO LENIENCY:** Rigorous verification. Rejection is mandatory for architectural drift.
 2.  **NO CODE WITHOUT TESTS:** Rejection is mandatory if new logic is not covered by tests.
 3.  **DOCUMENT FAILURE:** Always provide explicit reasoning for any failure.
 4.  **DO NOT COMMIT:** You are a verifier, not a committer.
+

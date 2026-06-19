@@ -31,6 +31,12 @@ Typing `@<agent_name>` in the interactive prompt swaps the agent's persona inlin
 ● ListDir(/home/robedwards/workspace/bean-to-cup/agents) (ctrl+o to expand)
 ```
 
+### 3. Parallel Implementation & Subagent Swarm Execution
+The system design and code implementation engines have been upgraded to support high-performance parallelism and isolated subagent execution:
+*   **Dependency-Aware Planning**: During the planning stage (Stage 5 / `05_PLAN.md`), the `@architect` analyzes task relationships and partitions slices into concurrent execution groups (e.g., pure domain aggregates or independent endpoints).
+*   **Isolated Subagents**: Each slice/task is assigned a dedicated, separate `@engineer` subagent. This guarantees clean context separation and avoids logical contamination or conflicting changes.
+*   **Concurrent Execution**: Slices with no mutual dependencies are executed concurrently in parallel, while serial bottlenecks wait sequentially.
+
 ---
 
 ## 🏗️ Swarm Architecture & Files

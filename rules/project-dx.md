@@ -12,7 +12,8 @@ Our goal is to build highly reliable, lightweight, and performant agent workflow
 
 ## 2. Walkthrough Validation
 *   **Testing Walkthroughs:** For any significant changes, always generate or update `walkthrough.md` to demonstrate proof of thorough manual testing, command validation, and successful registration.
-*   **Absolute vs. Relative Paths:** Ensure screenshot paths are relative to the repository root without a leading slash (e.g., `plans/feature/timestamp/image.png`) to render correctly in GitHub PRs.
+*   **Terminal Walkthroughs (Asciinema):** For terminal-based or CLI-based validation, always consider and activate the **`asciinema`** skill. Generate a playback scenario JSON file (`walkthrough_scenario.json`) and run `brew:record` to capture high-fidelity executions and automatically compile them to animated `.gif` and `.cast` files.
+*   **Asset Paths:** Ensure walkthrough screenshots and generated `.gif` files are stored inside the active plan directory and embedded in `08_WALKTHROUGH.md`, `walkthrough.md`, or pull requests using repository-root relative paths *WITHOUT* a leading slash (e.g., `plans/feature/timestamp/image.png` or `plans/feature/timestamp/walkthrough.gif`) to render correctly in GitHub PR descriptions.
 
 ## 3. GitHub Integration & CLI Tools
 *   **Prefer `gh`:** When creating pull requests, managing repository secrets, or running CI/CD triggers, always prefer using the native GitHub CLI (`gh`) over standard git commands.

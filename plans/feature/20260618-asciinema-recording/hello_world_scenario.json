@@ -1,0 +1,28 @@
+{
+  "prompt": "robedwards@workspace:~$ ",
+  "steps": [
+    {
+      "type": "comment",
+      "text": "# Let's launch the interactive agy subshell and say Hello World!",
+      "delay": 0.5,
+      "speed": 0.02
+    },
+    {
+      "type": "command",
+      "text": "agy --continue",
+      "inputs": [
+        {
+          "delay_before": 3.0,
+          "text": "hello world\n",
+          "speed": 0.05
+        },
+        {
+          "delay_before": 15.0,
+          "text": "/exit\n",
+          "speed": 0.05
+        }
+      ],
+      "delay": 1.0
+    }
+  ]
+}
