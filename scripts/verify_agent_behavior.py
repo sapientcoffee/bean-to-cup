@@ -57,12 +57,19 @@ def run_assertions(steps):
             if "invoke_subagent" in tool_name or tool_name == "default_api:invoke_subagent":
                 args = tc.get("args") or tc.get("arguments") or {}
                 subagents = args.get("Subagents", [])
-                for sub in subagents:
-                    invoked_subagents.append({
-                        "role": sub.get("Role"),
-                        "typeName": sub.get("TypeName"),
-                        "prompt": sub.get("Prompt")
-                    })
+                if isinstance(subagents, str):
+                    try:
+                        subagents = json.loads(subagents)
+                    except Exception:
+                        pass
+                if isinstance(subagents, list):
+                    for sub in subagents:
+                        if isinstance(sub, dict):
+                            invoked_subagents.append({
+                                "role": sub.get("Role"),
+                                "typeName": sub.get("TypeName"),
+                                "prompt": sub.get("Prompt")
+                            })
 
         # Check for error statuses in tool outputs or system responses
         if step.get("status") == "ERROR" or step.get("status") == "FAILED":
