@@ -81,6 +81,7 @@ def main():
             process = subprocess.Popen(
                 command_text,
                 shell=True,
+                stdin=slave,
                 stdout=slave,
                 stderr=slave,
                 close_fds=True,
@@ -88,16 +89,74 @@ def main():
             )
             os.close(slave)
 
-            # Stream stdout/stderr live as binary to preserve ANSI escape codes/colors
+            # Set master to non-blocking mode
+            import fcntl
+            fl = fcntl.fcntl(master, fcntl.F_GETFL)
+            fcntl.fcntl(master, fcntl.F_SETFL, fl | os.O_NONBLOCK)
+
+            inputs = step.get("inputs", [])
+            start_time = time.time()
+            input_idx = 0
+            last_input_time = start_time
+            inputs_finished_time = None
+
             while True:
+                # Check if process has terminated
+                if process.poll() is not None:
+                    # Read any remaining output
+                    while True:
+                        try:
+                            data = os.read(master, 1024)
+                            if not data:
+                                break
+                            sys.stdout.buffer.write(data)
+                            sys.stdout.buffer.flush()
+                        except OSError:
+                            break
+                    break
+
+                # Try to read from master (non-blocking)
                 try:
                     data = os.read(master, 1024)
+                    if data:
+                        sys.stdout.buffer.write(data)
+                        sys.stdout.buffer.flush()
                 except OSError:
-                    break
-                if not data:
-                    break
-                sys.stdout.buffer.write(data)
-                sys.stdout.buffer.flush()
+                    pass
+
+                # Check if we have input to send
+                if input_idx < len(inputs):
+                    current_input = inputs[input_idx]
+                    delay_before = float(current_input.get("delay_before", 1.0))
+                    text_to_send = current_input.get("text", "")
+                    speed = float(current_input.get("speed", 0.04))
+
+                    if time.time() - last_input_time >= delay_before:
+                        # Simulate typing this input directly into the PTY master!
+                        for char in text_to_send:
+                            os.write(master, char.encode('utf-8'))
+                            # Read any echoed back or output characters to display them immediately
+                            try:
+                                data = os.read(master, 1024)
+                                if data:
+                                    sys.stdout.buffer.write(data)
+                                    sys.stdout.buffer.flush()
+                            except OSError:
+                                pass
+                            time.sleep(speed)
+
+                        input_idx += 1
+                        last_input_time = time.time()
+                        if input_idx >= len(inputs):
+                            inputs_finished_time = time.time()
+
+                # If all inputs are finished, wait and terminate process
+                if inputs_finished_time is not None:
+                    wait_after_last = float(step.get("delay", 5.0))
+                    if time.time() - inputs_finished_time >= wait_after_last:
+                        process.terminate()
+
+                time.sleep(0.01) # Sleep a tiny bit to prevent 100% CPU spinning
 
             process.wait()
             os.close(master)

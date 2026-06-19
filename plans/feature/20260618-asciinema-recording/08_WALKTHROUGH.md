@@ -48,7 +48,7 @@ python3 scripts/record.py --scenario plans/feature/20260618-asciinema-recording/
 
 Here is the animated playback compiled entirely by our containerized recorder and GIF generator:
 
-![Walkthrough Demo](/plans/feature/20260618-asciinema-recording/test_walkthrough.gif)
+![Walkthrough Demo](plans/feature/20260618-asciinema-recording/test_walkthrough.gif)
 
 ---
 
@@ -63,7 +63,7 @@ python3 scripts/record.py --scenario plans/feature/20260618-asciinema-recording/
 ### 4.1 Visual Playback (Launch & Greeting)
 The recording captured the typing animation, `agy` launch, printing process, and output rendering:
 
-![Hello World Demo](/plans/feature/20260618-asciinema-recording/hello_world.gif)
+![Hello World Demo](plans/feature/20260618-asciinema-recording/hello_world.gif)
 
 
 
