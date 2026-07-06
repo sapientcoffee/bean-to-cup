@@ -27,10 +27,10 @@ import sys
 STAGE_CONFIGS = {
     "2": {
         "name": "PRD Generation (Stage 2)",
-        "inputs": ["01_GLOSSARY.md"],
+        "inputs": ["docs/glossary.md"],
         "outputs": ["02_PRD.md"],
         "default_mock_inputs": {
-            "01_GLOSSARY.md": "# Ubiquitous Glossary: Coffee Queue\n\n## Barista Queue\nAn ordered registry of active coffee requests.\n"
+            "docs/glossary.md": "# Ubiquitous Glossary: Coffee Queue\n\n## Barista Queue\nAn ordered registry of active coffee requests.\n"
         }
     },
     "3": {
@@ -98,7 +98,11 @@ def setup_sandbox(sandbox_path, stage_key, feature_slug):
     # Seed Mock Inputs
     print("📋 Seeding Mock Input Artifacts:")
     for filename, content in config["default_mock_inputs"].items():
-        filepath = os.path.join(plan_dir, filename)
+        if filename.startswith("docs/"):
+            filepath = os.path.join(sandbox_path, filename)
+            os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        else:
+            filepath = os.path.join(plan_dir, filename)
         with open(filepath, "w", encoding="utf-8") as f:
             f.write(content)
         print(f"  ✅ Created Mock Input: {filename} -> {filepath}")
@@ -109,7 +113,7 @@ def setup_sandbox(sandbox_path, stage_key, feature_slug):
     print("2. Open the Antigravity TUI ('agy') or agent prompt and run:")
     
     if stage_key == "2":
-        print(f"   > \"Please read the Socratic glossary in {plan_dir}/01_GLOSSARY.md and compile the PRD 02_PRD.md in that directory.\"")
+        print(f"   > \"Please read the Socratic glossary in {os.path.join(sandbox_path, 'docs/glossary.md')} and compile the PRD 02_PRD.md in that directory.\"")
     elif stage_key == "3":
         print(f"   > \"Please run context-free research on {plan_dir}/02_PRD.md and compile the 03_EXTRACTION.md facts.\"")
     elif stage_key == "4":

@@ -43,7 +43,7 @@ jobs:
         python3 scripts/run_stage_tests.py --stage 2 --sandbox scratch/sandbox-ci
         
         # Verify Stage 2 input file is generated
-        test -f scratch/sandbox-ci/plans/feature/test-feature/test-run/01_GLOSSARY.md
+        test -f scratch/sandbox-ci/docs/glossary.md
         echo "Harness bootstrap test: PASS"
 
         # Validate stage verification tool is operational

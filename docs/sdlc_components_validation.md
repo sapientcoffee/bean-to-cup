@@ -35,7 +35,7 @@ flowchart TD
         U1["User Types:<br><b>/feature [goal]</b><br>+ Answers Socratic Qs"]:::user
         I1["Input:<br>00_IDEATION.md (Optional)"]:::artifact
         C1["Skills: grill, grilling,<br>domain-modeling"]:::component
-        A1["Output:<br>01_GLOSSARY.md<br>(Glossary + ADRs)"]:::artifact
+        A1["Output:<br>docs/glossary.md<br>(Glossary + ADRs)"]:::artifact
         
         A0 -.-> I1
         U1 --> C1
@@ -47,7 +47,7 @@ flowchart TD
     subgraph S2 ["Stage 2: Product Requirements"]
         S2_Title["Stage 2: Product Requirements"]:::stage
         U2["User Action:<br>Reviews PRD in chat UI"]:::user
-        I2["Input:<br>01_GLOSSARY.md"]:::artifact
+        I2["Input:<br>docs/glossary.md"]:::artifact
         C2["Skill: write-prd"]:::component
         A2["Output:<br>02_PRD.md<br>(Non-goals & KPIs)"]:::artifact
         
@@ -177,7 +177,7 @@ flowchart TD
         *   [`grill`](file:///home/robedwards/workspace/bean-to-cup/skills/grill/SKILL.md): Coordinates the overall alignment interview flow.
         *   [`grilling`](file:///home/robedwards/workspace/bean-to-cup/skills/grilling/SKILL.md): Conducts the relentless interview loop with the developer.
         *   [`domain-modeling`](file:///home/robedwards/workspace/bean-to-cup/skills/domain-modeling/SKILL.md): Compiles and edits definitions *on-the-fly* directly inside the plans folder and updates the project-wide glossary.
-*   **Produced Artifact:** `plans/<feature-slug>/<timestamp>/01_GLOSSARY.md`.
+*   **Produced Artifact:** `docs/glossary.md`.
 
 ---
 

@@ -11,14 +11,14 @@ To maintain the highest standards of code and architectural discipline, always a
 ## 1. The Perfect Brew (Stage 0 to Stage 9 SDLC Protocol)
 *   **Strict State Machine:** We treat software tasks as "Brews." You must follow the Stage 0-9 document-driven protocol:
     0.  **Discovery/Ideation (Optional - `00_IDEATION.md`):** Formulate raw ideas, persona friction, and data schemas.
-    1.  **Socratic Alignment (`docs/glossary.md` & `01_GLOSSARY.md`):** Engage in Socratic requirements gathering and build the Ubiquitous Glossary.
-    2.  **PRD (`02_PRD.md`):** Establish requirements, non-goals, target personas, metrics, and acceptance criteria.
+    1.  **Socratic Alignment (`docs/glossary.md` & `docs/visual-glossary.html`):** Engage in Socratic requirements gathering, build the global Ubiquitous Glossary, and publish the visual glossary companion.
+    2.  **PRD (`02_PRD.md` & `02_visual-prd.html`):** Establish requirements, non-goals, target personas, metrics, and acceptance criteria in both markdown and visual HTML.
     3.  **Extraction (`03_EXTRACTION.md`):** Conduct blind, factual codebase research using specialized sub-agents.
-    4.  **Specification (`04_SPEC.md`):** Design the architecture aligned with local `design.md`, including threat model and telemetry.
+    4.  **Specification (`04_SPEC.md` & `04_visual-spec.html`):** Design the architecture aligned with local `design.md`, including threat model, telemetry, and visual spec layout.
     5.  **Execution Planning (`05_PLAN.md`):** Establish physical contracts, cut vertical slices into checklist items, and perform a strict dependency analysis to determine which tasks can run in parallel (`[Parallel]`) and which must run serially (`[Serial]`).
-    6.  **Human Review Gate (🛑 STOP):** Present design discussion & contracts to the user for explicit approval.
+    6.  **Human Review Gate (🛑 STOP):** Present design discussion, contracts, and visual plan to the user for explicit approval.
     7.  **TDD Implementation (`07_VERIFICATION.md`):** Spawn a separate, dedicated subagent to implement each individual slice/task. If multiple slices/tasks are marked as parallelizable with no mutual dependencies, execute their subagents concurrently in parallel using TDD via `/tdd` (silent on success).
-    8.  **Walkthrough (`08_WALKTHROUGH.md`):** Capture visual or technical proof via browser agent walkthrough or terminal playback recording (`brew:record`).
+    8.  **Walkthrough (`08_WALKTHROUGH.md` & `08_visual-recap.html`):** Capture visual or technical proof via browser agent walkthrough or terminal playback recording (`brew:record`), and generate the visual recap HTML page detailing all changes.
     9.  **PR Delivery:** Push branches and open PRs using `gh` CLI, maintaining codebase hygiene with `/improve-codebase-architecture`.
 
 ## 2. Plugin Validation & Schema Compliance

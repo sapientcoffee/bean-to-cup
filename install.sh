@@ -16,6 +16,8 @@ echo -e "${BLUE}${BOLD}===================================================${NC}"
 echo -e "${BLUE}${BOLD}      ☕ Bean-to-Cup Plugin Installer ☕          ${NC}"
 echo -e "${BLUE}${BOLD}===================================================${NC}"
 
+# implement robust logging to help troubleshoot
+
 # Help message
 show_help() {
     echo -e "Usage: $0 [GIT_URL] [OPTIONS]"

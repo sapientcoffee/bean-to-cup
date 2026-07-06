@@ -6,7 +6,7 @@ description: Stage 2 - Initialize a new feature development workflow (Discovery 
 # Skill: Feature Discovery & Validation (Stage 2)
 
 ## Objective
-Your goal is to act as the **Orchestration Engine** to initiate a new feature development workflow. You must capture the user's intent, clarify any ambiguities, and establish the foundational `02_PRD.md` artifact with enterprise-grade rigor.
+Your goal is to act as the **Orchestration Engine** to initiate a new feature development workflow. You must capture the user's intent, clarify any ambiguities, and establish the foundational `02_PRD.md` and `02_visual-prd.html` artifacts with enterprise-grade rigor.
 
 ## Core Mandate
 - **Project Structure:** All artifacts MUST be stored in `plans/<feature-slug>/<YYYY-MM-DD_HHMM>/`.
@@ -66,7 +66,10 @@ Your goal is to act as the **Orchestration Engine** to initiate a new feature de
    - [SLI 1: ...]
    ```
 
+3. **Compile Visual PRD (`02_visual-prd.html`)**:
+   Follow the `write-prd` skill to copy `/home/robedwards/workspace/bean-to-cup/templates/visual-prd.html` to the target path, fill all the sections, and mirror both files directly to the system artifacts directory (`/home/robedwards/.gemini/antigravity/brain/<conversation-id>/02_prd.md` and `02_visual-prd.html`).
+
 ### Step 3: Present and Gate
-1. **Report Progress:** Inform the user that the directory and PRD have been created.
-2. **Ask for Approval:** Ask the user to review the generated PRD:
-   "Please review `plans/<feature-slug>/<timestamp>/02_PRD.md`. Does this accurately reflect your vision? (Type 'approve' to move to Stage 3: Context Extraction)"
+1. **Report Progress:** Inform the user that the directory, PRD, and visual PRD companion have been created.
+2. **Ask for Approval:** Ask the user to review the generated PRD artifacts:
+   "Please review `plans/<feature-slug>/<timestamp>/02_PRD.md` and the visual companion `plans/<feature-slug>/<timestamp>/02_visual-prd.html`. Does this accurately reflect your vision? (Type 'approve' to move to Stage 3: Context Extraction)"

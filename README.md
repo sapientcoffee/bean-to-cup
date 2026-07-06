@@ -24,18 +24,18 @@ This extension implements emerging standards for AI-assisted development:
 
 ![The Artifact Filter](docs/images/artifact-filter.png)
 
-| SDLC Stage | Standard / Convention | Artifact File | extension Role |
+| SDLC Stage | Standard / Convention | Artifact Files | extension Role |
 | :--- | :--- | :--- | :--- |
 | **Stage 0 (Optional)** | Product Discovery | `00_IDEATION.md` | Formulate raw ideas, persona friction, and data schemas. |
-| **Stage 1** | Socratic Alignment | `01_GLOSSARY.md` | Engage in Socratic interview & Ubiquitous Glossary. |
-| **Stage 2** | Product Requirements | `02_PRD.md` | Machine-parsable requirements, NFRs, & non-goals. |
+| **Stage 1** | Socratic Alignment | `docs/glossary.md`<br>`docs/visual-glossary.html` | Engage in Socratic interview, build global Ubiquitous Glossary and visual companion. |
+| **Stage 2** | Product Requirements | `02_PRD.md`<br>`02_visual-prd.html` | Establish requirements and Gherkin scenarios in markdown and visual HTML. |
 | **Stage 3** | Context Extraction | `03_EXTRACTION.md` | Factual codebase mapping (Blind Research). |
-| **Stage 4** | Technical Specification | `04_SPEC.md` | Tech spec, Threat Model, SRE telemetry. |
+| **Stage 4** | Technical Specification | `04_SPEC.md`<br>`04_visual-spec.html` | Design architecture and layout visual spec interface. |
 | **Stage 5** | Execution Planning | `05_PLAN.md` | Slices, TDD checklist, & physical contracts. |
-| **Stage 6** | Human Review Gate | *None (Halt)* | STOP. Verify contracts & specs before implementation. |
+| **Stage 6** | Human Review Gate | *None (Halt)* | STOP. Verify design contracts and visual specs before execution. |
 | **Stage 7** | Test-Driven Implementation | `07_VERIFICATION.md` | Incrementally execute code under TDD loop. |
-| **Stage 8** | Automated Walkthrough | `08_WALKTHROUGH.md` | Visual & technical browser-based proof. |
-| **Stage 9** | PR Delivery & Maintenance | *PR Description* | Push branch, submit PR with walkthrough report. |
+| **Stage 8** | Automated Walkthrough | `08_WALKTHROUGH.md`<br>`08_visual-recap.html` | Visual/technical walkthroughs and visual recap report. |
+| **Stage 9** | PR Delivery & Maintenance | *PR Description* | Push branch, submit PR with walkthrough and recap reports. |
 
 ---
 
@@ -91,7 +91,7 @@ flowchart TD
         U1["User Types:<br><b>/feature [goal]</b><br>+ Answers Socratic Qs"]:::user
         I1["Input:<br>00_IDEATION.md (Optional)"]:::artifact
         C1["Skills: grill, grilling,<br>domain-modeling"]:::component
-        A1["Output:<br>01_GLOSSARY.md<br>(Glossary + ADRs)"]:::artifact
+        A1["Output:<br>docs/glossary.md &<br>docs/visual-glossary.html"]:::artifact
         
         A0 -.-> I1
         U1 --> C1
@@ -103,9 +103,9 @@ flowchart TD
     subgraph S2 ["Stage 2: Product Requirements"]
         S2_Title["Stage 2: Product Requirements"]:::stage
         U2["User Action:<br>Reviews PRD in chat UI"]:::user
-        I2["Input:<br>01_GLOSSARY.md"]:::artifact
+        I2["Input:<br>docs/glossary.md &<br>docs/visual-glossary.html"]:::artifact
         C2["Skill: write-prd"]:::component
-        A2["Output:<br>02_PRD.md<br>(Non-goals & KPIs)"]:::artifact
+        A2["Output:<br>02_PRD.md &<br>02_visual-prd.html"]:::artifact
         
         A1 --> I2
         U2 -.-> C2
@@ -131,10 +131,10 @@ flowchart TD
     subgraph S45 ["Stages 4 & 5: Spec & Plan"]
         S45_Title["Stages 4 & 5: Spec & Plan"]:::stage
         U45["User Action:<br>None (Automated)"]:::user
-        I45_1["Input 1:<br>02_PRD.md"]:::artifact
+        I45_1["Input 1:<br>02_PRD.md &<br>02_visual-prd.html"]:::artifact
         I45_2["Input 2:<br>03_EXTRACTION.md"]:::artifact
         C45["Subagent: @architect<br>(system-design.md)"]:::component
-        A4["Output:<br>04_SPEC.md (Contracts)"]:::artifact
+        A4["Output:<br>04_SPEC.md &<br>04_visual-spec.html"]:::artifact
         A5["Output:<br>05_PLAN.md (Checklist)"]:::artifact
         
         A2 -.-> I45_1
@@ -183,7 +183,7 @@ flowchart TD
         I8_1["Input 1:<br>07_VERIFICATION.md"]:::artifact
         I8_2["Input 2:<br>walkthrough_scenario.json"]:::default
         C8["Command: <b>/brew:record</b><br>➔ Skill: asciinema"]:::component
-        A8["Output:<br>08_WALKTHROUGH.md<br>(Terminal playbacks / GIF)"]:::artifact
+        A8["Output:<br>08_WALKTHROUGH.md &<br>08_visual-recap.html"]:::artifact
         
         A7 --> I8_1
         U8 --> C8
@@ -197,7 +197,7 @@ flowchart TD
         S9_Title["Stage 9: Delivery & PR"]:::stage
         U9["User Action:<br>Completes PR review<br>Optionally types:<br><b>/brew:archive</b>, <b>/brew:sync</b>,<br><b>/brew:worktree</b>, <b>/build:production</b>"]:::user
         I9_1["Input 1:<br>Working code"]:::artifact
-        I9_2["Input 2:<br>08_WALKTHROUGH.md"]:::artifact
+        I9_2["Input 2:<br>08_WALKTHROUGH.md &<br>08_visual-recap.html"]:::artifact
         C9["Skill: github-workflow<br>(creates PR via <b>gh</b> CLI)"]:::component
         A9["Output:<br>Active GitHub PR<br>& clean workspace"]:::artifact
         

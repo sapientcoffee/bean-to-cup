@@ -21,7 +21,7 @@ The heart of the extension is the `bean-to-cup.md` file (merged into the model's
 
 **The Stage 0 to Stage 9 SDLC Protocol:**
 *   **Stage 0: Discovery / Ideation (Optional)**: Brainstorming and drafting ideas (`00_IDEATION.md`).
-*   **Stage 1: Socratic Alignment (The Grill)**: Gathering requirements, compiling glossary, and ADRs (`01_GLOSSARY.md`).
+*   **Stage 1: Socratic Alignment (The Grill)**: Gathering requirements, compiling glossary, and ADRs (`docs/glossary.md`).
 *   **Stage 2: Product Requirements**: Structuring PRD with personas and NFRs (`02_PRD.md`).
 *   **Stage 3: Context Extraction**: Context-firewall factual research via sub-agents (`03_EXTRACTION.md`).
 *   **Stage 4: Technical Specification**: High-level design, SRE telemetry, Threat Model (`04_SPEC.md`).

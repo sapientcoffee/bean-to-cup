@@ -22,5 +22,15 @@ Our goal is to build highly reliable, lightweight, and performant agent workflow
 *   **Zero Bloat:** Keep dependencies and script footprints tiny. Avoid heavy third-party npm or system dependencies in hook scripts or subagent definitions to keep setup times fast.
 
 ## 5. Artifact Mirroring (Dynamic UI Visibility)
-*   **Dual-Write Requirement:** Whenever any stage-linked planning or documentation file is created or updated in the workspace (such as `01_GLOSSARY.md`, `02_PRD.md`, `03_EXTRACTION.md`, `04_SPEC.md`, `05_PLAN.md`, `07_VERIFICATION.md`, `08_WALKTHROUGH.md`, `walkthrough.md`, or `walkthrough.html`), you MUST also write it directly into the assistant's private system artifacts directory (`/home/robedwards/.gemini/antigravity-cli/brain/<conversation-id>/`) as a user-facing artifact (using descriptive, lowercase filenames like `02_prd.md` or `04_spec.md`).
+*   **Dual-Write Requirement:** Whenever any stage-linked planning or documentation file is created or updated in the workspace, you MUST also write/copy it directly into the assistant's private system artifacts directory (`/home/robedwards/.gemini/antigravity/brain/<conversation-id>/`) as a user-facing artifact.
+*   **File Mappings:**
+    *   `docs/glossary.md` / `docs/visual-glossary.html` ➔ `01_visual-glossary.html`
+    *   `plans/.../02_PRD.md` ➔ `02_prd.md`
+    *   `plans/.../02_visual-prd.html` ➔ `02_visual-prd.html`
+    *   `plans/.../04_SPEC.md` ➔ `04_spec.md`
+    *   `plans/.../04_visual-spec.html` ➔ `04_visual-spec.html`
+    *   `plans/.../05_PLAN.md` ➔ `05_plan.md`
+    *   `plans/.../07_VERIFICATION.md` ➔ `07_verification.md`
+    *   `plans/.../08_WALKTHROUGH.md` ➔ `08_walkthrough.md`
+    *   `plans/.../08_visual-recap.html` ➔ `08_visual-recap.html`
 *   **Purpose:** This mirrors workspace documentation inside the chat UI's persistent Artifacts viewer panel, making it incredibly easy to see and inspect what files have been created or modified without leaving the UI.

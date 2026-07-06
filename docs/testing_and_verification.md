@@ -84,7 +84,7 @@ This eliminates the need to run the entire pipeline from Stage 0 to test a late-
 
 | Target Stage to Test | Active Skill / Subagent | Required Mock Input Files | Expected Output Artifact |
 | :--- | :--- | :--- | :--- |
-| **Stage 2: PRD** | `write-prd` | `plans/feature/test/01_GLOSSARY.md` | `02_PRD.md` |
+| **Stage 2: PRD** | `write-prd` | `docs/glossary.md` | `02_PRD.md` |
 | **Stage 3: Extraction** | `research` | `plans/feature/test/02_PRD.md` | `03_EXTRACTION.md` |
 | **Stage 4: Spec** | `@architect` | `plans/feature/test/02_PRD.md`<br>`plans/feature/test/03_EXTRACTION.md` | `04_SPEC.md` |
 | **Stage 5: Plan** | `@architect` | `plans/feature/test/04_SPEC.md` | `05_PLAN.md` |

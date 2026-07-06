@@ -21,5 +21,6 @@ Your goal is to conduct a Socratic alignment and requirements gathering session.
    - Challenge terms against the ubiquitous language.
    - Sharpen fuzzy or overloaded terms.
    - Discuss concrete scenarios and probe edge cases one-by-one.
-   - Write or update the glossary (`01_GLOSSARY.md`) inside the versioned plan directory (or fallback `.plans/01_GLOSSARY.md`) on-the-fly as terms are resolved.
-   - Record architectural decisions as ADRs inside `docs/adr/` (or `plans/<feature-slug>/<timestamp>/docs/adr/` as appropriate) if they meet the ADR criteria.
+   - Write or update the global glossary (`docs/glossary.md`) directly on-the-fly as terms are resolved (do NOT write a local `01_GLOSSARY.md` file).
+   - Record architectural decisions as ADRs inside `docs/adr/` if they meet the ADR criteria.
+   - Generate or update the global visual glossary (`docs/visual-glossary.html`) by copying `/home/robedwards/workspace/bean-to-cup/templates/visual-glossary.html`, replacing `{{TIMESTAMP}}` with the current date/time, rendering terms in `<!-- VG:GLOSSARY -->` and ADRs in `<!-- VG:ADR -->`, and dual-writing the resulting HTML directly into the assistant's private system artifacts directory as `/home/robedwards/.gemini/antigravity/brain/<conversation-id>/01_visual-glossary.html`.
