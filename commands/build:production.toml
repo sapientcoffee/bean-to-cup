@@ -1,0 +1,10 @@
+description = "Target and build the application for production"
+prompt = """
+You are tasked with building the application for production.
+
+## Workflow:
+1. **Linting**: Run `npm run lint` to ensure code quality before building.
+2. **Production Build**: Run `npm run build` to generate the production artifacts.
+
+Use the `run_shell_command` tool to execute these steps.
+"""

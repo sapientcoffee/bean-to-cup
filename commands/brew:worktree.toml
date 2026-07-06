@@ -1,0 +1,7 @@
+description = "Manage Git Worktrees and Isolate Branches for parallel agent execution using the brew-worktree skill"
+prompt = """
+You are executing the `brew:worktree` command. Utilize the **brew-worktree** skill.
+
+## Guidelines:
+1. Load and execute the instructions defined in the [brew-worktree skill](file:///home/robedwards/workspace/bean-to-cup/skills/brew-worktree/SKILL.md).
+"""

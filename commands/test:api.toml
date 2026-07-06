@@ -1,0 +1,13 @@
+description = "Run local backend API validation scripts"
+prompt = """
+You are tasked with running the backend API validation scripts.
+
+## Workflow:
+Run the following scripts sequentially using `run_shell_command`:
+1. `node test_api.mjs`
+2. `node test_api2.mjs`
+3. `node test_ws.mjs`
+4. `node test_wildcard.mjs`
+
+Ensure that Application Default Credentials (ADC) are configured.
+"""

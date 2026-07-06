@@ -93,11 +93,11 @@ These scripts run automatically based on CLI events:
 bean-to-cup/
 ├── agents/             # Sub-agent definitions (.md with YAML frontmatter)
 ├── commands/           # Custom command definitions (.toml)
+├── holding-pen/        # Legacy/archived agents, commands, and workflows
 ├── hooks/              # Shell scripts and hook configurations (hooks.json)
 ├── policies/           # Tool-usage and security restrictions (.toml)
 ├── rules/              # Project mandates and developer guidelines (.md)
 ├── skills/             # Reusable agent capabilities (SKILL.md)
-├── workflows/          # Automated execution sequences (.md)
 ├── bean-to-cup.md      # The "Head Barista" Supervisor protocol
 ├── gemini-extension.json # Extension manifest and metadata
 └── README.md           # User-facing quickstart and reference

@@ -1,0 +1,7 @@
+description = "Parse 05_PLAN.md and synchronize tasks to GitHub issues using the brew-sync skill"
+prompt = """
+You are executing the `brew:sync` command. Utilize the **brew-sync** skill.
+
+## Guidelines:
+1. Load and execute the instructions defined in the [brew-sync skill](file:///home/robedwards/workspace/bean-to-cup/skills/brew-sync/SKILL.md).
+"""
