@@ -45,7 +45,7 @@ The plugin registers **13 specialized personas** in the workspace:
 
 | Persona | Handle | Purpose | Definition File |
 | :--- | :--- | :--- | :--- |
-| **System Design** | `@architect` | Conceptual specs (`03_SPEC.md`) and task checklist planning (`04_PLAN.md`). | [system-design.md](file:///home/robedwards/workspace/bean-to-cup/agents/system-design.md) |
+| **System Design** | `@architect` | Conceptual specs (`04_SPEC.md`) and task checklist planning (`05_PLAN.md`). | [system-design.md](file:///home/robedwards/workspace/bean-to-cup/agents/system-design.md) |
 | **Code Implementation** | `@engineer` | Production code construction via Red-Green-Refactor TDD. | [code-implementation.md](file:///home/robedwards/workspace/bean-to-cup/agents/code-implementation.md) |
 | **Quality Verification** | `@auditor` | Security, SLI/SLO compliance, and final QA verification report. | [quality-verification.md](file:///home/robedwards/workspace/bean-to-cup/agents/quality-verification.md) |
 | **Context Discovery** | `@scout` | Context-free "Blind Research" of the codebase. | [context-discovery.md](file:///home/robedwards/workspace/bean-to-cup/agents/context-discovery.md) |
