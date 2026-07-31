@@ -1,6 +1,6 @@
 ---
 name: git-delivery
-description: Phase 9 - Provides an emoji-powered, best-practice delivery pipeline to verify code quality, craft conventional atomic commits, and compile premium "What, Why, How" Pull Requests.
+description: Provides an emoji-powered, good-practice delivery pipeline to verify code quality, craft conventional atomic commits, and compile premium "What, Why, How" Pull Requests.
 ---
 
 # 🚀 Skill: Modern Git Delivery Protocol (The Perfect Pour)
