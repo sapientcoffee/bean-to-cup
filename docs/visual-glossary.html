@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ubiquitous Glossary &amp; ADRs</title>
+  <style>
+    :root {
+      --bg:#ffffff; --fg:#1f2328; --muted:#656d76; --faint:#eaeef2;
+      --accent:#0969da; --accent-soft:#ddf4ff;
+      --card:#ffffff; --card-border:#d0d7de; --code-bg:#f6f8fa;
+      --header-bg:#f6f8fa; --nav-bg:#ffffff;
+      --badge-new-bg:#dafbe1; --badge-new-fg:#1a7f37;
+      --badge-mod-bg:#fff8c5; --badge-mod-fg:#9a6700;
+      --badge-del-bg:#ffebe9; --badge-del-fg:#cf222e;
+      --shadow:0 1px 3px rgba(31,35,40,.12);
+    }
+    :root[data-theme="dark"] {
+      --bg:#0d1117; --fg:#e6edf3; --muted:#9198a1; --faint:#21262d;
+      --accent:#4493f8; --accent-soft:#10243e;
+      --card:#161b22; --card-border:#30363d; --code-bg:#161b22;
+      --header-bg:#161b22; --nav-bg:#0d1117;
+      --badge-new-bg:#12261e; --badge-new-fg:#3fb950;
+      --badge-mod-bg:#272115; --badge-mod-fg:#d29922;
+      --badge-del-bg:#2d1416; --badge-del-fg:#f85149;
+      --shadow:0 1px 3px rgba(1,4,9,.6);
+    }
+    * { box-sizing:border-box; }
+    html,body { margin:0; padding:0; }
+    body {
+      background:var(--bg); color:var(--fg);
+      font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    }
+    a { color:var(--accent); }
+    code,kbd,pre,.mono { font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace; }
+    h1,h2,h3 { line-height:1.25; }
+    .wrap { max-width:980px; margin:0 auto; padding:0 20px; }
+    header.va-header {
+      background:var(--header-bg); border-bottom:1px solid var(--card-border);
+    }
+    .va-header .wrap { display:flex; align-items:center; gap:16px; padding:14px 20px; flex-wrap:wrap; }
+    .va-header h1 { font-size:18px; margin:0; }
+    .va-header .moniker { color:var(--accent); }
+    .va-header .meta { color:var(--muted); font-size:12px; display:flex; gap:12px; flex-wrap:wrap; }
+    .va-header .spacer { flex:1; }
+    .toggle {
+      cursor:pointer; border:1px solid var(--card-border); background:var(--card);
+      color:var(--fg); border-radius:6px; padding:6px 10px; font-size:13px;
+    }
+    .toggle:hover { border-color:var(--accent); }
+    nav.va-nav {
+      position:sticky; top:0; z-index:20;
+      background:var(--nav-bg); border-bottom:1px solid var(--card-border);
+      box-shadow:var(--shadow);
+    }
+    nav.va-nav .wrap { display:flex; gap:2px; overflow-x:auto; padding:0 20px; }
+    .va-tab {
+      appearance:none; border:0; background:transparent; color:var(--muted);
+      padding:12px 12px; font-size:13px; cursor:pointer; white-space:nowrap;
+      border-bottom:2px solid transparent;
+    }
+    .va-tab:hover { color:var(--fg); }
+    .va-tab.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:600; }
+    main .wrap { padding-top:24px; padding-bottom:64px; }
+    .va-section[hidden] { display:none; }
+    .va-section h2 { font-size:22px; margin:0 0 4px; }
+    .va-section > .lede { color:var(--muted); margin:0 0 20px; }
+    .card {
+      background:var(--card); border:1px solid var(--card-border);
+      border-radius:8px; padding:16px; box-shadow:var(--shadow);
+      margin-bottom:14px;
+    }
+    .grid { display:grid; gap:14px; }
+    .grid.cols-2 { grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); }
+    .kv { display:grid; grid-template-columns:max-content 1fr; gap:6px 14px; }
+    .kv dt { color:var(--muted); }
+    .kv dd { margin:0; }
+    .term-title { font-size:16px; font-weight:700; color:var(--accent); margin:0 0 4px; }
+    .avoid-tag { color:var(--badge-del-fg); background:var(--badge-del-bg); font-size:11px; font-weight:700;
+                 padding:2px 8px; border-radius:4px; display:inline-block; margin-top:8px; }
+    .search-container { margin-bottom:20px; }
+    .search-input {
+      width:100%; max-width:360px; padding:8px 12px; border-radius:6px;
+      border:1px solid var(--card-border); background:var(--card); color:var(--fg);
+      font-size:14px;
+    }
+    .search-input:focus { outline:none; border-color:var(--accent); }
+    .badge { display:inline-block; font-size:11px; font-weight:600; padding:1px 7px;
+             border-radius:999px; vertical-align:middle; }
+    .badge.new { background:var(--badge-new-bg); color:var(--badge-new-fg); }
+    .badge.mod { background:var(--badge-mod-bg); color:var(--badge-mod-fg); }
+    .badge.del { background:var(--badge-del-bg); color:var(--badge-del-fg); }
+  </style>
+</head>
+<body>
+  <header class="va-header">
+    <div class="wrap">
+      <h1>Ubiquitous Glossary &amp; ADRs</h1>
+      <div class="spacer"></div>
+      <div class="meta">
+        <span>Generated: 2026-07-31</span>
+        <span>docs/glossary.md &amp; docs/adr/ · derived view</span>
+      </div>
+      <button class="toggle" id="theme-toggle" title="Toggle light/dark">🌓 Theme</button>
+    </div>
+  </header>
+
+  <nav class="va-nav">
+    <div class="wrap" id="va-tabs">
+      <button class="va-tab active" data-target="glossary">Glossary</button>
+      <button class="va-tab" data-target="adr">Architecture Decisions</button>
+    </div>
+  </nav>
+
+  <main>
+    <div class="wrap">
+      <!-- ================= GLOSSARY ================= -->
+      <section class="va-section" id="glossary">
+        <h2>Core Domain Terms</h2>
+        <p class="lede">Ubiquitous Language established for the project context. Use the search box to filter terms.</p>
+        
+        <div class="search-container">
+          <input type="text" id="glossary-search" placeholder="Search terms..." class="search-input" />
+        </div>
+
+        <div class="grid cols-2" id="terms-container">
+          <!-- Standard Terms -->
+          <div class="card term-card" data-term="brew">
+            <div class="term-title">Brew</div>
+            <p>A discrete software feature, refactoring unit, or bug fix being actively developed under the Stage 0-9 protocol.</p>
+            <div class="avoid-tag">Avoid: Task, issue, ticket, feature branch</div>
+          </div>
+          <div class="card term-card" data-term="autonomous brewing swarm">
+            <div class="term-title">Autonomous Brewing Swarm</div>
+            <p>The collection of specialized, role-focused agentic engines working collaboratively to deliver a Brew.</p>
+            <div class="avoid-tag">Avoid: Agent pool, script set, AI assistants</div>
+          </div>
+          <div class="card term-card" data-term="state machine (stage 0 to stage 9 protocol)">
+            <div class="term-title">State Machine (Stage 0 to Stage 9 Protocol)</div>
+            <p>The strict, document-driven lifecycle that a Brew must traverse from raw ideation (Stage 0) through to PR delivery (Stage 9).</p>
+            <div class="avoid-tag">Avoid: Workflow, process, pipe, pipeline</div>
+          </div>
+          <div class="card term-card" data-term="document-as-context">
+            <div class="term-title">Document-as-Context</div>
+            <p>The architectural pattern where structured Markdown documents in a versioned plan directory act as the physical API and single source of truth between agent runs and human checkpoints.</p>
+            <div class="avoid-tag">Avoid: Chat history, prompt instructions, oral state</div>
+          </div>
+          <div class="card term-card" data-term="socratic grilling (socratic alignment)">
+            <div class="term-title">Socratic Grilling (Socratic Alignment)</div>
+            <p>The initial phase and process of stress-testing a feature's requirements, boundaries, and domain vocabulary via an interactive interview prior to technical planning.</p>
+            <div class="avoid-tag">Avoid: Chatting, requirements gathering, brainstorming</div>
+          </div>
+          <div class="card term-card" data-term="orchestration engine">
+            <div class="term-title">Orchestration Engine</div>
+            <p>The central controller of the swarm that maintains the protocol state, enforces execution boundaries, manages Git state, and dispatches specialized subagents.</p>
+            <div class="avoid-tag">Avoid: Parent agent, main script, coordinator</div>
+          </div>
+          <div class="card term-card" data-term="context firewall (blind research)">
+            <div class="term-title">Context Firewall (Blind Research)</div>
+            <p>The practice of keeping requirement discovery and technical codebase extraction contextually separated to prevent LLM confirmation bias and context-window bloat during research.</p>
+            <div class="avoid-tag">Avoid: Direct grep, full search, context pollution</div>
+          </div>
+          <div class="card term-card" data-term="physicalized contract">
+            <div class="term-title">Physicalized Contract</div>
+            <p>Concrete interface definitions that must be physically created and committed before functional logic is written.</p>
+            <div class="avoid-tag">Avoid: Implementation, draft, mock logic</div>
+          </div>
+          <div class="card term-card" data-term="test-driven implementation (tdd loop)">
+            <div class="term-title">Test-Driven Implementation (TDD Loop)</div>
+            <p>The iterative development loop where a failing test is written to verify contract behavior (Red), minimal code is written to pass (Green), and the codebase is refactored (Refactor).</p>
+            <div class="avoid-tag">Avoid: Coding first, manual testing, implementation run</div>
+          </div>
+          <div class="card term-card" data-term="walkthrough">
+            <div class="term-title">Walkthrough</div>
+            <p>The phase and automated process of launching local servers and using browser agent or generalist tools to compile technical/visual evidence of feature completeness.</p>
+            <div class="avoid-tag">Avoid: Demo, showcase, manual validation</div>
+          </div>
+
+          <!-- CodMod Terms (New) -->
+          <div class="card term-card" data-term="modernization assessment">
+            <div class="term-title">Modernization Assessment <span class="badge new">New</span></div>
+            <p>The systematic evaluation of an application's codebase architecture, libraries, dependencies, and configuration to identify upgrade blockers, technical debt, and cloud-native target platforms.</p>
+            <div class="avoid-tag">Avoid: Code check, tech-debt review, cloud migration audit</div>
+          </div>
+          <div class="card term-card" data-term="codmod (app modernization assessment cli)">
+            <div class="term-title">CodMod (App Modernization Assessment CLI) <span class="badge new">New</span></div>
+            <p>An AI-powered portable command-line tool released by Google Cloud's Migration Center that leverages Vertex AI's Gemini models to scan source code locally and produce comprehensive modernization assessment reports.</p>
+            <div class="avoid-tag">Avoid: MC CLI, Google assessment tool, cloud analyzer</div>
+          </div>
+          <div class="card term-card" data-term="transformation intent">
+            <div class="term-title">Transformation Intent <span class="badge new">New</span></div>
+            <p>A predefined, highly optimized analysis profile in CodMod focused on a specific modernization pathway (e.g. JAVA_LEGACY_TO_MODERN, WILDFLY_LEGACY_TO_MODERN, MICROSOFT_MODERNIZATION, CLOUD_TO_CLOUD, ARM_MIGRATION).</p>
+            <div class="avoid-tag">Avoid: Migration profile, intent type, target route</div>
+          </div>
+          <div class="card term-card" data-term="cost estimation mode">
+            <div class="term-title">Cost Estimation Mode <span class="badge new">New</span></div>
+            <p>An interactive or programmatic dry-run of the assessment that parses files to estimate the token size and projected Vertex AI Gemini API cost before invoking the heavy code understanding LLM engines.</p>
+            <div class="avoid-tag">Avoid: Budget check, token scan, price dryrun</div>
+          </div>
+          <div class="card term-card" data-term="assessment report">
+            <div class="term-title">Assessment Report <span class="badge new">New</span></div>
+            <p>The final output of a CodMod execution. By default, it is a premium-designed, self-contained HTML document outlining executive summary, target platforms, software inventory, required refactoring, and step-by-step guidance.</p>
+            <div class="avoid-tag">Avoid: CodMod doc, tech output, analysis file</div>
+          </div>
+          <div class="card term-card" data-term="fidelity mode">
+            <div class="term-title">Fidelity Mode <span class="badge new">New</span></div>
+            <p>An optional configuration flag (--improve-fidelity) that instructs CodMod to analyze sections serially instead of in parallel, improving logical consistency and depth at the expense of runtime.</p>
+            <div class="avoid-tag">Avoid: Slow mode, serial scan, deep check</div>
+          </div>
+          <div class="card term-card" data-term="model set">
+            <div class="term-title">Model Set <span class="badge new">New</span></div>
+            <p>The configuration flag specifying which Gemini model or optimization level to leverage during the assessment (e.g. 2.0-flash, 2.5-flash, 2.5-pro, adaptive).</p>
+            <div class="avoid-tag">Avoid: Model type, vertex version, gemini selection</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ADR ================= -->
+      <section class="va-section" id="adr" hidden>
+        <h2>Architecture Decision Records</h2>
+        <p class="lede">Log of key architectural decisions made, statuses, context, and consequences.</p>
+
+        <div id="adr-container">
+          <div class="card">
+            <h3>0000 — Use ADRs</h3>
+            <dl class="kv" style="margin-bottom:12px;">
+              <dt>Status</dt><dd><span class="badge new">Accepted</span></dd>
+              <dt>Context</dt><dd>We need a formal, structured way to document and track key design and architectural decisions made over the course of the project.</dd>
+              <dt>Decision</dt><dd>We will adopt Architectural Decision Records (ADRs) using a standardized Markdown format inside the <code>docs/adr/</code> directory.</dd>
+              <dt>Consequences</dt><dd>Every significant architectural choice will be recorded, reviewable, and tracked over time. Historical choices are preserved for context.</dd>
+            </dl>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+  (function () {
+    "use strict";
+    var root = document.documentElement;
+    try {
+      var saved = localStorage.getItem("va-theme");
+      if (saved) root.setAttribute("data-theme", saved);
+    } catch (e) {}
+
+    document.getElementById("theme-toggle").addEventListener("click", function () {
+      var dark = root.getAttribute("data-theme") === "dark";
+      root.setAttribute("data-theme", dark ? "light" : "dark");
+      try { localStorage.setItem("va-theme", dark ? "light" : "dark"); } catch (e) {}
+    });
+
+    function showTab(id, push) {
+      var sections = document.querySelectorAll(".va-section");
+      sections.forEach(function (s) { s.hidden = (s.id !== id); });
+      document.querySelectorAll(".va-tab").forEach(function (t) {
+        t.classList.toggle("active", t.getAttribute("data-target") === id);
+      });
+      if (push && history.replaceState) history.replaceState(null, "", "#" + id);
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+    document.getElementById("va-tabs").addEventListener("click", function (e) {
+      var btn = e.target.closest(".va-tab");
+      if (btn) showTab(btn.getAttribute("data-target"), true);
+    });
+
+    var search = document.getElementById("glossary-search");
+    if (search) {
+      search.addEventListener("input", function (e) {
+        var q = e.target.value.toLowerCase().trim();
+        document.querySelectorAll(".term-card").forEach(function (card) {
+          var term = card.getAttribute("data-term") || "";
+          var text = card.textContent.toLowerCase();
+          if (term.indexOf(q) !== -1 || text.indexOf(q) !== -1) {
+            card.style.display = "";
+          } else {
+            card.style.display = "none";
+          }
+        });
+      });
+    }
+
+    var initial = (location.hash || "#glossary").slice(1);
+    if (!document.getElementById(initial)) initial = "glossary";
+    showTab(initial, false);
+  })();
+  </script>
+</body>
+</html>

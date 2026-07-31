@@ -1,0 +1,9 @@
+description = "Executes a context-aware application modernization assessment using Google Cloud's CodMod tool"
+prompt = """
+You are executing the `brew:assess` command. Utilize the **brew-assess** skill.
+
+## Guidelines:
+1. Load and execute the instructions defined in the [brew-assess skill](file:///home/robedwards/workspace/bean-to-cup/skills/brew-assess/SKILL.md).
+2. Use the provided command arguments:
+   - Codebase Path: {{args}}
+"""
