@@ -246,7 +246,7 @@ The Bean-to-Cup plugin manages an autonomous network of **8 active specialized s
 
 ## ⌨️ Custom Commands
 
-The plugin implements **11 active Custom Commands** mapped as flat namespace TOML declarations in the `commands/` directory.
+The plugin implements **12 active Custom Commands** mapped as flat namespace TOML declarations in the `commands/` directory.
 
 ### Core Lifecycle
 *   **`/feature <goal>`** [CORE]: Initiates the 9-phase protocol starting with an AI-Ready PRD and versioned workspace setup.
@@ -254,6 +254,7 @@ The plugin implements **11 active Custom Commands** mapped as flat namespace TOM
 *   **`/research <query>`** [CORE]: Spawns parallel agents for deep, factual context-isolated codebase extraction.
 
 ### Workspace Management & Testing
+*   **`/push <args>`** [CORE]: Delivers code changes to Git following modern best practices, including linting, conventional commits, and rich PR descriptions.
 *   **`/brew:init`** [CORE] *(Deprecated)*: Legacy command to bootstrap your project. This setup is now handled automatically.
 *   **`/brew:archive`** [CORE]: Clears away 'spent grounds' (completed tasks) to keep context clean.
 *   **`/brew:record`** [CORE]: Launches terminal recording and playback scenario capture.
@@ -290,6 +291,7 @@ Each modular skill in the `skills/` directory complies with the open **Agent Ski
 *   **`chaos-mitigation`** [CORE]: **Stage 7**: Handles SRE log inspection and runs automated mitigation playbooks.
 *   **`deploy-app`** [CORE]: **Stage 7**: Resolves dependencies, compiles packages, and serves local webservers.
 *   **`github-workflow`** [CORE]: **Stage 9**: Automates branch pushes and PR compilation with the GitHub CLI (`gh`).
+*   **`git-delivery`** [CORE]: **Stage 9**: Provides an emoji-powered, best-practice delivery pipeline to verify, stage, commit, and raise high-quality "What, Why, How" PRs.
 
 ### Automated Hooks
 *   **`lint-on-change`** [CORE]: Automatically runs your linter whenever a file is modified.

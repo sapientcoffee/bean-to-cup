@@ -1,0 +1,11 @@
+description = "Delivers code changes to Git following modern best practices, including linting, conventional commits, and rich PR descriptions"
+prompt = """
+You are initiating the code delivery pipeline. To ensure enterprise-grade code quality, structured linear history, and high-fidelity Pull Requests, utilize the **git-delivery** skill registered in AGY.
+
+## Guidelines:
+1. Locate, load, and execute the instructions defined in the **git-delivery** skill registered in AGY.
+2. Follow all step-by-step leftover sweeping, atomic staging, emoji-fied conventional commits, pre-flight verification checks, and the "What, Why, How" PR template.
+3. Keep your communications informative, engaging, and fun (use emojis where appropriate!).
+
+*User Request: {{args}}*
+"""

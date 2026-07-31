@@ -7,13 +7,14 @@ This document serves as the definitive reference manual and registry for all age
 
 ---
 
-## ⌨️ 1. Custom Commands (20 Total)
+## ⌨️ 1. Custom Commands (21 Total)
 
 All commands in this registry are registered natively in the flat `commands/` directory of the plugin. Nested folder structures are not used to guarantee proper discovery by the `agy` compiler.
 
 | Command / Shortcut | Namespace | Target SDLC Stage | Core Objective & Behavior | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **[`/feature`](file:///home/robedwards/workspace/bean-to-cup/commands/feature.toml)** | global | **Stage 2** | Initiates the 9-stage feature development state machine, prompting requirements gathering. | **Active** |
+| **[`/push`](file:///home/robedwards/workspace/bean-to-cup/commands/push.toml)** | global | **Stage 9** | Delivers code changes to Git following modern best practices, including linting, conventional commits, and rich PR descriptions. | **Active** |
 | **[`/rewrite`](file:///home/robedwards/workspace/bean-to-cup/commands/rewrite.toml)** | global | **Stage 1 & 2** | Initiates an application rewrite workflow (Stages 0-5) by analyzing assessments and coordinating specialized skills. | **Active** |
 | **[`/research`](file:///home/robedwards/workspace/bean-to-cup/commands/research.toml)** | global | **Stage 3** | Spawns parallel investigative agents to map codebase components and patterns. | **Active** |
 | **[`/loop:start`](file:///home/robedwards/workspace/bean-to-cup/commands/loop:start.toml)** | loop | **Stage 7** | Starts the infinite, self-correcting development cycle (the Ralph loop) under TDD. | **Active** |
@@ -58,7 +59,7 @@ Specialized subagents are dispatched with specific, isolated prompts to execute 
 
 ---
 
-## 🛠️ 3. Modular Skills (14 Total)
+## 🛠️ 3. Modular Skills (15 Total)
 
 Skills are functional bundles of instructions, scripts, and examples found in the `skills/` directory that can be dynamically activated by agents to expand their capabilities.
 
@@ -78,6 +79,7 @@ Skills are functional bundles of instructions, scripts, and examples found in th
 | **[`chaos-mitigation`](file:///home/robedwards/workspace/bean-to-cup/skills/chaos-mitigation/SKILL.md)** | **Stage 7 & Day 2** | Investigates service logs and executes runbooks to resolve simulated outages in `press-service`. | **Active** |
 | **[`deploy-app`](file:///home/robedwards/workspace/bean-to-cup/skills/deploy-app/SKILL.md)** | **Stage 7** | Automatically detects application framework stack, installs packages, and runs local servers. | **Active** |
 | **[`github-workflow`](file:///home/robedwards/workspace/bean-to-cup/skills/github-workflow/SKILL.md)** | **Stage 9** | Manages git staging, milestoned commits, and automated PR generation with the GitHub CLI (`gh`). | **Active** |
+| **[`git-delivery`](file:///home/robedwards/workspace/bean-to-cup/skills/git-delivery/SKILL.md)** | **Stage 9** | Provides an emoji-powered, best-practice delivery pipeline to verify, stage, commit, and raise high-quality "What, Why, How" PRs. | **Active** |
 
 ---
 
