@@ -7,7 +7,7 @@ This document serves as the definitive reference manual and registry for all age
 
 ---
 
-## ⌨️ 1. Custom Commands (21 Total)
+## ⌨️ 1. Custom Commands (23 Total)
 
 All commands in this registry are registered natively in the flat `commands/` directory of the plugin. Nested folder structures are not used to guarantee proper discovery by the `agy` compiler.
 
@@ -17,13 +17,16 @@ All commands in this registry are registered natively in the flat `commands/` di
 | **[`/push`](file:///home/robedwards/workspace/bean-to-cup/commands/push.toml)** | global | **Stage 9** | Delivers code changes to Git following modern best practices, including linting, conventional commits, and rich PR descriptions. | **Active** |
 | **[`/rewrite`](file:///home/robedwards/workspace/bean-to-cup/commands/rewrite.toml)** | global | **Stage 1 & 2** | Initiates an application rewrite workflow (Stages 0-5) by analyzing assessments and coordinating specialized skills. | **Active** |
 | **[`/research`](file:///home/robedwards/workspace/bean-to-cup/commands/research.toml)** | global | **Stage 3** | Spawns parallel investigative agents to map codebase components and patterns. | **Active** |
+| **[`/assess`](file:///home/robedwards/workspace/bean-to-cup/commands/assess.toml)** | global | **Stage 1 & 2** | Executes a context-aware application modernization assessment using Google Cloud's CodMod tool. | **Active** |
+| **[`/record`](file:///home/robedwards/workspace/bean-to-cup/commands/record.toml)** | global | **Stage 8** | Records terminal interactions and compiles them to animated GIFs. | **Active** |
+| **[`/sync`](file:///home/robedwards/workspace/bean-to-cup/commands/sync.toml)** | global | **Stage 5** | Parses the vertical execution plan and synchronizes implementation slices to GitHub issues. | **Active** |
+| **[`/worktree`](file:///home/robedwards/workspace/bean-to-cup/commands/worktree.toml)** | global | **Stage 9** | Manages Git Worktrees and isolates feature branches during development. | **Active** |
 | **[`/loop:start`](file:///home/robedwards/workspace/bean-to-cup/commands/loop:start.toml)** | loop | **Stage 7** | Starts the infinite, self-correcting development cycle (the Ralph loop) under TDD. | **Active** |
 | **[`/loop:cancel`](file:///home/robedwards/workspace/bean-to-cup/commands/loop:cancel.toml)** | loop | **Stage 7** | Cancels any actively running self-correcting development loop. | **Active** |
 | **[`/loop:help`](file:///home/robedwards/workspace/bean-to-cup/commands/loop:help.toml)** | loop | **Stage 7** | Displays diagnostic support and troubleshooting help for the loop commands. | **Active** |
 | **[`/dev`](file:///home/robedwards/workspace/bean-to-cup/commands/dev.toml)** | global | **Utility** | General-purpose developer helper for non-complex, minor inline requests. | **Active** |
 | **[`/startcycle`](file:///home/robedwards/workspace/bean-to-cup/commands/startcycle.toml)** | global | **Stage 1 & 7** | Resumes or bootstraps an existing active feature development cycle. | **Active** |
-| **[`/brew:archive`](file:///home/robedwards/workspace/bean-to-cup/commands/brew:archive.toml)** | brew | **Maintenance** | Clears completed, spent feature grounds from the workspace to save context budget. | **Active** |
-| **[`/brew:init`](file:///home/robedwards/workspace/bean-to-cup/commands/brew:init.toml)** | brew | **Bootstrapping** | *Legacy* command to bootstrap a local project with Head Barista templates. | ⚠️ **Deprecated**<br>*(Now handled automatically upon plugin registration in AGY 2.0)* |
+| **[`/archive`](file:///home/robedwards/workspace/bean-to-cup/commands/archive.toml)** | global | **Maintenance** | Clears completed, spent feature grounds from the workspace to save context budget. | **Active** |
 | **[`/sql:analyze`](file:///home/robedwards/workspace/bean-to-cup/commands/sql:analyze.toml)** | sql | **Stage 3 / Spec** | Analyzes database schemas and legacy stored procedures for dependencies. | **Active** |
 | **[`/ddd:logical`](file:///home/robedwards/workspace/bean-to-cup/commands/ddd:logical.toml)** | ddd | **DDD Stage 1** | Identifies logical subdomain boundaries and compiles the domain aggregate map. | **Active** |
 | **[`/ddd:physical`](file:///home/robedwards/workspace/bean-to-cup/commands/ddd:physical.toml)** | ddd | **DDD Stage 2** | Defines physical design interfaces, database schemas, and contracts. | **Active** |

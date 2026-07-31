@@ -179,10 +179,10 @@ flowchart TD
     %% STAGE 8: AUTOMATED WALKTHROUGH
     subgraph S8 ["Stage 8: Automated Walkthrough"]
         S8_Title["Stage 8: Walkthrough"]:::stage
-        U8["User Types:<br><b>/brew:record</b>"]:::user
+        U8["User Types:<br><b>/record</b>"]:::user
         I8_1["Input 1:<br>07_VERIFICATION.md"]:::artifact
         I8_2["Input 2:<br>walkthrough_scenario.json"]:::default
-        C8["Command: <b>/brew:record</b><br>➔ Skill: asciinema"]:::component
+        C8["Command: <b>/record</b><br>➔ Skill: asciinema"]:::component
         A8["Output:<br>08_WALKTHROUGH.md &<br>08_visual-recap.html"]:::artifact
         
         A7 --> I8_1
@@ -195,7 +195,7 @@ flowchart TD
     %% STAGE 9: PR DELIVERY & MAINTENANCE
     subgraph S9 ["Stage 9: PR Delivery & Maintenance"]
         S9_Title["Stage 9: Delivery & PR"]:::stage
-        U9["User Action:<br>Completes PR review<br>Optionally types:<br><b>/brew:archive</b>, <b>/brew:sync</b>,<br><b>/brew:worktree</b>, <b>/build:production</b>"]:::user
+        U9["User Action:<br>Completes PR review<br>Optionally types:<br><b>/archive</b>, <b>/sync</b>,<br><b>/worktree</b>, <b>/build:production</b>"]:::user
         I9_1["Input 1:<br>Working code"]:::artifact
         I9_2["Input 2:<br>08_WALKTHROUGH.md &<br>08_visual-recap.html"]:::artifact
         C9["Skill: github-workflow<br>(creates PR via <b>gh</b> CLI)"]:::component
@@ -255,11 +255,11 @@ The plugin implements **12 active Custom Commands** mapped as flat namespace TOM
 
 ### Workspace Management & Testing
 *   **`/push <args>`** [CORE]: Delivers code changes to Git following modern best practices, including linting, conventional commits, and rich PR descriptions.
-*   **`/brew:init`** [CORE] *(Deprecated)*: Legacy command to bootstrap your project. This setup is now handled automatically.
-*   **`/brew:archive`** [CORE]: Clears away 'spent grounds' (completed tasks) to keep context clean.
-*   **`/brew:record`** [CORE]: Launches terminal recording and playback scenario capture.
-*   **`/brew:sync`** [CORE]: Synchronizes active branch and plans with upstream repo states.
-*   **`/brew:worktree`** [CORE]: Manages clean, isolated branch checkouts for development.
+*   **`/init`** [CORE] *(Deprecated)*: Legacy command to bootstrap your project. This setup is now handled automatically.
+*   **`/archive`** [CORE]: Clears away 'spent grounds' (completed tasks) to keep context clean.
+*   **`/record`** [CORE]: Launches terminal recording and playback scenario capture.
+*   **`/sync`** [CORE]: Synchronizes active branch and plans with upstream repo states.
+*   **`/worktree`** [CORE]: Manages clean, isolated branch checkouts for development.
 *   **`/dev <task>`** [CORE]: General-purpose development helper for quick, minor inline requests.
 *   **`/test:api`** [CORE]: Specialized endpoint testing and compliance checks.
 *   **`/build:production`** [CORE]: Packages, compiles, and builds production release artifacts.
@@ -396,7 +396,7 @@ gemini extensions link ./bean-to-cup
 >
 > If running on legacy Gemini CLI, you can still optionally run:
 > ```bash
-> /brew:init
+> /init
 > ```
 
 #### 3. Start your first Brew

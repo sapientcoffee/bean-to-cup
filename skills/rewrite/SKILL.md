@@ -21,15 +21,15 @@ An application rewrite leverages the repository's suite of specialized autonomou
 6. **Execution & Kanban Planning (Phase 5):** Use the `kanban` skill to cut vertical slices, conduct dependency mapping, and generate interactive Kanban tracking boards.
 7. **TDD Code Generation (Phase 7):** Use `generate-code` to write backend/frontend codebase slices and `audit-code` for QA compliance.
 8. **Testing & Dev Hosting (Phase 7):** Use `dev` to run local backend/frontend servers, and `test-api` to execute local verification suites.
-9. **Walkthrough & Recording (Phase 8):** Use `brew:record` / `brew-record` to capture high-fidelity terminal playbacks and walkthroughs.
-10. **Delivery & Branching (Phase 9):** Use `brew:worktree` / `brew-worktree` and `github-workflow` to manage isolated branches and open clean pull requests.
+9. **Walkthrough & Recording (Phase 8):** Use the `record` skill to capture high-fidelity terminal playbacks and walkthroughs.
+10. **Delivery & Branching (Phase 9):** Use the `worktree` skill and `github-workflow` to manage isolated branches and open clean pull requests.
 
 ---
 
 ## 🧭 Generic & Flexible Step-by-Step Protocol
 
 ### Step 1: Ingest Assessment Report & Establish Baseline (Language-Agnostic)
-1. **Locate Assessment:** Look for a pre-generated assessment report (e.g., `modernization_report.html`, `petclinic-standard-report-3.6.html`, or a JSON metadata export). If none exists, run the `assess` skill using `brew:assess` to generate one.
+1. **Locate Assessment:** Look for a pre-generated assessment report (e.g., `modernization_report.html`, `petclinic-standard-report-3.6.html`, or a JSON metadata export). If none exists, run the `assess` skill using the `assess` command to generate one.
 2. **Determine Source Stack & Target Runtime:**
    - Identify the source language and frameworks (e.g., legacy Java/Spring, .NET Framework / C#, C/C++, COBOL, mainframe, or modern monolith).
    - Identify the target modernized platform (e.g., Java 21/Spring Boot 3.x, .NET Core/8/9, Go, Node.js/TypeScript).
@@ -83,5 +83,5 @@ An application rewrite leverages the repository's suite of specialized autonomou
 ### Step 6: Human Gate & Execution (Stages 6 to 9)
 1. **Halt for Approval:** Present the PRD, Spec, and Slice Execution Plan to the user. Require explicit "approve" verification.
 2. **Slice-by-Slice Implementation:** Execute using TDD via `/tdd` (silent on success) utilizing the `generate-code` and `audit-code` skills to build and verify each slice.
-3. **Walkthrough Proof:** Capture terminal playbacks or page tests with `brew:record`.
-4. **Isolated Branch Delivery:** Build production packages, isolate branch slices using `brew:worktree`, and create elegant PRs using `gh` via the `github-workflow` skill.
+3. **Walkthrough Proof:** Capture terminal playbacks or page tests with the `record` command.
+4. **Isolated Branch Delivery:** Build production packages, isolate branch slices using the `worktree` command, and create elegant PRs using `gh` via the `github-workflow` skill.

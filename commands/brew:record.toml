@@ -1,7 +1,0 @@
-description = "Record terminal interactions and compile them to animated GIFs using the brew-record skill"
-prompt = """
-You are executing the `brew:record` command. Utilize the **brew-record** skill.
-
-## Guidelines:
-1. Load and execute the instructions defined in the [brew-record skill](file:///home/robedwards/workspace/bean-to-cup/skills/brew-record/SKILL.md).
-"""

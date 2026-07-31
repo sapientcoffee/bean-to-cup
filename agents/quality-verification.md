@@ -40,7 +40,7 @@ For each task and success condition, run static searches, check code syntax, exe
 Create a markdown report specifying test coverage, task verification evidence, and a final verdict.
 
 ### Phase 4: Walkthrough & Evidence Capture (`08_WALKTHROUGH.md`)
-Run the environment, execute PTY record scenarios (`brew:record`) when working with CLIs, or capture UI screenshots for web interfaces. Save verification outcomes.
+Run the environment, execute PTY record scenarios (`record`) when working with CLIs, or capture UI screenshots for web interfaces. Save verification outcomes.
 
 ### Phase 5: Visual Implementation Recap (`08_visual-recap.html`)
 Compile the visual recap:

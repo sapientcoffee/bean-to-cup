@@ -101,7 +101,7 @@ When you open a Pull Request using the GitHub CLI (`gh pr create`), use our prem
 ### 🧪 Verification & Proof
 *Detail how these changes were tested:*
 - [ ] Unit tests passed green 🟢
-- [ ] Manual walkthrough completed with `brew:record` 📹
+- [ ] Manual walkthrough completed with the `record` command 📹
 *Attach terminal playback links or screenshot embeds here:*
 *Format: plans/feature/<slug>/walkthrough.gif (Use relative paths without leading slash for GH rendering!)*
 

@@ -18,7 +18,7 @@ To maintain the highest standards of code and architectural discipline, always a
     5.  **Execution Planning (`05_PLAN.md`):** Establish physical contracts, cut vertical slices into checklist items, and perform a strict dependency analysis to determine which tasks can run in parallel (`[Parallel]`) and which must run serially (`[Serial]`).
     6.  **Human Review Gate (🛑 STOP):** Present design discussion, contracts, and visual plan to the user for explicit approval.
     7.  **TDD Implementation (`07_VERIFICATION.md`):** Spawn a separate, dedicated subagent to implement each individual slice/task. If multiple slices/tasks are marked as parallelizable with no mutual dependencies, execute their subagents concurrently in parallel using TDD via `/tdd` (silent on success).
-    8.  **Walkthrough (`08_WALKTHROUGH.md` & `08_visual-recap.html`):** Capture visual or technical proof via browser agent walkthrough or terminal playback recording (`brew:record`), and generate the visual recap HTML page detailing all changes.
+    8.  **Walkthrough (`08_WALKTHROUGH.md` & `08_visual-recap.html`):** Capture visual or technical proof via browser agent walkthrough or terminal playback recording (`record`), and generate the visual recap HTML page detailing all changes.
     9.  **PR Delivery:** Push branches and open PRs using `gh` CLI, maintaining codebase hygiene with `/improve-codebase-architecture`.
 
 ## 2. Plugin Validation & Schema Compliance

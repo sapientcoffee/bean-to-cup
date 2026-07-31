@@ -1,0 +1,7 @@
+description = "Manage Git Worktrees and Isolate Branches for parallel agent execution using the worktree skill"
+prompt = """
+You are executing the `worktree` command. Utilize the **worktree** skill registered in AGY.
+
+## Guidelines:
+1. Locate, load, and execute the instructions defined in the **worktree** skill registered in AGY.
+"""

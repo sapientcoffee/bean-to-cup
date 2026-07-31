@@ -15,7 +15,7 @@ limitations under the License.
 -->
 
 ---
-name: brew:record
+name: record
 description: Record terminal interactions and compile them to animated GIFs. Use during walkthroughs or on-demand recording sessions.
 ---
 
@@ -74,7 +74,7 @@ Save your scenario file (e.g. `walkthrough_scenario.json`) inside the active fea
 
 ## 2. Running the Recording
 
-Trigger the terminal recording engine using the `brew:record` CLI command.
+Trigger the terminal recording engine using the `record` CLI command.
 
 ### 2.1 Contextual Recording (Stage 8 Walkthrough)
 When recording a verification walkthrough for an active Brew:
@@ -82,7 +82,7 @@ When recording a verification walkthrough for an active Brew:
     `plans/feature/<brew-timestamp-slug>/walkthrough_scenario.json`.
 2.  Execute the CLI command targeting that plan folder:
     ```bash
-    agy brew:record --scenario plans/feature/<brew-timestamp-slug>/walkthrough_scenario.json --output plans/feature/<brew-timestamp-slug>/walkthrough
+    agy record --scenario plans/feature/<timestamp-slug>/walkthrough_scenario.json --output plans/feature/<timestamp-slug>/walkthrough
     ```
 3.  Once complete, embed the resulting `.gif` asset directly inside your `08_WALKTHROUGH.md` report using a relative path:
     ```markdown
@@ -97,7 +97,7 @@ When recording a verification walkthrough for an active Brew:
 To capture arbitrary interactive terminal sessions:
 1.  Run the CLI command without scenario flags:
     ```bash
-    agy brew:record --output docs/recordings/my-interactive-demo
+    agy record --output docs/recordings/my-interactive-demo
     ```
 2.  Type your commands inside the spawned shell.
 3.  Type `exit` or press `Ctrl-D` to complete recording and auto-compile the `.gif`.

@@ -123,10 +123,10 @@ flowchart TD
     %% STAGE 8: AUTOMATED WALKTHROUGH
     subgraph S8 ["Stage 8: Automated Walkthrough"]
         S8_Title["Stage 8: Walkthrough"]:::stage
-        U8["User Types:<br><b>/brew:record</b>"]:::user
+        U8["User Types:<br><b>/record</b>"]:::user
         I8_1["Input 1:<br>07_VERIFICATION.md"]:::artifact
         I8_2["Input 2:<br>walkthrough_scenario.json"]:::default
-        C8["Command: <b>/brew:record</b><br>➔ Skill: asciinema"]:::component
+        C8["Command: <b>/record</b><br>➔ Skill: asciinema"]:::component
         A8["Output:<br>08_WALKTHROUGH.md<br>(Terminal playbacks / GIF)"]:::artifact
         
         A7 --> I8_1
@@ -139,7 +139,7 @@ flowchart TD
     %% STAGE 9: PR DELIVERY & MAINTENANCE
     subgraph S9 ["Stage 9: PR Delivery & Maintenance"]
         S9_Title["Stage 9: Delivery & PR"]:::stage
-        U9["User Action:<br>Completes PR review<br>Optionally types:<br><b>/brew:archive</b>, <b>/brew:sync</b>,<br><b>/brew:worktree</b>, <b>/build:production</b>"]:::user
+        U9["User Action:<br>Completes PR review<br>Optionally types:<br><b>/archive</b>, <b>/sync</b>,<br><b>/worktree</b>, <b>/build:production</b>"]:::user
         I9_1["Input 1:<br>Working code"]:::artifact
         I9_2["Input 2:<br>08_WALKTHROUGH.md"]:::artifact
         C9["Skill: github-workflow<br>(creates PR via <b>gh</b> CLI)"]:::component
@@ -256,7 +256,7 @@ flowchart TD
 *   **Purpose:** Captures terminal recordings and visual evidence verifying complete functional behavior.
 *   **Who Calls It:** The **Orchestration Engine (Head Barista)** once all Stage 7 tasks are green and staged.
 *   **Active Components Engaged:**
-    *   **Command:** [`/brew:record`](file:///home/robedwards/workspace/bean-to-cup/commands/brew:record.toml) launches recording.
+    *   **Command:** [`/record`](file:///home/robedwards/workspace/bean-to-cup/commands/record.toml) launches recording.
     *   **Skill:** [`asciinema`](file:///home/robedwards/workspace/bean-to-cup/skills/asciinema/SKILL.md): Automatically compiles animated playback `.gif` assets of the terminal commands.
 *   **Produced Artifact:** `plans/<feature-slug>/<timestamp>/08_WALKTHROUGH.md` (fully visual Technical proof).
 
@@ -268,9 +268,9 @@ flowchart TD
 *   **Active Components Engaged:**
     *   **Skill:** [`github-workflow`](file:///home/robedwards/workspace/bean-to-cup/skills/github-workflow/SKILL.md): Manages staging, conventions, and uses `gh` to open the PR.
     *   **Commands:**
-        *   [`/brew:archive`](file:///home/robedwards/workspace/bean-to-cup/commands/brew:archive.toml): Clears spent feature grounds to save context limits.
-        *   [`/brew:sync`](file:///home/robedwards/workspace/bean-to-cup/commands/brew:sync.toml): Pulls branch upstream states.
-        *   [`/brew:worktree`](file:///home/robedwards/workspace/bean-to-cup/commands/brew:worktree.toml): Manages clean isolation of branches.
+        *   [`/archive`](file:///home/robedwards/workspace/bean-to-cup/commands/archive.toml): Clears spent feature grounds to save context limits.
+        *   [`/sync`](file:///home/robedwards/workspace/bean-to-cup/commands/sync.toml): Pulls branch upstream states.
+        *   [`/worktree`](file:///home/robedwards/workspace/bean-to-cup/commands/worktree.toml): Manages clean isolation of branches.
         *   [`/build:production`](file:///home/robedwards/workspace/bean-to-cup/commands/build:production.toml): Generates release-ready binary compilations.
 
 ---

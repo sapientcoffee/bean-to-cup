@@ -1,5 +1,5 @@
 ---
-name: brew:archive
+name: archive
 description: Clears away the 'spent grounds' (completed plans) into ./plans/archive and updates .geminiignore.
 ---
 
@@ -59,5 +59,5 @@ This command/skill does not require any mandatory command-line arguments but ope
 ## 4. Execution Example
 Run the command via `agy` or as a task:
 ```bash
-agy brew:archive
+agy archive
 ```

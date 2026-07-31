@@ -1,5 +1,5 @@
 ---
-name: brew:sync
+name: sync
 description: Parse 05_PLAN.md and synchronize tasks to GitHub issues
 ---
 
@@ -62,5 +62,5 @@ python3 scripts/sync.py --plan plans/feature/20260618-sync-automation/05_PLAN.md
 
 ### Full Synchronization:
 ```bash
-agy brew:sync --plan plans/feature/20260618-sync-automation/05_PLAN.md --epic 123
+agy sync --plan plans/feature/20260618-sync-automation/05_PLAN.md --epic 123
 ```

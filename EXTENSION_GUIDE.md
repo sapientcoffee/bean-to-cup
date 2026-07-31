@@ -54,8 +54,8 @@ Invoke specialized sub-agents using `@<name>`:
 | Command | Namespace | Purpose |
 | :--- | :--- | :--- |
 | **`/feature`** | Core | Initiates the 9-phase brewing protocol for a new feature. |
-| **`/brew:init`** | Brew | *(Deprecated)* Bootstraps a local project with the Head Barista protocol (now handled automatically in AGY 2.0). |
-| **`/brew:archive`** | Brew | Clears away 'spent grounds' (completed tasks) to keep context clean. |
+| **`/init`** | Brew | *(Deprecated)* Bootstraps a local project with the Head Barista protocol (now handled automatically in AGY 2.0). |
+| **`/archive`** | Brew | Clears away 'spent grounds' (completed tasks) to keep context clean. |
 | **`/research`** | Core | Spawns parallel agents for deep, factual codebase extraction. |
 | **`/loop:start`** | Loop | Starts an infinite, self-correcting development loop (Ralph). |
 | **`/ddd:*`** | DDD | A specialized 7-step pipeline for refactoring SQL to modern .NET/DDD. |
@@ -115,7 +115,7 @@ bean-to-cup/
     > [!NOTE]
     > Under Antigravity 2.0, bootstrapping is handled automatically upon registration. If you are on the legacy Gemini CLI, you can still optionally run:
     ```bash
-    /brew:init
+    /init
     ```
 3.  **Start a Feature Brew**:
     ```bash

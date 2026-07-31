@@ -1,6 +1,6 @@
-description = "Clears away the 'spent grounds' (completed plans) into ./plans/archive and updates .geminiignore."
+description = "Clears away the completed plans into ./plans/archive and updates .geminiignore."
 prompt = """
-You are executing the `brew:archive` command. Your goal is to clear away the 'spent grounds' (completed plans, rejection reports, and research findings) into an archive directory to keep the workspace clean.
+You are executing the `archive` command. Your goal is to clear away completed plans, rejection reports, and research findings into an archive directory to keep the workspace clean.
 
 Your instructions:
 1. **Read the Master Roadmap**: Read `./plans/00_MASTER_ROADMAP.md` (or the workspace's equivalent master roadmap file) to determine which campaigns, tasks, or phases are marked as "Completed", "Done", or are otherwise finished.

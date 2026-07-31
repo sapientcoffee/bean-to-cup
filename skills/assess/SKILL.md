@@ -135,7 +135,7 @@ To leverage the latest Gemini 3.x capabilities while avoiding Vertex AI regional
      ```json
      {
        "timestamp": "YYYY-MM-DDTHH:MM:SSZ",
-       "command": "brew:assess",
+       "command": "assess",
        "project": "<project-id>",
        "codebase_loc": <loc>,
        "detected_intent": "<intent>",

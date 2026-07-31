@@ -81,7 +81,7 @@ Identify the current state of the project and execute the corresponding phase.
 ### STAGE 8: AUTOMATED WALKTHROUGH
 *   **Trigger:** All tasks in the Implementation Loop are completed and committed.
 *   **Action:** Dispatch `generalist` / `browser_agent` to generate `plans/08_WALKTHROUGH.md` and `plans/08_visual-recap.html` (retrospective review).
-*   **Instruction:** Spin up the dev server, record PIDs. If the feature has a UI, capture screenshots via `browser_agent` using Chrome DevTools. If it is a CLI, capture PTY terminal execution sessions (`brew:record`). Create `08_WALKTHROUGH.md`, copy `templates/visual-recap.html` to `08_visual-recap.html`, fill the diff details and audit findings, and mirror the walkthrough and recap directly to the system artifacts directory.
+*   **Instruction:** Spin up the dev server, record PIDs. If the feature has a UI, capture screenshots via `browser_agent` using Chrome DevTools. If it is a CLI, capture PTY terminal execution sessions (`record`). Create `08_WALKTHROUGH.md`, copy `templates/visual-recap.html` to `08_visual-recap.html`, fill the diff details and audit findings, and mirror the walkthrough and recap directly to the system artifacts directory.
 
 ### STAGE 9: PR DELIVERY & MAINTENANCE
 *   **Trigger:** Walkthrough and recap are completed and approved.

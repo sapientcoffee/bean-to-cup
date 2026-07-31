@@ -1,5 +1,5 @@
 ---
-name: brew:worktree
+name: worktree
 description: Manage Git Worktrees and Isolate Branches for parallel agent execution.
 ---
 
@@ -60,15 +60,15 @@ The worktree lifecycle manager accepts the following parameters:
 
 ### Spawning a new Isolated Worktree:
 ```bash
-agy brew:worktree --action create --task 456 --slug implement-auth-validation
+agy worktree --action create --task 456 --slug implement-auth-validation
 ```
 
 ### Merging and Finalizing work:
 ```bash
-agy brew:worktree --action merge --task 456
+agy worktree --action merge --task 456
 ```
 
 ### Startup Reconciliation and Cleanup:
 ```bash
-agy brew:worktree --action clean
+agy worktree --action clean
 ```

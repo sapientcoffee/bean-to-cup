@@ -1,0 +1,7 @@
+description = "Record terminal interactions and compile them to animated GIFs using the record skill"
+prompt = """
+You are executing the `record` command. Utilize the **record** skill registered in AGY.
+
+## Guidelines:
+1. Locate, load, and execute the instructions defined in the **record** skill registered in AGY.
+"""
