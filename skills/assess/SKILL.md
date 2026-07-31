@@ -1,5 +1,5 @@
 ---
-name: brew-assess
+name: assess
 description: Exposes the app modernization assessment skill, performing agentic codebase scans, GCP credential verification, cost estimation checks, and executing the codmod CLI.
 ---
 
