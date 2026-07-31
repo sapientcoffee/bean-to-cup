@@ -7,13 +7,14 @@ This document serves as the definitive reference manual and registry for all age
 
 ---
 
-## ⌨️ 1. Custom Commands (19 Total)
+## ⌨️ 1. Custom Commands (20 Total)
 
 All commands in this registry are registered natively in the flat `commands/` directory of the plugin. Nested folder structures are not used to guarantee proper discovery by the `agy` compiler.
 
 | Command / Shortcut | Namespace | Target SDLC Stage | Core Objective & Behavior | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **[`/feature`](file:///home/robedwards/workspace/bean-to-cup/commands/feature.toml)** | global | **Stage 2** | Initiates the 9-stage feature development state machine, prompting requirements gathering. | **Active** |
+| **[`/rewrite`](file:///home/robedwards/workspace/bean-to-cup/commands/rewrite.toml)** | global | **Stage 1 & 2** | Initiates an application rewrite workflow (Stages 0-5) by analyzing assessments and coordinating specialized skills. | **Active** |
 | **[`/research`](file:///home/robedwards/workspace/bean-to-cup/commands/research.toml)** | global | **Stage 3** | Spawns parallel investigative agents to map codebase components and patterns. | **Active** |
 | **[`/loop:start`](file:///home/robedwards/workspace/bean-to-cup/commands/loop:start.toml)** | loop | **Stage 7** | Starts the infinite, self-correcting development cycle (the Ralph loop) under TDD. | **Active** |
 | **[`/loop:cancel`](file:///home/robedwards/workspace/bean-to-cup/commands/loop:cancel.toml)** | loop | **Stage 7** | Cancels any actively running self-correcting development loop. | **Active** |
@@ -57,7 +58,7 @@ Specialized subagents are dispatched with specific, isolated prompts to execute 
 
 ---
 
-## 🛠️ 3. Modular Skills (13 Total)
+## 🛠️ 3. Modular Skills (14 Total)
 
 Skills are functional bundles of instructions, scripts, and examples found in the `skills/` directory that can be dynamically activated by agents to expand their capabilities.
 
@@ -69,6 +70,7 @@ Skills are functional bundles of instructions, scripts, and examples found in th
 | **[`domain-modeling`](file:///home/robedwards/workspace/bean-to-cup/skills/domain-modeling/SKILL.md)** | **Stage 1, 4 & 5** | Compiles and updates the project-wide Ubiquitous Glossary in `docs/glossary.md` on-the-fly during requirements design. | **Active** |
 | **[`feature`](file:///home/robedwards/workspace/bean-to-cup/skills/feature/SKILL.md)** | **Stage 2** | Prepares feature contexts and slugs, bootstraps versioned subdirectories, and launches Socratic alignment. | **Active** |
 | **[`write-prd`](file:///home/robedwards/workspace/bean-to-cup/skills/write-prd/SKILL.md)** | **Stage 2** | Compiles requirements, KPIs, and in/out-of-scope boundaries into machine-parsable `02_PRD.md`. | **Active** |
+| **[`rewrite`](file:///home/robedwards/workspace/bean-to-cup/skills/rewrite/SKILL.md)** | **Stage 1 & 2** | Orchestrates a legacy application rewrite workflow by analyzing modernization assessments and coordinating specialized skills. | **Active** |
 | **[`research`](file:///home/robedwards/workspace/bean-to-cup/skills/research/SKILL.md)** | **Stage 3** | Coordinates context-isolated parallel codebase mapping and aggregates facts into `03_EXTRACTION.md`. | **Active** |
 | **[`audit-code`](file:///home/robedwards/workspace/bean-to-cup/skills/audit-code/SKILL.md)** | **Stage 7** | Acts as QA to check spec alignment, find bugs, and commit changes inside the `app_build/` directory. | **Active** |
 | **[`generate-code`](file:///home/robedwards/workspace/bean-to-cup/skills/generate-code/SKILL.md)** | **Stage 7** | Automatically scaffolds boilerplate, components, and controllers according to Spec contracts. | **Active** |

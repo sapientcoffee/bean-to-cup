@@ -246,10 +246,11 @@ The Bean-to-Cup plugin manages an autonomous network of **8 active specialized s
 
 ## ⌨️ Custom Commands
 
-The plugin implements **10 active Custom Commands** mapped as flat namespace TOML declarations in the `commands/` directory.
+The plugin implements **11 active Custom Commands** mapped as flat namespace TOML declarations in the `commands/` directory.
 
 ### Core Lifecycle
 *   **`/feature <goal>`** [CORE]: Initiates the 9-phase protocol starting with an AI-Ready PRD and versioned workspace setup.
+*   **`/rewrite <args>`** [CORE]: Initiates an application rewrite workflow (Stages 0-5) by analyzing assessments and coordinating specialized skills.
 *   **`/research <query>`** [CORE]: Spawns parallel agents for deep, factual context-isolated codebase extraction.
 
 ### Workspace Management & Testing
@@ -281,6 +282,7 @@ Each modular skill in the `skills/` directory complies with the open **Agent Ski
 *   **`grill` / `grilling`** [CORE]: **Stage 1**: Relentless interactive interview and requirements stress-testing.
 *   **`domain-modeling`** [CORE]: **Stage 1, 4 & 5**: Builds, refines, and maintains the ubiquitous glossary and domain models.
 *   **`write-prd`** [CORE]: **Stage 2**: Standardizes requirements, non-goals, and KPIs into a machine-parsable `02_PRD.md`.
+*   **`rewrite`** [CORE]: **Stage 1 & 2**: Orchestrates a legacy application rewrite workflow by analyzing modernization assessments and coordinating specialized skills.
 *   **`research`** [CORE]: **Stage 3**: Guides context-isolated codebase extraction into factual `03_EXTRACTION.md`.
 *   **`audit-code`** [CORE]: **Stage 7**: Runs architectural compliance checks, QA gates, and executes minor commits.
 *   **`generate-code`** [CORE]: **Stage 7**: Generates boilerplate and components according to Spec contracts.
