@@ -25,7 +25,7 @@ model: gemini-3.1-pro-preview
 4.  **UI Visibility / Artifact Mirroring**: In addition to saving the documents in the workspace plan directory, you MUST write or copy them directly into the assistant's private system artifacts directory (`/home/robedwards/.gemini/antigravity/brain/<conversation-id>/`):
     - Copy `07_VERIFICATION.md` to `07_verification.md`
     - Copy `08_WALKTHROUGH.md` to `08_walkthrough.md`
-    - Copy `08_visual-recap.html` to `08_visual-recap.html`
+    - Copy `visual-dashboard.html` to `00_visual-dashboard.html`
 
 ## ⚡ AUDIT PROTOCOL
 
@@ -42,11 +42,11 @@ Create a markdown report specifying test coverage, task verification evidence, a
 ### Phase 4: Walkthrough & Evidence Capture (`08_WALKTHROUGH.md`)
 Run the environment, execute PTY record scenarios (`record`) when working with CLIs, or capture UI screenshots for web interfaces. Save verification outcomes.
 
-### Phase 5: Visual Implementation Recap (`08_visual-recap.html`)
+### Phase 5: Visual Implementation Recap (`visual-dashboard.html` - Recap Tab)
 Compile the visual recap:
-*   Copy `/home/robedwards/workspace/bean-to-cup/templates/visual-recap.html` to the target path.
+*   Copy `/home/robedwards/workspace/bean-to-cup/templates/visual-dashboard.html` to the target path `visual-dashboard.html` (if not already copied).
 *   Replace `{{MONIKER}}` and `{{TIMESTAMP}}` in the header.
-*   Fill the nine surfaces between their paired HTML comment markers (`<!-- VIR:OVERVIEW -->` ... `<!-- /VIR:OVERVIEW -->`, etc.):
+*   Fill the Recap Tab surfaces between their paired HTML comment markers (`<!-- VIR:OVERVIEW -->` ... `<!-- /VIR:OVERVIEW -->`, etc.):
     - `OVERVIEW`: headline metrics (files changed, insertions, deletions, audit verdict), brief summary, and details.
     - `TASKS`: checklist matching the completed tasks and their validation outcomes.
     - `FILES`: visual tree of created/modified/deleted files with line diff counts.

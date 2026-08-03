@@ -16,13 +16,13 @@
     *   **Timestamping:** Use `date +%Y-%m-%d_%H%M` from the Linux subsystem for the directory name.
     *   **Standard Artifacts (Versioned Directory & Global Docs):**
         - `00_IDEATION.md` (Stage 0: Discovery outline, if initiated)
-        - `docs/glossary.md` & `docs/visual-glossary.html` (Stage 1: Global Ubiquitous Glossary & visual companion)
-        - `02_PRD.md` & `02_visual-prd.html` (Stage 2: Product Requirements in markdown and visual HTML)
+        - `docs/glossary.md` & `visual-dashboard.html` (Stage 1: Global Ubiquitous Glossary & Glossary Tab)
+        - `02_PRD.md` & `visual-dashboard.html` (Stage 2: Product Requirements & PRD Tab)
         - `03_EXTRACTION.md` (Stage 3: Technical Extraction: Factual codebase mapping via sub-agents)
-        - `04_SPEC.md` & `04_visual-spec.html` (Stage 4: Design Specification in markdown and visual HTML)
+        - `04_SPEC.md` & `visual-dashboard.html` (Stage 4: Design Specification & Spec Tab)
         - `05_PLAN.md` (Stage 5: Implementation Plan: Sequential TDD tasks)
-        - `07_VERIFICATION.md` (Stage 7: Validation Report: Proof of audit)
-        - `08_WALKTHROUGH.md` & `08_visual-recap.html` (Stage 8: Automated Walkthrough and visual recap)
+        - `07_VERIFICATION.md` & `visual-dashboard.html` (Stage 7: Validation Report & Kanban Tab)
+        - `08_WALKTHROUGH.md` & `visual-dashboard.html` (Stage 8: Automated Walkthrough & Recap Tab)
 6.  **Human Gating (Upstream Design Alignment):** Use the `ask_user` tool for ALL technical decision gating, discovery, and design choices. You MUST solicit user approval on the **Design Discussion and contracts** in Stage 6 before moving from Strategy/Design to active Implementation. You do not ask the developer to read 1,000-line tactical plans; you align on high-leverage design and contracts.
 7.  **Git & Rollback Guardian:** You are the ONLY engine allowed to mutate git history. If implementation loop failures occur, you govern stashing or reverting to preserve progress while keeping a clean workspace.
 
@@ -43,17 +43,17 @@ Identify the current state of the project and execute the corresponding phase.
 *   **Trigger:** User asks to "Start Project", "Add Feature", or triggers a feature discovery session.
 *   **Action:** 
     1.  Analyze the user's request (and `00_IDEATION.md` if available) for clarity, contradictions, or missing logical steps.
-    2.  **Socratic Grilling:** Engage in Socratic requirements gathering. Trigger the custom **`/grill`** skill (which nests relentless **`/grilling`** and codebase-aware **`/domain-modeling`**). Address edge cases, compile initial Architecture Decision Records (`docs/adr/`), and write/update the global glossary (`docs/glossary.md`) and compile the global visual glossary (`docs/visual-glossary.html`) *on-the-fly* as the interview progresses.
-*   **Output:** `docs/glossary.md` and `docs/visual-glossary.html`. Also mirror the visual HTML into the chat UI's persistent artifacts folder as `/home/robedwards/.gemini/antigravity/brain/<conversation-id>/01_visual-glossary.html`.
+    2.  **Socratic Grilling:** Engage in Socratic requirements gathering. Trigger the custom **`/grill`** skill (which nests relentless **`/grilling`** and codebase-aware **`/domain-modeling`**). Address edge cases, compile initial Architecture Decision Records (`docs/adr/`), and write/update the global glossary (`docs/glossary.md`) and write/update the Glossary tab of the unified master **`visual-dashboard.html`** *on-the-fly* as the interview progresses.
+*   **Output:** `docs/glossary.md` and `visual-dashboard.html` (Glossary Tab). Also mirror the visual HTML into the chat UI's persistent artifacts folder as `/home/robedwards/.gemini/antigravity/brain/<conversation-id>/00_visual-dashboard.html`.
 
 ### STAGE 2: PRODUCT REQUIREMENTS (PRD)
 *   **Trigger:** Socratic Alignment is complete.
 *   **Action:** 
-    1.  Trigger the **`/to-prd`** command to synthesize the Socratic discussion and compile a highly structured Product Requirements Document at `plans/<feature-slug>/<timestamp>/02_PRD.md` and its visual HTML companion at `plans/<feature-slug>/<timestamp>/02_visual-prd.html`. Keep requirements strictly focused on business logic and customer value, completely technology-agnostic.
-*   **Exit Criteria:** User confirms the PRD is accurate. Both files must be mirrored to the system artifacts directory (`02_prd.md` and `02_visual-prd.html`).
+    1.  Trigger the **`/to-prd`** command to synthesize the Socratic discussion and compile a highly structured Product Requirements Document at `plans/<feature-slug>/<timestamp>/02_PRD.md` and write requirements to the PRD Tab of the unified master **`visual-dashboard.html`**. Keep requirements strictly focused on business logic and customer value, completely technology-agnostic.
+*   **Exit Criteria:** User confirms the PRD is accurate. Both files must be mirrored to the system artifacts directory (`02_prd.md` and `00_visual-dashboard.html`).
 
 ### STAGE 3: CONTEXT EXTRACTION (Research)
-*   **Trigger:** Requirements (`02_PRD.md` & `02_visual-prd.html`) are confirmed.
+*   **Trigger:** Requirements (`02_PRD.md` & `visual-dashboard.html`) are confirmed.
 *   **Action:** 
     1.  Analyze the requirements to identify what knowledge is missing.
     2.  Generate a "Research Brief" consisting of a list of factual questions for investigation.
@@ -63,25 +63,25 @@ Identify the current state of the project and execute the corresponding phase.
 
 ### STAGE 4: TECHNICAL SPECIFICATION (Spec)
 *   **Trigger:** `02_PRD.md` and `03_EXTRACTION.md` are ready.
-*   **Action:** Dispatch `system-design` to create a detailed Technical Specification at `plans/04_SPEC.md` and its visual companion `plans/04_visual-spec.html`.
-*   **Instruction:** Read the PRD and Extraction Report. Design the architecture aligned with `design.md`, write `04_SPEC.md`, copy `templates/visual-spec.html` to `04_visual-spec.html`, fill the visual tabs, and mirror both files to the system artifacts directory.
+*   **Action:** Dispatch `system-design` to create a detailed Technical Specification at `plans/04_SPEC.md` and write design spec to the Design Spec Tab of the unified master **`visual-dashboard.html`**.
+*   **Instruction:** Read the PRD and Extraction Report. Design the architecture aligned with `design.md`, write `04_SPEC.md`, copy `templates/visual-dashboard.html` to `visual-dashboard.html` (if not already copied), fill the Spec Tab, and mirror both files to the system artifacts directory.
 
 ### STAGE 5: EXECUTION PLANNING (Plan)
-*   **Trigger:** Design Spec (`04_SPEC.md` & `04_visual-spec.html`) is ready.
+*   **Trigger:** Design Spec (`04_SPEC.md` & `visual-dashboard.html`) is ready.
 *   **Action:** Dispatch `system-design` to establish contracts and plan tactical execution. Write interface contracts first. Cut vertical slices. Create a step-by-step implementation plan `plans/05_PLAN.md` (checkbox format, prefixed with `[Serial]` or `[Parallel]`).
 
 ### STAGE 6: HUMAN REVIEW GATE (🛑 STOP)
 *   **Trigger:** Spec Contracts are physicalized and the tactical `plans/05_PLAN.md` is generated.
-*   **Action:** **STOP.** Present the Design Discussion and structure contracts (and the visual plan in `04_visual-spec.html`) to the user. Do not proceed to execution until the user approves.
+*   **Action:** **STOP.** Present the Design Discussion and structure contracts (and the Kanban tasks inside the Kanban Tab of the unified master `visual-dashboard.html`) to the user. Do not proceed to execution until the user approves.
 
 ### STAGE 7: TEST-DRIVEN IMPLEMENTATION
 *   **Trigger:** User says "Approve".
-*   **Action:** Iterate through pending Tasks one by one using TDD (`/tdd` guardrail loop). Implement red-green-refactor steps. Stage verified files. Commit milestoned progress only upon approval. Save verification log as `plans/07_VERIFICATION.md`.
+*   **Action:** Iterate through pending Tasks one by one using TDD (`/tdd` guardrail loop). Implement red-green-refactor steps. Stage verified files. Commit milestoned progress only upon approval. Save verification log as `plans/07_VERIFICATION.md` and manage cards inside the Kanban Tab of the unified master `visual-dashboard.html`.
 
 ### STAGE 8: AUTOMATED WALKTHROUGH
 *   **Trigger:** All tasks in the Implementation Loop are completed and committed.
-*   **Action:** Dispatch `generalist` / `browser_agent` to generate `plans/08_WALKTHROUGH.md` and `plans/08_visual-recap.html` (retrospective review).
-*   **Instruction:** Spin up the dev server, record PIDs. If the feature has a UI, capture screenshots via `browser_agent` using Chrome DevTools. If it is a CLI, capture PTY terminal execution sessions (`record`). Create `08_WALKTHROUGH.md`, copy `templates/visual-recap.html` to `08_visual-recap.html`, fill the diff details and audit findings, and mirror the walkthrough and recap directly to the system artifacts directory.
+*   **Action:** Dispatch `generalist` / `browser_agent` to generate `plans/08_WALKTHROUGH.md` and write details to the Recap Tab of the unified master **`visual-dashboard.html`** (retrospective review).
+*   **Instruction:** Spin up the dev server, record PIDs. If the feature has a UI, capture screenshots via `browser_agent` using Chrome DevTools. If it is a CLI, capture PTY terminal execution sessions (`record`). Create `08_WALKTHROUGH.md`, fill the Recap Tab of the unified master `visual-dashboard.html`, and mirror both walkthrough and dashboard directly to the system artifacts directory.
 
 ### STAGE 9: PR DELIVERY & MAINTENANCE
 *   **Trigger:** Walkthrough and recap are completed and approved.
