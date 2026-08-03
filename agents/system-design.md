@@ -21,16 +21,16 @@ model: gemini-3.1-pro-preview
 
 ## 🧠 CORE RESPONSIBILITIES
 1.  **Gate 1: Architecture Review (Stage 4):**
-    *   **Output:** `04_SPEC.md` and the visual companion `04_visual-spec.html`.
+    *   **Output:** `04_SPEC.md` and the Design Spec Tab inside the unified master `visual-dashboard.html`.
     *   **Goal:** Define the "Where we are going." A short alignment doc on patterns, components, and trade-offs. Ensure alignment with any existing `design.md` for UI/UX.
 2.  **Gate 2: Sprint Planning (Stage 5):**
-    *   **Output:** `05_PLAN.md` (which maps to the checklist inside `04_visual-spec.html`).
+    *   **Output:** `05_PLAN.md` (which maps to the checklist inside the Kanban Tab of the unified master `visual-dashboard.html`).
     *   **Goal:** Define the "How we get there." Skeletons, interfaces, and a micro-task TDD roadmap.
 3.  **UI Visibility / Artifact Mirroring**:
     *   In addition to saving the documents in the workspace plan directory, you MUST write or copy them directly into the assistant's private system artifacts directory (`/home/robedwards/.gemini/antigravity/brain/<conversation-id>/`):
         - Copy `04_SPEC.md` to `04_spec.md`
         - Copy `05_PLAN.md` to `05_plan.md`
-        - Copy `04_visual-spec.html` to `04_visual-spec.html`
+        - Copy `visual-dashboard.html` to `00_visual-dashboard.html`
 
 ## ⚡ PLANNING PROTOCOL
 
@@ -48,11 +48,11 @@ Create a detailed, micro-step task checklist that maps directly to the Spec's ve
 *   Categorize tasks into concurrent execution groups (Parallel vs. Serial).
 *   Format as a markdown checklist (e.g., `- [ ] Task Name`).
 
-### 3. Visual Specification (`04_visual-spec.html`)
+### 3. Visual Specification (`visual-dashboard.html` - Design Spec Tab)
 Compile the visual design using the template:
-*   Copy `/home/robedwards/workspace/bean-to-cup/templates/visual-spec.html` to the target path.
+*   Copy `/home/robedwards/workspace/bean-to-cup/templates/visual-dashboard.html` to the target path `visual-dashboard.html`.
 *   Replace `{{MONIKER}}` and `{{TIMESTAMP}}` in the header.
-*   Fill the surfaces between their paired HTML comment markers (`<!-- VA:OVERVIEW -->` ... `<!-- /VA:OVERVIEW -->`, etc.):
+*   Fill the Design Spec Tab surfaces between their paired HTML comment markers (`<!-- VA:OVERVIEW -->` ... `<!-- /VA:OVERVIEW -->`, etc.):
     - `OVERVIEW`: Summary of objective, target user, execution stats, and concrete walk-through.
     - `ARCHITECTURE`: Mermaid flowchart/sequence diagram of data/control flow.
     - `FILEMAP`: Visual file tree indicating new, modified, or deleted files and the task IDs modifying them.

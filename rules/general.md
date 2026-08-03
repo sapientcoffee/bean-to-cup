@@ -9,17 +9,18 @@ Welcome to the **Bean-to-Cup** CLI plugin repository! This is an autonomous bari
 To maintain the highest standards of code and architectural discipline, always adhere to the following rules:
 
 ## 1. The Perfect Brew (Stage 0 to Stage 9 SDLC Protocol)
-*   **Strict State Machine:** We treat software tasks as "Brews." You must follow the Stage 0-9 document-driven protocol:
+*   **Strict State Machine:** We treat software tasks as "Brews." You must follow the Stage 0-9 document-driven protocol, writing or updating active tabs in the single unified master **`visual-dashboard.html`** across each phase:
     0.  **Discovery/Ideation (Optional - `00_IDEATION.md`):** Formulate raw ideas, persona friction, and data schemas.
-    1.  **Socratic Alignment (`docs/glossary.md` & `docs/visual-glossary.html`):** Engage in Socratic requirements gathering, build the global Ubiquitous Glossary, and publish the visual glossary companion.
-    2.  **PRD (`02_PRD.md` & `02_visual-prd.html`):** Establish requirements, non-goals, target personas, metrics, and acceptance criteria in both markdown and visual HTML.
+    1.  **Socratic Alignment (`docs/glossary.md` & `visual-dashboard.html`):** Engage in Socratic requirements gathering, build the global Ubiquitous Glossary, and publish to the Glossary tab inside the unified dashboard.
+    2.  **PRD (`02_PRD.md` & `visual-dashboard.html`):** Establish requirements, non-goals, target personas, metrics, and acceptance criteria in both markdown and the Product PRD tab inside the unified dashboard.
     3.  **Extraction (`03_EXTRACTION.md`):** Conduct blind, factual codebase research using specialized sub-agents.
-    4.  **Specification (`04_SPEC.md` & `04_visual-spec.html`):** Design the architecture aligned with local `design.md`, including threat model, telemetry, and visual spec layout.
-    5.  **Execution Planning (`05_PLAN.md`):** Establish physical contracts, cut vertical slices into checklist items, and perform a strict dependency analysis to determine which tasks can run in parallel (`[Parallel]`) and which must run serially (`[Serial]`).
-    6.  **Human Review Gate (🛑 STOP):** Present design discussion, contracts, and visual plan to the user for explicit approval.
-    7.  **TDD Implementation (`07_VERIFICATION.md`):** Spawn a separate, dedicated subagent to implement each individual slice/task. If multiple slices/tasks are marked as parallelizable with no mutual dependencies, execute their subagents concurrently in parallel using TDD via `/tdd` (silent on success).
-    8.  **Walkthrough (`08_WALKTHROUGH.md` & `08_visual-recap.html`):** Capture visual or technical proof via browser agent walkthrough or terminal playback recording (`record`), and generate the visual recap HTML page detailing all changes.
+    4.  **Specification (`04_SPEC.md` & `visual-dashboard.html`):** Design the architecture aligned with local `design.md`, including threat model, telemetry, and the Design Spec tab inside the unified dashboard.
+    5.  **Execution Planning (`05_PLAN.md`):** Establish physical contracts, cut vertical slices, and perform dependency analysis. Set up task states inside the Kanban Board tab of the unified dashboard.
+    6.  **Human Review Gate (🛑 STOP):** Present design discussion, contracts, and unified visual dashboard to the user for explicit approval.
+    7.  **TDD Implementation (`07_VERIFICATION.md` & `visual-dashboard.html`):** Spawn specialized subagents to execute implementation slices. Developers or agents interactively manage tasks inside the Kanban Board tab of the unified dashboard.
+    8.  **Walkthrough (`08_WALKTHROUGH.md` & `visual-dashboard.html`):** Capture visual or technical proof via browser agent walkthrough or terminal playback recording (`record`), and generate the Recap tab of the unified dashboard detailing all changes.
     9.  **PR Delivery:** Push branches and open PRs using `gh` CLI, maintaining codebase hygiene with `/improve-codebase-architecture`.
+
 
 ## 2. Plugin Validation & Schema Compliance
 *   **Continuous Validation:** All commands (`commands/*.toml`), skills (`skills/*/SKILL.md`), and hook files (`hooks.json`) must comply with the `agy 2.0` schema.
@@ -27,4 +28,5 @@ To maintain the highest standards of code and architectural discipline, always a
 
 ## 3. Core Discipline (No Spec, No Code)
 *   **Zero Improvisation:** Never write code directly without a corresponding and approved specification and implementation plan.
+*   **Dual-Existence & Stage Handoff Protocol:** The markdown files (`02_PRD.md`, `04_SPEC.md`, `05_PLAN.md`, `07_VERIFICATION.md`, and `08_WALKTHROUGH.md`) coexist perfectly with `visual-dashboard.html` as the definitive, machine-parseable source of truth representing each stage. They are used directly by the test harness and model parsers as high-fidelity stage handoffs, ensuring full backward compatibility and automated parser interoperability.
 *   **Licensing:** All new source files must contain the standard Google Apache 2.0 license header. Use the `google-license-manager` skill to automate this.

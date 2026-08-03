@@ -27,14 +27,14 @@ This extension implements emerging standards for AI-assisted development:
 | SDLC Stage | Standard / Convention | Artifact Files | extension Role |
 | :--- | :--- | :--- | :--- |
 | **Stage 0 (Optional)** | Product Discovery | `00_IDEATION.md` | Formulate raw ideas, persona friction, and data schemas. |
-| **Stage 1** | Socratic Alignment | `docs/glossary.md`<br>`docs/visual-glossary.html` | Engage in Socratic interview, build global Ubiquitous Glossary and visual companion. |
-| **Stage 2** | Product Requirements | `02_PRD.md`<br>`02_visual-prd.html` | Establish requirements and Gherkin scenarios in markdown and visual HTML. |
+| **Stage 1** | Socratic Alignment | `docs/glossary.md`<br>`visual-dashboard.html` (Glossary Tab) | Engage in Socratic interview, build global Ubiquitous Glossary and visual companion. |
+| **Stage 2** | Product Requirements | `02_PRD.md`<br>`visual-dashboard.html` (PRD Tab) | Establish requirements and Gherkin scenarios in markdown and visual HTML. |
 | **Stage 3** | Context Extraction | `03_EXTRACTION.md` | Factual codebase mapping (Blind Research). |
-| **Stage 4** | Technical Specification | `04_SPEC.md`<br>`04_visual-spec.html` | Design architecture and layout visual spec interface. |
+| **Stage 4** | Technical Specification | `04_SPEC.md`<br>`visual-dashboard.html` (Spec Tab) | Design architecture and layout visual spec interface. |
 | **Stage 5** | Execution Planning | `05_PLAN.md` | Slices, TDD checklist, & physical contracts. |
 | **Stage 6** | Human Review Gate | *None (Halt)* | STOP. Verify design contracts and visual specs before execution. |
-| **Stage 7** | Test-Driven Implementation | `07_VERIFICATION.md` | Incrementally execute code under TDD loop. |
-| **Stage 8** | Automated Walkthrough | `08_WALKTHROUGH.md`<br>`08_visual-recap.html` | Visual/technical walkthroughs and visual recap report. |
+| **Stage 7** | Test-Driven Implementation | `07_VERIFICATION.md`<br>`visual-dashboard.html` (Kanban Tab) | Incrementally execute code under TDD loop and track live progress. |
+| **Stage 8** | Automated Walkthrough | `08_WALKTHROUGH.md`<br>`visual-dashboard.html` (Recap Tab) | Visual/technical walkthroughs and visual recap report. |
 | **Stage 9** | PR Delivery & Maintenance | *PR Description* | Push branch, submit PR with walkthrough and recap reports. |
 
 ---
@@ -54,6 +54,9 @@ Agents are prone to "over-implementing." Our artifacts explicitly list **Constra
 
 #### D. Agentic Validation (Evals)
 Don't just write tests; write Evals. In your `04_SPEC.md`, we define what "Success" looks like for the AI using measurable criteria (SLIs/SLOs), such as "The generated API must have a response time < 100ms."
+
+#### E. Dual-Existence & Stage Handoff Protocol
+The markdown files (`02_PRD.md`, `04_SPEC.md`, `05_PLAN.md`, `07_VERIFICATION.md`, and `08_WALKTHROUGH.md`) coexist perfectly with the consolidated `visual-dashboard.html` as the definitive, machine-parseable source of truth representing each stage. They are used directly by the test harness and model parsers as high-fidelity stage handoffs, ensuring full backward compatibility and automated parser interoperability.
 
 ---
 
@@ -91,7 +94,7 @@ flowchart TD
         U1["User Types:<br><b>/feature [goal]</b><br>+ Answers Socratic Qs"]:::user
         I1["Input:<br>00_IDEATION.md (Optional)"]:::artifact
         C1["Skills: grill, grilling,<br>domain-modeling"]:::component
-        A1["Output:<br>docs/glossary.md &<br>docs/visual-glossary.html"]:::artifact
+        A1["Output:<br>docs/glossary.md &<br>visual-dashboard.html (Glossary Tab)"]:::artifact
         
         A0 -.-> I1
         U1 --> C1
@@ -103,9 +106,9 @@ flowchart TD
     subgraph S2 ["Stage 2: Product Requirements"]
         S2_Title["Stage 2: Product Requirements"]:::stage
         U2["User Action:<br>Reviews PRD in chat UI"]:::user
-        I2["Input:<br>docs/glossary.md &<br>docs/visual-glossary.html"]:::artifact
+        I2["Input:<br>docs/glossary.md &<br>visual-dashboard.html (Glossary Tab)"]:::artifact
         C2["Skill: write-prd"]:::component
-        A2["Output:<br>02_PRD.md &<br>02_visual-prd.html"]:::artifact
+        A2["Output:<br>02_PRD.md &<br>visual-dashboard.html (PRD Tab)"]:::artifact
         
         A1 --> I2
         U2 -.-> C2
@@ -131,10 +134,10 @@ flowchart TD
     subgraph S45 ["Stages 4 & 5: Spec & Plan"]
         S45_Title["Stages 4 & 5: Spec & Plan"]:::stage
         U45["User Action:<br>None (Automated)"]:::user
-        I45_1["Input 1:<br>02_PRD.md &<br>02_visual-prd.html"]:::artifact
+        I45_1["Input 1:<br>02_PRD.md &<br>visual-dashboard.html (PRD Tab)"]:::artifact
         I45_2["Input 2:<br>03_EXTRACTION.md"]:::artifact
         C45["Subagent: @architect<br>(system-design.md)"]:::component
-        A4["Output:<br>04_SPEC.md &<br>04_visual-spec.html"]:::artifact
+        A4["Output:<br>04_SPEC.md &<br>visual-dashboard.html (Spec Tab)"]:::artifact
         A5["Output:<br>05_PLAN.md (Checklist)"]:::artifact
         
         A2 -.-> I45_1
@@ -165,7 +168,7 @@ flowchart TD
         I7_1["Input 1:<br>04_SPEC.md (Contracts)"]:::artifact
         I7_2["Input 2:<br>05_PLAN.md (Checklist)"]:::artifact
         C7["Subagents: @engineer, @auditor,<br>@code-review<br>➔ Skills: generate-code, audit-code,<br>kanban, deploy-app<br>➔ Hook: lint-on-change.sh"]:::component
-        A7["Outputs:<br>- Working verified code<br>- 07_VERIFICATION.md (Logs)"]:::artifact
+        A7["Outputs:<br>- Working verified code<br>- 07_VERIFICATION.md (Logs)<br>- visual-dashboard.html (Kanban Tab)"]:::artifact
         
         U6 -->|Approved| C7
         A4 -.-> I7_1
@@ -183,7 +186,7 @@ flowchart TD
         I8_1["Input 1:<br>07_VERIFICATION.md"]:::artifact
         I8_2["Input 2:<br>walkthrough_scenario.json"]:::default
         C8["Command: <b>/record</b><br>➔ Skill: asciinema"]:::component
-        A8["Output:<br>08_WALKTHROUGH.md &<br>08_visual-recap.html"]:::artifact
+        A8["Output:<br>08_WALKTHROUGH.md &<br>visual-dashboard.html (Recap Tab)"]:::artifact
         
         A7 --> I8_1
         U8 --> C8
@@ -197,7 +200,7 @@ flowchart TD
         S9_Title["Stage 9: Delivery & PR"]:::stage
         U9["User Action:<br>Completes PR review<br>Optionally types:<br><b>/archive</b>, <b>/sync</b>,<br><b>/worktree</b>, <b>/build:production</b>"]:::user
         I9_1["Input 1:<br>Working code"]:::artifact
-        I9_2["Input 2:<br>08_WALKTHROUGH.md &<br>08_visual-recap.html"]:::artifact
+        I9_2["Input 2:<br>08_WALKTHROUGH.md &<br>visual-dashboard.html (Recap Tab)"]:::artifact
         C9["Skill: github-workflow<br>(creates PR via <b>gh</b> CLI)"]:::component
         A9["Output:<br>Active GitHub PR<br>& clean workspace"]:::artifact
         
