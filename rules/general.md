@@ -28,4 +28,5 @@ To maintain the highest standards of code and architectural discipline, always a
 
 ## 3. Core Discipline (No Spec, No Code)
 *   **Zero Improvisation:** Never write code directly without a corresponding and approved specification and implementation plan.
+*   **Dual-Existence & Stage Handoff Protocol:** The markdown files (`02_PRD.md`, `04_SPEC.md`, `05_PLAN.md`, `07_VERIFICATION.md`, and `08_WALKTHROUGH.md`) coexist perfectly with `visual-dashboard.html` as the definitive, machine-parseable source of truth representing each stage. They are used directly by the test harness and model parsers as high-fidelity stage handoffs, ensuring full backward compatibility and automated parser interoperability.
 *   **Licensing:** All new source files must contain the standard Google Apache 2.0 license header. Use the `google-license-manager` skill to automate this.

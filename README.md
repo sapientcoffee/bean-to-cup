@@ -55,6 +55,9 @@ Agents are prone to "over-implementing." Our artifacts explicitly list **Constra
 #### D. Agentic Validation (Evals)
 Don't just write tests; write Evals. In your `04_SPEC.md`, we define what "Success" looks like for the AI using measurable criteria (SLIs/SLOs), such as "The generated API must have a response time < 100ms."
 
+#### E. Dual-Existence & Stage Handoff Protocol
+The markdown files (`02_PRD.md`, `04_SPEC.md`, `05_PLAN.md`, `07_VERIFICATION.md`, and `08_WALKTHROUGH.md`) coexist perfectly with the consolidated `visual-dashboard.html` as the definitive, machine-parseable source of truth representing each stage. They are used directly by the test harness and model parsers as high-fidelity stage handoffs, ensuring full backward compatibility and automated parser interoperability.
+
 ---
 
 ## 🏗️ Architectural Overview

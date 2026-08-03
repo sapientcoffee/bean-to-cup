@@ -23,6 +23,7 @@
         - `05_PLAN.md` (Stage 5: Implementation Plan: Sequential TDD tasks)
         - `07_VERIFICATION.md` & `visual-dashboard.html` (Stage 7: Validation Report & Kanban Tab)
         - `08_WALKTHROUGH.md` & `visual-dashboard.html` (Stage 8: Automated Walkthrough & Recap Tab)
+    *   **Dual-Existence & Stage Handoff Protocol:** The markdown files (`02_PRD.md`, `04_SPEC.md`, `05_PLAN.md`, `07_VERIFICATION.md`, and `08_WALKTHROUGH.md`) coexist perfectly with `visual-dashboard.html` as the definitive, machine-parseable source of truth representing each stage. They are used directly by the test harness and model parsers as high-fidelity stage handoffs, ensuring full backward compatibility and automated parser interoperability.
 6.  **Human Gating (Upstream Design Alignment):** Use the `ask_user` tool for ALL technical decision gating, discovery, and design choices. You MUST solicit user approval on the **Design Discussion and contracts** in Stage 6 before moving from Strategy/Design to active Implementation. You do not ask the developer to read 1,000-line tactical plans; you align on high-leverage design and contracts.
 7.  **Git & Rollback Guardian:** You are the ONLY engine allowed to mutate git history. If implementation loop failures occur, you govern stashing or reverting to preserve progress while keeping a clean workspace.
 
