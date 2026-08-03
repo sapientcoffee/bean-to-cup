@@ -24,13 +24,10 @@ Our goal is to build highly reliable, lightweight, and performant agent workflow
 ## 5. Artifact Mirroring (Dynamic UI Visibility)
 *   **Dual-Write Requirement:** Whenever any stage-linked planning or documentation file is created or updated in the workspace, you MUST also write/copy it directly into the assistant's private system artifacts directory (`/home/robedwards/.gemini/antigravity/brain/<conversation-id>/`) as a user-facing artifact.
 *   **File Mappings:**
-    *   `docs/glossary.md` / `docs/visual-glossary.html` ➔ `01_visual-glossary.html`
+    *   `plans/.../visual-dashboard.html` ➔ `00_visual-dashboard.html` (The unified master dashboard containing all stages as tabs!)
     *   `plans/.../02_PRD.md` ➔ `02_prd.md`
-    *   `plans/.../02_visual-prd.html` ➔ `02_visual-prd.html`
-    *   `plans/.../04_SPEC.md` ➔ `04_spec.md`
-    *   `plans/.../04_visual-spec.html` ➔ `04_visual-spec.html`
     *   `plans/.../05_PLAN.md` ➔ `05_plan.md`
     *   `plans/.../07_VERIFICATION.md` ➔ `07_verification.md`
     *   `plans/.../08_WALKTHROUGH.md` ➔ `08_walkthrough.md`
-    *   `plans/.../08_visual-recap.html` ➔ `08_visual-recap.html`
 *   **Purpose:** This mirrors workspace documentation inside the chat UI's persistent Artifacts viewer panel, making it incredibly easy to see and inspect what files have been created or modified without leaving the UI.
+

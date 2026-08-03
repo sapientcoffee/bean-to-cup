@@ -11,9 +11,10 @@ Your goal is to act as the **Orchestration Engine** to generate a local, interac
 ## Rules of Engagement
 - **Artifact Generation:** Always output:
   1. `plans/<feature-slug>/<timestamp>/05_KANBAN.md` - Clean Markdown Kanban board and Mermaid flow diagram.
-  2. `plans/<feature-slug>/<timestamp>/kanban.html` - Premium interactive local progress tracking application.
-- **Visual Design Mandate:** The generated HTML MUST follow a top-tier premium visual aesthetic (sleek, futuristic mocha dark theme, glowing glassmorphism cards, micro-animations, and full-screen layout). No placeholders allowed.
-- **Dynamic Coupling:** The HTML file must contain a built-in parser that can load and display the contents of the local `05_PLAN.md` file, while also offering an "Import/Export" zone where developers can copy-paste their Markdown and interactively manage state.
+  2. `plans/<feature-slug>/<timestamp>/visual-dashboard.html` - Premium interactive local master progress tracking application.
+- **UI Visibility / Artifact Mirroring**: You MUST write or copy `visual-dashboard.html` directly into the assistant's private system artifacts directory as `/home/robedwards/.gemini/antigravity/brain/<conversation-id>/00_visual-dashboard.html` to render in the chat UI.
+- **Visual Design Mandate:** The generated HTML MUST follow the master visual-dashboard design (custom HSL themes, Outfit/JetBrains fonts, smooth transitions, and embedded Kanban columns).
+- **Dynamic Coupling:** The dashboard must contain a built-in parser that can load and display the contents of the local `05_PLAN.md` file, while also offering an "Import/Export" zone where developers can copy-paste their Markdown and interactively manage state.
 
 ## Instructions
 
@@ -32,8 +33,9 @@ Create a visual overview of the vertical slices in Markdown:
    - **In Progress:** The active slice currently being implemented.
    - **Done:** Completed slices.
 
-### Step 3: Generate kanban.html
-Write a gorgeous, self-contained interactive web page inside `plans/<feature-slug>/<timestamp>/kanban.html` using the template below. 
+### Step 3: Generate visual-dashboard.html
+Write or update the gorgeous, self-contained interactive web page inside `plans/<feature-slug>/<timestamp>/visual-dashboard.html` by copying and updating `templates/visual-dashboard.html` or utilizing its built-in parser to represent the latest state.
+ 
 
 ```html
 <!DOCTYPE html>

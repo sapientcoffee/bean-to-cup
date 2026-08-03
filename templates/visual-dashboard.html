@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Perfect Brew Dashboard — {{MONIKER}}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ---- Theme tokens (HSL coffee-inspired palette) ----------------- */
+    :root {
+      --bg: #faf8f5;
+      --fg: #2c2520;
+      --muted: #7a6e67;
+      --faint: #f0ebe4;
+      --accent: #8e624c;
+      --accent-soft: #f3ece6;
+      --card: #ffffff;
+      --card-border: #e6ded7;
+      --code-bg: #fdfdfc;
+      --header-bg: #eae3db;
+      --nav-bg: #ffffff;
+      --badge-new-bg: #dafbe1;
+      --badge-new-fg: #1a7f37;
+      --badge-mod-bg: #fff8c5;
+      --badge-mod-fg: #9a6700;
+      --badge-del-bg: #ffebe9;
+      --badge-del-fg: #cf222e;
+      --sev-high: #cf222e;
+      --sev-med: #9a6700;
+      --sev-low: #0969da;
+      --shadow: 0 4px 12px rgba(44, 37, 32, 0.05);
+      
+      --kanban-bg: #11111b;
+      --kanban-card: rgba(49, 50, 68, 0.4);
+      --kanban-border: rgba(147, 153, 178, 0.2);
+    }
+    :root[data-theme="dark"] {
+      --bg: #12100e;
+      --fg: #eae5e2;
+      --muted: #a49791;
+      --faint: #1f1b18;
+      --accent: #d4a373;
+      --accent-soft: #25201c;
+      --card: #1c1715;
+      --card-border: #2d2522;
+      --code-bg: #151210;
+      --header-bg: #1c1715;
+      --nav-bg: #12100e;
+      --badge-new-bg: #12261e;
+      --badge-new-fg: #3fb950;
+      --badge-mod-bg: #272115;
+      --badge-mod-fg: #d29922;
+      --badge-del-bg: #2d1416;
+      --badge-del-fg: #f85149;
+      --sev-high: #f85149;
+      --sev-med: #d29922;
+      --sev-low: #4493f8;
+      --shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    /* ---- Base ---------------------------------------------------------- */
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; min-height: 100vh; }
+    body {
+      background: var(--bg); color: var(--fg);
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code, kbd, pre, .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; }
+    h1, h2, h3, h4 { line-height: 1.25; margin-top: 0; font-weight: 600; }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    /* ---- Header band --------------------------------------------------- */
+    header.va-header {
+      background: var(--header-bg); border-bottom: 1px solid var(--card-border);
+      transition: background 0.3s, border 0.3s;
+    }
+    .va-header .wrap { display: flex; align-items: center; gap: 24px; padding: 16px 24px; flex-wrap: wrap; }
+    .va-header h1 { font-size: 20px; margin: 0; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .va-header .moniker { color: var(--accent); }
+    .va-header .meta { color: var(--muted); font-size: 12px; display: flex; gap: 16px; flex-wrap: wrap; }
+    .va-header .spacer { flex: 1; }
+    .toggle {
+      cursor: pointer; border: 1px solid var(--card-border); background: var(--card);
+      color: var(--fg); border-radius: 6px; padding: 6px 12px; font-size: 13px;
+      font-weight: 500; transition: all 0.2s ease;
+    }
+    .toggle:hover { border-color: var(--accent); background: var(--faint); }
+
+    /* ---- Active Stage Timeline Stepper ---------------------------------- */
+    .timeline-stepper {
+      display: flex; justify-content: space-between; align-items: center;
+      width: 100%; max-width: 600px; margin: 8px 0; position: relative;
+    }
+    .timeline-stepper::before {
+      content: ''; position: absolute; top: 12px; left: 0; right: 0; height: 3px;
+      background: var(--card-border); z-index: 1;
+    }
+    .stepper-progress {
+      position: absolute; top: 12px; left: 0; height: 3px; background: var(--accent);
+      z-index: 1; transition: width 0.4s ease;
+    }
+    .step-node {
+      width: 26px; height: 26px; border-radius: 50%; background: var(--card);
+      border: 3px solid var(--card-border); z-index: 2; display: flex; align-items: center;
+      justify-content: center; font-size: 10px; font-weight: 700; color: var(--muted);
+      cursor: pointer; transition: all 0.3s ease; position: relative;
+    }
+    .step-node:hover { border-color: var(--accent); color: var(--fg); }
+    .step-node.completed { border-color: var(--accent); background: var(--accent); color: #ffffff; }
+    .step-node.active { border-color: var(--accent); box-shadow: 0 0 10px var(--accent); color: var(--accent); }
+    .step-node .step-label {
+      position: absolute; top: 32px; left: 50%; transform: translateX(-50%);
+      font-size: 10px; white-space: nowrap; color: var(--muted); font-weight: 500;
+    }
+    .step-node.active .step-label { color: var(--fg); font-weight: 700; }
+
+    /* ---- Sticky tab nav ------------------------------------------------ */
+    nav.va-nav {
+      position: sticky; top: 0; z-index: 20;
+      background: var(--nav-bg); border-bottom: 1px solid var(--card-border);
+      box-shadow: var(--shadow); transition: background 0.3s, border 0.3s;
+    }
+    nav.va-nav .wrap { display: flex; gap: 4px; overflow-x: auto; padding: 0 24px; }
+    .va-tab {
+      appearance: none; border: 0; background: transparent; color: var(--muted);
+      padding: 16px 16px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap;
+      border-bottom: 3px solid transparent; transition: all 0.2s ease;
+    }
+    .va-tab:hover { color: var(--fg); }
+    .va-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 700; }
+
+    /* ---- Sections ------------------------------------------------------ */
+    main .wrap { padding-top: 32px; padding-bottom: 64px; }
+    .va-section[hidden] { display: none; }
+    .va-section h2 { font-size: 24px; margin: 0 0 8px; }
+    .va-section > .lede { color: var(--muted); margin: 0 0 24px; font-size: 15px; }
+
+    /* ---- Cards & Grids ------------------------------------------------ */
+    .card {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: 12px; padding: 20px; box-shadow: var(--shadow);
+      margin-bottom: 20px; transition: background 0.3s, border 0.3s;
+    }
+    .grid { display: grid; gap: 18px; }
+    .grid.cols-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+    .grid.cols-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    
+    .kv { display: grid; grid-template-columns: max-content 1fr; gap: 8px 16px; }
+    .kv dt { color: var(--muted); font-weight: 500; }
+    .kv dd { margin: 0; }
+    
+    pre {
+      background: var(--code-bg); border: 1px solid var(--card-border); border-radius: 8px;
+      padding: 16px; overflow: auto; font-size: 13px; margin: 12px 0 0;
+    }
+    .mermaid {
+      background: var(--code-bg); border: 1px solid var(--card-border); border-radius: 8px;
+      padding: 16px; text-align: center; margin: 12px 0;
+    }
+
+    /* ---- Badges -------------------------------------------------------- */
+    .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px;
+             border-radius: 999px; vertical-align: middle; }
+    .badge.new { background: var(--badge-new-bg); color: var(--badge-new-fg); }
+    .badge.mod { background: var(--badge-mod-bg); color: var(--badge-mod-fg); }
+    .badge.del { background: var(--badge-del-bg); color: var(--badge-del-fg); }
+
+    /* ---- Locked Stage Card style ----------------------------------------- */
+    .locked-stage-card {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 48px 24px; background: var(--card);
+      border: 1px dashed var(--card-border); border-radius: 12px; color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .locked-stage-card .locked-icon { font-size: 40px; margin-bottom: 16px; opacity: 0.8; }
+    .locked-stage-card h3 { font-size: 18px; margin: 0 0 8px; color: var(--fg); }
+    .locked-stage-card p { font-size: 14px; max-width: 460px; margin: 0; }
+
+    /* ---- Socratic Glossary Styles --------------------------------------- */
+    .term-title { font-size: 17px; font-weight: 700; color: var(--accent); margin: 0 0 6px; }
+    .avoid-tag { color: var(--badge-del-fg); background: var(--badge-del-bg); font-size: 11px; font-weight: 700;
+                 padding: 2px 8px; border-radius: 4px; display: inline-block; margin-top: 8px; }
+    .search-container { margin-bottom: 20px; }
+    .search-input {
+      width: 100%; max-width: 380px; padding: 10px 16px; border-radius: 8px;
+      border: 1px solid var(--card-border); background: var(--card); color: var(--fg);
+      font-size: 14px; outline: none; transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: var(--accent); }
+
+    /* ---- Product PRD Styles -------------------------------------------- */
+    .story { background: var(--card); border: 1px solid var(--card-border); border-left: 5px solid var(--accent);
+             border-radius: 12px; padding: 16px 20px; box-shadow: var(--shadow); }
+    .story .story-id { float: right; font-size: 12px; color: var(--accent); font-weight: 700; }
+    .story .role { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+    .story .want { font-weight: 600; margin: 0 0 6px; font-size: 15px; }
+    .story .benefit { color: var(--muted); margin: 0; font-size: 14px; }
+    .story .benefit::before { content: "so that "; color: var(--muted); font-style: italic; }
+
+    .scenario { background: var(--card); border: 1px solid var(--card-border); border-radius: 8px;
+                padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow); }
+    .scenario > .title { font-weight: 600; margin: 0 0 12px; display: flex; align-items: center; gap: 8px; }
+    .scenario > .title .tag { font-size: 11px; font-weight: 700; color: #fff; background: var(--accent);
+                padding: 2px 8px; border-radius: 999px; }
+    ul.gherkin { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+    ul.gherkin li { display: grid; grid-template-columns: 64px 1fr; gap: 8px; font-size: 14px; }
+    ul.gherkin .keyword { font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: .04em; }
+    ul.gherkin .given { color: var(--sev-low); }
+    ul.gherkin .when { color: var(--sev-med); }
+    ul.gherkin .then { color: var(--badge-new-fg); }
+
+    /* ---- Technical Design / Spec Styles --------------------------------- */
+    .spec-endpoint { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-weight: 600; }
+    .spec-method { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px;
+                   border-radius: 4px; color: #fff; text-transform: uppercase; }
+    .spec-method.get { background: var(--badge-new-fg); }
+    .spec-method.post { background: var(--accent); }
+    .spec-method.put { background: var(--sev-med); }
+    .spec-method.delete { background: var(--sev-high); }
+
+    /* ---- Kanban Styles ------------------------------------------------- */
+    .kanban-container {
+      display: grid; grid-template-columns: 280px 1fr; gap: 24px;
+      height: calc(100vh - 220px); min-height: 500px;
+    }
+    .kanban-sidebar {
+      background: var(--card); border: 1px solid var(--card-border); border-radius: 12px;
+      padding: 20px; display: flex; flex-direction: column; gap: 18px; box-shadow: var(--shadow);
+    }
+    .kanban-board {
+      display: grid; grid-template-rows: auto 1fr 240px; gap: 20px; overflow: hidden;
+    }
+    .kanban-columns {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; overflow-y: hidden; height: 100%;
+    }
+    .kanban-column {
+      background: var(--card); border: 1px solid var(--card-border); border-radius: 12px;
+      display: flex; flex-direction: column; height: 100%; overflow: hidden; box-shadow: var(--shadow);
+    }
+    .column-header {
+      padding: 14px 16px; border-bottom: 1px solid var(--card-border); font-weight: 600; font-size: 14px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .column-body { padding: 12px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; height: 100%; }
+    
+    .column-todo .column-header { border-left: 4px solid var(--accent); }
+    .column-progress .column-header { border-left: 4px solid var(--sev-low); }
+    .column-done .column-header { border-left: 4px solid var(--badge-new-fg); }
+
+    .kanban-card {
+      background: var(--faint); border: 1px solid var(--card-border); border-radius: 8px;
+      padding: 12px; cursor: grab; position: relative; transition: all 0.2s ease;
+    }
+    .kanban-card:hover { transform: translateY(-2px); border-color: var(--accent); box-shadow: var(--shadow); }
+    .kanban-card .card-title { font-size: 13px; font-weight: 600; color: var(--fg); }
+    .kanban-card .card-meta { display: flex; gap: 8px; margin-top: 8px; font-size: 11px; color: var(--muted); }
+
+    .kanban-lower { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 100%; overflow: hidden; }
+    .kanban-lower-panel {
+      background: var(--card); border: 1px solid var(--card-border); border-radius: 12px;
+      padding: 16px; display: flex; flex-direction: column; overflow: hidden; box-shadow: var(--shadow);
+    }
+    .kanban-lower-panel h3 { font-size: 14px; margin-bottom: 10px; font-weight: 600; }
+    .kanban-viewport { background: var(--faint); border-radius: 8px; padding: 12px; flex: 1; overflow: auto; font-size: 13px; }
+
+    /* ---- Verification Recap / Walkthrough Styles ------------------------- */
+    .recap-diff { background: var(--code-bg); border-radius: 8px; overflow: hidden; border: 1px solid var(--card-border); }
+    .diff-line { display: grid; grid-template-columns: 44px 44px 1fr; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+    .diff-line .num { text-align: right; padding-right: 12px; color: var(--muted); background: var(--faint); user-select: none; }
+    .diff-line .content { padding-left: 12px; white-space: pre-wrap; }
+    .diff-line.add { background: var(--badge-new-bg); border-left: 4px solid var(--badge-new-fg); }
+    .diff-line.del { background: var(--badge-del-bg); border-left: 4px solid var(--badge-del-fg); }
+
+    /* CDN Banner */
+    .cdn-banner {
+      display: none; background: var(--badge-mod-bg); color: var(--badge-mod-fg);
+      font-size: 12px; text-align: center; padding: 6px; font-weight: 500;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .cdn-banner.show { display: block; }
+
+    /* Modals */
+    .modal {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(44, 37, 32, 0.4); backdrop-filter: blur(4px);
+      display: none; align-items: center; justify-content: center; z-index: 1000;
+    }
+    .modal-content {
+      background: var(--card); border: 1px solid var(--card-border); border-radius: 16px;
+      width: 90%; max-width: 720px; height: 75vh; display: flex; flex-direction: column; padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .modal-title { font-size: 18px; font-weight: 600; margin: 0; }
+    .modal-close { background: none; border: none; color: var(--muted); font-size: 24px; cursor: pointer; }
+    .modal-close:hover { color: var(--badge-del-fg); }
+    .editor-textarea {
+      width: 100%; flex: 1; background: var(--faint); border: 1px solid var(--card-border);
+      border-radius: 8px; padding: 16px; color: var(--fg); font-family: 'JetBrains Mono', monospace;
+      font-size: 13px; resize: none; outline: none; margin-bottom: 16px;
+    }
+    .editor-textarea:focus { border-color: var(--accent); }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 12px; }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/github.min.css" id="hljs-theme">
+</head>
+
+<body>
+  <div class="cdn-banner" id="cdn-banner">
+    ⚠️ Offline fallback active: Interactive diagramming and rich code-highlighting will compile once internet connectivity is established.
+  </div>
+
+  <header class="va-header">
+    <div class="wrap">
+      <h1>☕ Perfect Brew: <span class="moniker">{{MONIKER}}</span></h1>
+      <div class="spacer"></div>
+      
+      <!-- Timeline stepper -->
+      <div class="timeline-stepper">
+        <div class="stepper-progress" id="stepperProgress" style="width: 0%;"></div>
+        <div class="step-node completed" data-target="dashboard" title="Dashboard">
+          D
+          <div class="step-label">Overview</div>
+        </div>
+        <div class="step-node active" id="node-glossary" data-target="glossary" title="Stage 1: Glossary">
+          1
+          <div class="step-label">Glossary</div>
+        </div>
+        <div class="step-node" id="node-prd" data-target="prd" title="Stage 2: Product Requirements">
+          2
+          <div class="step-label">PRD</div>
+        </div>
+        <div class="step-node" id="node-spec" data-target="spec" title="Stage 4: Technical Design">
+          4
+          <div class="step-label">Design</div>
+        </div>
+        <div class="step-node" id="node-kanban" data-target="kanban" title="Stage 7: Kanban Tracker">
+          7
+          <div class="step-label">Kanban</div>
+        </div>
+        <div class="step-node" id="node-recap" data-target="recap" title="Stage 8: Walkthrough Recap">
+          8
+          <div class="step-label">Recap</div>
+        </div>
+      </div>
+
+      <div class="spacer"></div>
+      <div class="meta">
+        <span>Active Stage: <strong id="activeStageLabel">Stage 1 Socratic Alignment</strong></span>
+        <span>Generated: <span class="mono">{{TIMESTAMP}}</span></span>
+      </div>
+      <button class="toggle" id="theme-toggle" title="Toggle light/dark">🌓 Theme</button>
+    </div>
+  </header>
+
+  <nav class="va-nav">
+    <div class="wrap" id="va-tabs">
+      <button class="va-tab active" data-target="dashboard">Brew Overview</button>
+      <button class="va-tab" data-target="glossary">Stage 1: Glossary &amp; ADRs</button>
+      <button class="va-tab" data-target="prd">Stage 2: Product PRD</button>
+      <button class="va-tab" data-target="spec">Stage 4: Technical Spec</button>
+      <button class="va-tab" data-target="kanban">Stage 7: Kanban Board</button>
+      <button class="va-tab" data-target="recap">Stage 8: Walkthrough Recap</button>
+    </div>
+  </nav>
+
+  <main>
+    <div class="wrap">
+
+      <!-- ================= BREW DASHBOARD ================= -->
+      <section class="va-section" id="dashboard">
+        <h2>Perfect Brew Control Center</h2>
+        <p class="lede">Comprehensive status report for feature implementation progress, metrics, and timeline state.</p>
+        
+        <div class="grid cols-3">
+          <div class="card" style="text-align: center;">
+            <div style="font-size: 32px; font-weight: 700; color: var(--accent);" id="mainProgressText">15%</div>
+            <p style="text-transform: uppercase; font-size: 11px; color: var(--muted); margin: 4px 0 0; letter-spacing: .06em;">Brew Complete</p>
+          </div>
+          <div class="card" style="text-align: center;">
+            <div style="font-size: 32px; font-weight: 700; color: var(--sev-low);" id="completedTasksText">1 / 6</div>
+            <p style="text-transform: uppercase; font-size: 11px; color: var(--muted); margin: 4px 0 0; letter-spacing: .06em;">Slices Verified</p>
+          </div>
+          <div class="card" style="text-align: center;">
+            <div style="font-size: 32px; font-weight: 700; color: var(--badge-new-fg);" id="currentStageBadge">Stage 1</div>
+            <p style="text-transform: uppercase; font-size: 11px; color: var(--muted); margin: 4px 0 0; letter-spacing: .06em;">Active Stage</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Active Brew Context</h3>
+          <dl class="kv">
+            <dt>Feature Moniker</dt><dd><code>{{MONIKER}}</code></dd>
+            <dt>Target Branch</dt><dd><code>main</code></dd>
+            <dt>Active Plan Path</dt><dd><code id="activePlanPath">plans/feature/{{MONIKER}}/05_PLAN.md</code></dd>
+            <dt>Last Swarm Run</dt><dd>{{TIMESTAMP}}</dd>
+          </dl>
+        </div>
+      </section>
+
+      <!-- ================= STAGE 1: GLOSSARY ================= -->
+      <section class="va-section" id="glossary" hidden>
+        <h2>Ubiquitous Glossary &amp; ADRs</h2>
+        <p class="lede">Stage 1 Socratic Alignment results. Derived view of <code>docs/glossary.md</code> and <code>docs/adr/</code>.</p>
+        
+        <div class="search-container">
+          <input type="text" id="glossary-search" placeholder="Search terms..." class="search-input" />
+        </div>
+
+        <!-- VG:GLOSSARY -->
+        <div class="grid cols-2" id="terms-container">
+          <div class="locked-stage-card">
+            <div class="locked-icon">🔒</div>
+            <h3>Glossary not yet populated</h3>
+            <p>Once the Socratic alignment interview resolves initial terms, they will appear here automatically.</p>
+          </div>
+        </div>
+        <!-- /VG:GLOSSARY -->
+
+        <h3 style="margin-top: 40px;">Architecture Decision Records</h3>
+        <!-- VG:ADR -->
+        <div class="grid cols-2" id="adr-container">
+          <div class="locked-stage-card">
+            <div class="locked-icon">🔒</div>
+            <h3>Architecture Decisions pending</h3>
+            <p>Key design alignments and architectural decision records (ADRs) will render in this panel.</p>
+          </div>
+        </div>
+        <!-- /VG:ADR -->
+      </section>
+
+      <!-- ================= STAGE 2: PRD ================= -->
+      <section class="va-section" id="prd" hidden>
+        <h2>Product Requirements Document</h2>
+        <p class="lede">Stage 2 Product requirements and user-facing boundary specifications sitting in <code>02_PRD.md</code>.</p>
+        
+        <!-- VPO:OVERVIEW -->
+        <div class="locked-stage-card">
+          <div class="locked-icon">🔒</div>
+          <h3>Stage 2: Product Requirements pending</h3>
+          <p>This tab will unlock once the Product Requirements Document (02_PRD.md) is compiled.</p>
+        </div>
+        <!-- /VPO:OVERVIEW -->
+
+        <!-- VPO:STORIES -->
+        <!-- /VPO:STORIES -->
+
+        <!-- VPO:CRITERIA -->
+        <!-- /VPO:CRITERIA -->
+
+        <!-- VPO:FLOWS -->
+        <!-- /VPO:FLOWS -->
+
+        <!-- VPO:CONSTRAINTS -->
+        <!-- /VPO:CONSTRAINTS -->
+
+        <!-- VPO:PROTO -->
+        <!-- /VPO:PROTO -->
+
+        <!-- VPO:QUESTIONS -->
+        <!-- /VPO:QUESTIONS -->
+
+        <!-- VPO:COMMENTS -->
+        <!-- /VPO:COMMENTS -->
+      </section>
+
+      <!-- ================= STAGE 4: SPEC ================= -->
+      <section class="va-section" id="spec" hidden>
+        <h2>Technical Specification &amp; Design</h2>
+        <p class="lede">Stage 4 Architectural Design layouts, threat models, database schemas, and service specs sits in <code>04_SPEC.md</code>.</p>
+        
+        <!-- VA:OVERVIEW -->
+        <div class="locked-stage-card">
+          <div class="locked-icon">🔒</div>
+          <h3>Stage 4: Specification &amp; Design pending</h3>
+          <p>This tab will unlock once the Technical Specification (04_SPEC.md) is compiled.</p>
+        </div>
+        <!-- /VA:OVERVIEW -->
+
+        <!-- VA:ARCHITECTURE -->
+        <!-- /VA:ARCHITECTURE -->
+
+        <!-- VA:FILEMAP -->
+        <!-- /VA:FILEMAP -->
+
+        <!-- VA:CODE -->
+        <!-- /VA:CODE -->
+
+        <!-- VA:API -->
+        <!-- /VA:API -->
+
+        <!-- VA:SCHEMA -->
+        <!-- /VA:SCHEMA -->
+
+        <!-- VA:PROTO -->
+        <!-- /VA:PROTO -->
+
+        <!-- VA:QUESTIONS -->
+        <!-- /VA:QUESTIONS -->
+
+        <!-- VA:COMMENTS -->
+        <!-- /VA:COMMENTS -->
+      </section>
+
+      <!-- ================= STAGE 7: KANBAN ================= -->
+      <section class="va-section" id="kanban" hidden>
+        <h2>Stage 7 Implementation Kanban Tracker</h2>
+        <p class="lede">Real-time vertical slices tracker compiled from <code>05_PLAN.md</code>. Drag-and-drop enabled.</p>
+        
+        <div class="kanban-container">
+          <!-- Sidebar Controls -->
+          <div class="kanban-sidebar">
+            <h3 style="margin:0; font-size: 15px; color: var(--accent);">📊 Status Controls</h3>
+            <div style="font-size: 12px; color: var(--muted); margin-bottom: 8px;">
+              Manage implementation slices interactively. Refreshing preserves progress.
+            </div>
+            
+            <button class="toggle" onclick="openModal('importModal')" style="width: 100%;">📥 Import Plan (05_PLAN.md)</button>
+            <button class="toggle" onclick="exportMarkdown()" style="width: 100%; margin-top: 8px;">📤 Export Updated Plan</button>
+            <button class="toggle" onclick="loadLocalPlan()" style="width: 100%; margin-top: auto; border-color: var(--accent);">🔄 Fetch Local Plan</button>
+          </div>
+
+          <!-- Kanban Workspace -->
+          <div class="kanban-board">
+            <div class="kanban-columns">
+              <!-- To Do -->
+              <div class="kanban-column column-todo" id="todoColumn" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'todo')">
+                <div class="column-header">
+                  <span>📋 BACKLOG (TO DO)</span>
+                  <span class="badge" style="background:var(--faint);" id="todoHeaderCount">0</span>
+                </div>
+                <div class="column-body" id="todoList"></div>
+              </div>
+
+              <!-- In Progress -->
+              <div class="kanban-column column-progress" id="progressColumn" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'inprogress')">
+                <div class="column-header">
+                  <span>⚡ ACTIVE (BREWING)</span>
+                  <span class="badge" style="background:var(--faint);" id="progressHeaderCount">0</span>
+                </div>
+                <div class="column-body" id="progressList"></div>
+              </div>
+
+              <!-- Done -->
+              <div class="kanban-column column-done" id="doneColumn" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'done')">
+                <div class="column-header">
+                  <span>✔ VERIFIED (DONE)</span>
+                  <span class="badge" style="background:var(--faint);" id="doneHeaderCount">0</span>
+                </div>
+                <div class="column-body" id="doneList"></div>
+              </div>
+            </div>
+
+            <!-- Lower Panels (Mermaid Dependency Tree & Inspector) -->
+            <div class="kanban-lower">
+              <div class="kanban-lower-panel">
+                <h3>📊 Pipeline Dependency Tree</h3>
+                <div class="kanban-viewport" id="mermaidContainer">
+                  <pre class="mermaid" id="mermaidOutput">
+flowchart TD
+  Start([Ready to Import 05_PLAN.md])
+                  </pre>
+                </div>
+              </div>
+              <div class="kanban-lower-panel">
+                <h3>🔍 Slice Inspector</h3>
+                <div class="kanban-viewport" id="detailsPanel" style="display:flex; align-items:center; justify-content:center; color: var(--muted); font-style: italic;">
+                  Select a vertical slice task card to inspect instruction details and verification criteria.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= STAGE 8: RECAP ================= -->
+      <section class="va-section" id="recap" hidden>
+        <h2>Stage 8 Verification &amp; Walkthrough Recap</h2>
+        <p class="lede">Detailed retrospective report and visual validation walkthrough parsed from <code>08_WALKTHROUGH.md</code>.</p>
+        
+        <!-- VIR:OVERVIEW -->
+        <div class="locked-stage-card">
+          <div class="locked-icon">🔒</div>
+          <h3>Stage 8: Implementation Walkthrough pending</h3>
+          <p>This tab will unlock once the Verification Walkthrough (08_WALKTHROUGH.md) is compiled.</p>
+        </div>
+        <!-- /VIR:OVERVIEW -->
+
+        <!-- VIR:TASKS -->
+        <!-- /VIR:TASKS -->
+
+        <!-- VIR:FILES -->
+        <!-- /VIR:FILES -->
+
+        <!-- VIR:CHANGES -->
+        <!-- /VIR:CHANGES -->
+
+        <!-- VIR:ARCH -->
+        <!-- /VIR:ARCH -->
+
+        <!-- VIR:CONTRACTS -->
+        <!-- /VIR:CONTRACTS -->
+
+        <!-- VIR:UI -->
+        <!-- /VIR:UI -->
+
+        <!-- VIR:VERIFY -->
+        <!-- /VIR:VERIFY -->
+
+        <!-- VIR:NOTES -->
+        <!-- /VIR:NOTES -->
+      </section>
+
+    </div>
+  </main>
+
+  <!-- IMPORT MODAL -->
+  <div class="modal" id="importModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Import 05_PLAN.md Markdown</h3>
+        <button class="modal-close" onclick="closeModal('importModal')">&times;</button>
+      </div>
+      <p style="font-size: 13px; color: var(--muted); margin: 0 0 12px;">Paste your <code>05_PLAN.md</code> contents below to initialize or update the interactive progress tracker.</p>
+      <textarea class="editor-textarea" id="importArea" placeholder="# Implementation Plan: ..."></textarea>
+      <div class="modal-footer">
+        <button class="toggle" onclick="closeModal('importModal')">Cancel</button>
+        <button class="toggle" onclick="processImport()" style="background: var(--accent); color: #fff; border-color: var(--accent);">Compile Board & Flow</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPORT MODAL -->
+  <div class="modal" id="exportModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Export Updated 05_PLAN.md</h3>
+        <button class="modal-close" onclick="closeModal('exportModal')">&times;</button>
+      </div>
+      <p style="font-size: 13px; color: var(--muted); margin: 0 0 12px;">Copy the updated markdown content below and paste it back into your <code>05_PLAN.md</code> file.</p>
+      <textarea class="editor-textarea" id="exportArea" readonly onclick="this.select()"></textarea>
+      <div class="modal-footer">
+        <button class="toggle" onclick="closeModal('exportModal')">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    "use strict";
+    var root = document.documentElement;
+
+    /* ---- Theme Management ---- */
+    try {
+      var saved = localStorage.getItem("va-theme");
+      if (saved) {
+        root.setAttribute("data-theme", saved);
+        updateHljsTheme(saved);
+      }
+    } catch (e) {}
+
+    document.getElementById("theme-toggle").addEventListener("click", function () {
+      var dark = root.getAttribute("data-theme") === "dark";
+      var nextTheme = dark ? "light" : "dark";
+      root.setAttribute("data-theme", nextTheme);
+      try { localStorage.setItem("va-theme", nextTheme); } catch (e) {}
+      updateHljsTheme(nextTheme);
+      if (mermaidOk) {
+        resetMermaid();
+        var active = document.querySelector(".va-section:not([hidden])");
+        if (active) renderMermaid(active);
+      }
+    });
+
+    function updateHljsTheme(theme) {
+      var el = document.getElementById("hljs-theme");
+      if (!el) return;
+      if (theme === "dark") {
+        el.href = "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/github-dark.min.css";
+      } else {
+        el.href = "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/github.min.css";
+      }
+    }
+
+    /* ---- CDNs Loading Checks ---- */
+    var mermaidOk = typeof window.mermaid !== "undefined";
+    var hljsOk = typeof window.hljs !== "undefined";
+    if (!mermaidOk || !hljsOk) {
+      document.getElementById("cdn-banner").classList.add("show");
+    }
+
+    if (mermaidOk) {
+      window.mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: "strict" });
+    }
+
+    /* ---- Tab Switching & Lazy Render Caching ---- */
+    var rendered = {};
+    function showTab(id, push) {
+      var sections = document.querySelectorAll(".va-section");
+      sections.forEach(function (s) { s.hidden = (s.id !== id); });
+      document.querySelectorAll(".va-tab").forEach(function (t) {
+        t.classList.toggle("active", t.getAttribute("data-target") === id);
+      });
+      
+      var sec = document.getElementById(id);
+      if (sec && !rendered[id]) {
+        renderMermaid(sec);
+        highlightCode(sec);
+        rendered[id] = true;
+      }
+      
+      if (push && history.replaceState) history.replaceState(null, "", "#" + id);
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+
+    document.getElementById("va-tabs").addEventListener("click", function (e) {
+      var btn = e.target.closest(".va-tab");
+      if (btn) showTab(btn.getAttribute("data-target"), true);
+    });
+
+    // Handle timeline nodes clicking
+    document.querySelectorAll(".step-node").forEach(function (node) {
+      node.addEventListener("click", function () {
+        showTab(node.getAttribute("data-target"), true);
+      });
+    });
+
+    /* ---- Lazy Compilations ------------------ */
+    function capture(sectionEl) {
+      sectionEl.querySelectorAll("pre.mermaid").forEach(function (el) {
+        if (!el.hasAttribute("data-src")) el.setAttribute("data-src", el.textContent);
+      });
+    }
+
+    function renderMermaid(sectionEl) {
+      if (!mermaidOk || !sectionEl) return;
+      capture(sectionEl);
+      var nodes = sectionEl.querySelectorAll("pre.mermaid:not([data-processed])");
+      if (!nodes.length) return;
+      try { window.mermaid.run({ nodes: nodes }); } catch (e) { console.error(e); }
+    }
+
+    function resetMermaid() {
+      document.querySelectorAll("pre.mermaid[data-processed]").forEach(function (el) {
+        el.removeAttribute("data-processed");
+        el.innerHTML = el.getAttribute("data-src") || el.textContent;
+      });
+      rendered = {};
+    }
+
+    function highlightCode(sectionEl) {
+      if (!hljsOk || !sectionEl) return;
+      sectionEl.querySelectorAll("pre code:not([data-highlighted])").forEach(function (b) {
+        window.hljs.highlightElement(b);
+        b.setAttribute("data-highlighted", "true");
+      });
+    }
+
+    /* ---- Active Stepper Config ---- */
+    function setTimelineStage(stageNum) {
+      var progressMap = { 1: 20, 2: 40, 4: 60, 7: 80, 8: 100 };
+      var progress = progressMap[stageNum] || 0;
+      document.getElementById("stepperProgress").style.width = progress + "%";
+      
+      var nodes = document.querySelectorAll(".step-node");
+      var stages = [1, 2, 4, 7, 8];
+      nodes.forEach(function (node, index) {
+        var nStage = stages[index];
+        node.classList.toggle("completed", nStage < stageNum);
+        node.classList.toggle("active", nStage === stageNum);
+      });
+    }
+
+    /* ---- Socratic Glossary search ---- */
+    var searchBox = document.getElementById("glossary-search");
+    if (searchBox) {
+      searchBox.addEventListener("input", function (e) {
+        var query = e.target.value.toLowerCase();
+        document.querySelectorAll(".term-card").forEach(function (card) {
+          var t = card.getAttribute("data-term") || "";
+          card.style.display = t.toLowerCase().includes(query) ? "" : "none";
+        });
+      });
+    }
+
+    /* ================= KANBAN INTERACTIVE ENGINE ================= */
+    let tasks = [];
+    let originalMarkdown = '';
+    let draggedCardId = null;
+
+    window.openModal = function (id) { document.getElementById(id).style.display = "flex"; };
+    window.closeModal = function (id) { document.getElementById(id).style.display = "none"; };
+
+    window.allowDrop = function (ev) { ev.preventDefault(); };
+    window.dragEnter = function (ev) { ev.currentTarget.classList.add("drag-over"); };
+    window.dragLeave = function (ev) { ev.currentTarget.classList.remove("drag-over"); };
+    
+    window.drag = function (ev) {
+      draggedCardId = ev.target.id;
+      ev.dataTransfer.setData("text", ev.target.id);
+    };
+
+    window.drop = function (ev, targetCol) {
+      ev.preventDefault();
+      ev.currentTarget.classList.remove("drag-over");
+      const cardId = ev.dataTransfer.getData("text") || draggedCardId;
+      moveTask(cardId, targetCol);
+    };
+
+    function moveTask(taskId, targetCol) {
+      const taskIndex = tasks.findIndex(t => t.id === taskId);
+      if (taskIndex === -1) return;
+      tasks[taskIndex].status = targetCol;
+      
+      // Save state to local storage
+      try {
+        localStorage.setItem("va-kanban-tasks-" + "{{MONIKER}}", JSON.stringify(tasks));
+      } catch (e) {}
+
+      renderKanbanBoard();
+      updateProgressMetrics();
+    }
+
+    window.loadLocalPlan = function () {
+      fetch('05_PLAN.md')
+        .then(response => {
+          if (!response.ok) throw new Error('CORS or file not found');
+          return response.text();
+        })
+        .then(text => {
+          document.getElementById('importArea').value = text;
+          parseMarkdownPlan(text);
+          document.getElementById('activePlanPath').innerText = 'plans/.../05_PLAN.md (Loaded Live From Disk)';
+        })
+        .catch(err => {
+          console.log("Offline local 05_PLAN.md fallback to localStorage/Pre-Baked.");
+          // Try loading from localStorage
+          try {
+            const saved = localStorage.getItem("va-kanban-tasks-" + "{{MONIKER}}");
+            if (saved) {
+              tasks = JSON.parse(saved);
+              renderKanbanBoard();
+              updateProgressMetrics();
+            }
+          } catch (e) {}
+        });
+    };
+
+    window.processImport = function () {
+      const text = document.getElementById('importArea').value;
+      if (!text.trim()) return;
+      parseMarkdownPlan(text);
+      closeModal('importModal');
+    };
+
+    function parseMarkdownPlan(markdown) {
+      originalMarkdown = markdown;
+      tasks = [];
+      const lines = markdown.split('\n');
+      let currentPhase = 'Core Change';
+      let title = 'Implementation Plan';
+
+      const titleMatch = markdown.match(/^#\s+(.*)$/m);
+      if (titleMatch) title = titleMatch[1];
+      
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (line.startsWith('##') && line.includes('Phase')) {
+          currentPhase = line.replace(/##\s*/, '');
+        }
+        
+        // Parse checkboxes
+        const taskMatch = line.match(/^-\s+\[([ xX])\]\s+(.*)$/);
+        if (taskMatch) {
+          const checked = taskMatch[1].toLowerCase() === 'x';
+          const titleText = taskMatch[2];
+          
+          // Generate deterministic ID from text
+          const cleanText = titleText.replace(/[^\w]/g, '').toLowerCase();
+          const taskObj = {
+            id: 'task-' + cleanText.substring(0, 24),
+            title: titleText,
+            phase: currentPhase,
+            status: checked ? 'done' : 'todo',
+            instructions: '',
+            target: '',
+            verification: ''
+          };
+          tasks.push(taskObj);
+        }
+      }
+
+      // Populate instructions if matches found below
+      let currentTaskObj = null;
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (line.startsWith('#### Step') || line.startsWith('### Phase')) {
+          const words = line.toLowerCase().replace(/[^\w\s]/g, '').split(' ');
+          currentTaskObj = tasks.find(t => words.every(w => t.title.toLowerCase().includes(w) || t.phase.toLowerCase().includes(w)));
+        }
+        if (currentTaskObj && line.startsWith('*')) {
+          if (line.toLowerCase().includes('target file:')) {
+            currentTaskObj.target = line.replace(/\*\s*[Tt]arget\s*[Ff]ile:\s*/, '').replace(/`/g, '');
+          } else if (line.toLowerCase().includes('verification:')) {
+            currentTaskObj.verification = line.replace(/\*\s*[Vv]erification:\s*/, '').replace(/`/g, '');
+          } else if (line.toLowerCase().includes('instructions:')) {
+            currentTaskObj.instructions = line.replace(/\*\s*[Ii]nstructions:\s*/, '').replace(/`/g, '');
+          }
+        }
+      }
+
+      renderKanbanBoard();
+      updateProgressMetrics();
+    }
+
+    function renderKanbanBoard() {
+      const todoList = document.getElementById("todoList");
+      const progressList = document.getElementById("progressList");
+      const doneList = document.getElementById("doneList");
+
+      todoList.innerHTML = '';
+      progressList.innerHTML = '';
+      doneList.innerHTML = '';
+
+      let todoCount = 0;
+      let progCount = 0;
+      let doneCount = 0;
+
+      tasks.forEach(task => {
+        const card = document.createElement("div");
+        card.className = "kanban-card";
+        card.id = task.id;
+        card.draggable = true;
+        card.ondragstart = drag;
+        card.onclick = () => inspectTask(task.id);
+
+        card.innerHTML = `
+          <div class="card-title">${task.title}</div>
+          <div class="card-meta">
+            <span>📂 ${task.target || 'General'}</span>
+          </div>
+        `;
+
+        if (task.status === 'todo') {
+          todoList.appendChild(card);
+          todoCount++;
+        } else if (task.status === 'inprogress') {
+          progressList.appendChild(card);
+          progCount++;
+        } else {
+          doneList.appendChild(card);
+          doneCount++;
+        }
+      });
+
+      document.getElementById("todoHeaderCount").innerText = todoCount;
+      document.getElementById("progressHeaderCount").innerText = progCount;
+      document.getElementById("doneHeaderCount").innerText = doneCount;
+
+      renderMermaidDiagram();
+    }
+
+    function inspectTask(taskId) {
+      const task = tasks.find(t => t.id === taskId);
+      if (!task) return;
+
+      const p = document.getElementById("detailsPanel");
+      p.style.display = "block";
+      p.style.color = "inherit";
+      p.style.fontStyle = "normal";
+
+      p.innerHTML = `
+        <h4 style="color: var(--accent); margin-bottom: 12px; font-size: 15px;">🔍 ${task.title}</h4>
+        <dl class="kv">
+          <dt>Phase</dt><dd><code>${task.phase}</code></dd>
+          <dt>Status</dt><dd><span class="badge ${task.status === 'done' ? 'new' : (task.status === 'inprogress' ? 'mod' : 'del')}">${task.status.toUpperCase()}</span></dd>
+          <dt>Target File</dt><dd><code>${task.target || 'N/A'}</code></dd>
+          <dt>Verification</dt><dd><code>${task.verification || 'N/A'}</code></dd>
+        </dl>
+        <p style="margin-top: 14px; font-size: 13px; color: var(--fg); border-top: 1px solid var(--card-border); padding-top: 10px;">
+          <strong>Instructions:</strong><br>${task.instructions || 'Develop this step matching technical specs.'}
+        </p>
+      `;
+    }
+
+    function renderMermaidDiagram() {
+      const container = document.getElementById("mermaidContainer");
+      if (!mermaidOk) return;
+
+      let md = 'flowchart TD\n';
+      tasks.forEach((t, i) => {
+        const cleanName = t.title.substring(0, 32).replace(/"/g, "'");
+        md += `  node${i}["${cleanName}"]\n`;
+        md += `  classDef done fill:#dafbe1,stroke:#1a7f37,color:#1a7f37;\n`;
+        md += `  classDef prog fill:#ddf4ff,stroke:#0969da,color:#0969da;\n`;
+        md += `  classDef todo fill:#fff8c5,stroke:#9a6700,color:#9a6700;\n`;
+        
+        if (t.status === 'done') md += `  class node${i} done;\n`;
+        else if (t.status === 'inprogress') md += `  class node${i} prog;\n`;
+        else md += `  class node${i} todo;\n`;
+
+        if (i > 0) {
+          md += `  node${i-1} --> node${i}\n`;
+        }
+      });
+
+      const p = document.createElement("pre");
+      p.className = "mermaid";
+      p.id = "mermaidOutput";
+      p.textContent = md;
+
+      container.innerHTML = '';
+      container.appendChild(p);
+
+      window.mermaid.run({ nodes: [p] });
+    }
+
+    function updateProgressMetrics() {
+      if (!tasks.length) return;
+      const done = tasks.filter(t => t.status === 'done').length;
+      const pct = Math.round((done / tasks.length) * 100);
+      
+      document.getElementById("mainProgressText").innerText = pct + "%";
+      document.getElementById("completedTasksText").innerText = done + " / " + tasks.length;
+      
+      // Try setting active timeline stage from completed count
+      if (pct >= 100) setTimelineStage(8);
+      else if (pct > 60) setTimelineStage(7);
+      else if (pct > 40) setTimelineStage(4);
+      else if (pct > 15) setTimelineStage(2);
+      else setTimelineStage(1);
+    }
+
+    window.exportMarkdown = function () {
+      if (!tasks.length) return;
+      let md = originalMarkdown || '';
+      
+      tasks.forEach(t => {
+        const escapedTitle = t.title.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        const r = new RegExp('-\\s+\\[[ xX]\\]\\s+' + escapedTitle, 'g');
+        const replacement = `- [${t.status === 'done' ? 'x' : ' '}] ${t.title}`;
+        md = md.replace(r, replacement);
+      });
+
+      document.getElementById("exportArea").value = md;
+      openModal("exportModal");
+    };
+
+    /* ---- Initial Actions ---- */
+    var initialTab = (location.hash || "#dashboard").slice(1);
+    if (!document.getElementById(initialTab)) initialTab = "dashboard";
+    showTab(initialTab, false);
+    
+    // Auto-fetch local plan
+    loadLocalPlan();
+
+    // Export functions to window
+    window.showTab = showTab;
+    window.setTimelineStage = setTimelineStage;
+  })();
+  </script>
+</body>
+</html>
