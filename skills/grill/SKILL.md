@@ -19,8 +19,10 @@ Your goal is to conduct a Socratic alignment and requirements gathering session.
 1. Engage in Socratic requirements gathering by running a relentless interactive interview (`/grilling` session) with the user.
 2. Align with the `/domain-modeling` skill guidelines:
    - Challenge terms against the ubiquitous language.
+   - Challenge design assumptions and align requirements with Google Cloud Well-Architected Framework pillars (Reliability, Security, Cost Optimization, Operational Excellence, Performance Efficiency), deployment strategies, and SRE/observability best practices.
    - Sharpen fuzzy or overloaded terms.
    - Discuss concrete scenarios and probe edge cases one-by-one.
    - Write or update the global glossary (`docs/glossary.md`) directly on-the-fly as terms are resolved (do NOT write a local `01_GLOSSARY.md` file).
    - Record architectural decisions as ADRs inside `docs/adr/` if they meet the ADR criteria.
-   - Generate or update the visual dashboard companion (`plans/{feature-slug}/{timestamp}/visual-dashboard.html`) by copying `/home/robedwards/workspace/bean-to-cup/templates/visual-dashboard.html`, replacing `{{TIMESTAMP}}` and `{{MONIKER}}` with current values, rendering terms in `<!-- VG:GLOSSARY -->` and ADRs in `<!-- VG:ADR -->`, and dual-writing the resulting HTML directly into the assistant's private system artifacts directory as `/home/robedwards/.gemini/antigravity/brain/<conversation-id>/00_visual-dashboard.html`.
+   - **Unified Visual Dashboard (`visual-dashboard.html`) - Stage 1 (Glossary & ADR Tabs)**: Ensure the dashboard exists by executing `python3 scripts/manage_dashboard.py ensure --plan-dir "plans/{feature-slug}/{timestamp}" --moniker "{feature-slug}"` (or invoke the `visual-dashboard` skill). Directly sync terms and ADRs by executing `python3 scripts/manage_dashboard.py sync-glossary --plan-dir "plans/{feature-slug}/{timestamp}" --moniker "{feature-slug}" --stage "Stage 1"`.
+   - **Zero Intermediate Snippet Files**: Do NOT write any temporary HTML files. `sync-glossary` parses `docs/glossary.md` and `docs/adr/` directly and mirrors to system artifacts.

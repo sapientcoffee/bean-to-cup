@@ -24,16 +24,14 @@ This extension implements emerging standards for AI-assisted development:
 
 ![The Artifact Filter](docs/images/artifact-filter.png)
 
-| SDLC Stage | Standard / Convention | Artifact Files | extension Role |
-| :--- | :--- | :--- | :--- |
-| **Stage 0 (Optional)** | Product Discovery | `00_IDEATION.md` | Formulate raw ideas, persona friction, and data schemas. |
+| **Stage 0 (Optional)** | Product Discovery | `00_IDEATION.md`<br>`visual-dashboard.html` (Discovery Tab) | Formulate raw ideas, persona friction, and data schemas, publishing to visual Discovery tab. |
 | **Stage 1** | Socratic Alignment | `docs/glossary.md`<br>`visual-dashboard.html` (Glossary Tab) | Engage in Socratic interview, build global Ubiquitous Glossary and visual companion. |
 | **Stage 2** | Product Requirements | `02_PRD.md`<br>`visual-dashboard.html` (PRD Tab) | Establish requirements and Gherkin scenarios in markdown and visual HTML. |
 | **Stage 3** | Context Extraction | `03_EXTRACTION.md` | Factual codebase mapping (Blind Research). |
 | **Stage 4** | Technical Specification | `04_SPEC.md`<br>`visual-dashboard.html` (Spec Tab) | Design architecture and layout visual spec interface. |
-| **Stage 5** | Execution Planning | `05_PLAN.md` | Slices, TDD checklist, & physical contracts. |
+| **Stage 5** | Execution Planning | `05_PLAN.md`<br>`visual-dashboard.html` (Overview Tab) | Slices, TDD checklist, physical contracts, and interactive Kanban tracking. |
 | **Stage 6** | Human Review Gate | *None (Halt)* | STOP. Verify design contracts and visual specs before execution. |
-| **Stage 7** | Test-Driven Implementation | `07_VERIFICATION.md`<br>`visual-dashboard.html` (Kanban Tab) | Incrementally execute code under TDD loop and track live progress. |
+| **Stage 7** | Test-Driven Implementation | `07_VERIFICATION.md`<br>`visual-dashboard.html` (Overview Tab) | Incrementally execute code under TDD loop and track live progress on the Overview tab Kanban board. |
 | **Stage 8** | Automated Walkthrough | `08_WALKTHROUGH.md`<br>`visual-dashboard.html` (Recap Tab) | Visual/technical walkthroughs and visual recap report. |
 | **Stage 9** | PR Delivery & Maintenance | *PR Description* | Push branch, submit PR with walkthrough and recap reports. |
 
@@ -168,7 +166,7 @@ flowchart TD
         I7_1["Input 1:<br>04_SPEC.md (Contracts)"]:::artifact
         I7_2["Input 2:<br>05_PLAN.md (Checklist)"]:::artifact
         C7["Subagents: @engineer, @auditor,<br>@code-review<br>➔ Skills: generate-code, audit-code,<br>kanban, deploy-app<br>➔ Hook: lint-on-change.sh"]:::component
-        A7["Outputs:<br>- Working verified code<br>- 07_VERIFICATION.md (Logs)<br>- visual-dashboard.html (Kanban Tab)"]:::artifact
+        A7["Outputs:<br>- Working verified code<br>- 07_VERIFICATION.md (Logs)<br>- visual-dashboard.html (Overview Tab)"]:::artifact
         
         U6 -->|Approved| C7
         A4 -.-> I7_1

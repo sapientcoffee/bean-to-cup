@@ -124,8 +124,7 @@ To leverage the latest Gemini 3.x capabilities while avoiding Vertex AI regional
 ## 7. Report Mirroring & Telemetry
 
 1. **Artifact Mirroring (Rule 5 compliance):**
-   - Upon successful generation of `modernization_report.html`, immediately copy/mirror this report into your active chat session's system artifacts directory:
-     `file:///home/robedwards/.gemini/antigravity-cli/brain/<conversation-id>/08_visual-recap.html`
+   - Upon successful generation of `modernization_report.html`, immediately copy/mirror this report into your active chat session's system artifacts directory as `08_visual-recap.html` (e.g. using `python3 scripts/manage_dashboard.py mirror --plan-dir "." --target-filename "08_visual-recap.html"` or copying to `<appDataDir>/brain/<conversation-id>/08_visual-recap.html`).
    - Include valid `ArtifactMetadata` so that the interactive HTML opens directly inside the side-panel chat panel.
 
 2. **Write Telemetry Logs:**

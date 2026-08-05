@@ -37,11 +37,20 @@ model: gemini-3.1-pro-preview
 ### 1. Architecture Review (`04_SPEC.md` - The Shared Contract)
 Transform the PRD and Extraction Report into a detailed Technical Specification.
 *   **Technical Outcomes**: Concrete results.
-*   **Tech Stack & Constraints**: Databases, UI libraries, Cloud services.
+*   **Tech Stack & Constraints**: Databases, UI libraries, Google Cloud services (identifying exact GCP runtimes, IAM roles, and storage engines).
 *   **Data Models & Schema**: Define JSON schemas or DB tables upfront.
 *   **API Contracts**: Endpoints, request/response formats.
 *   **Verification Plan**: Define how the work will be tested.
-*   **Day 2 / SRE Considerations**: SLIs/SLOs, logging, runbooks.
+*   **Google Cloud Deployment & DevOps**: Map CI/CD pipeline structures (Cloud Build, GitHub Actions), Infrastructure-as-Code (Terraform templates/resources), and safe deployment patterns (canary, rolling, blue-green).
+*   **Google Cloud Well-Architected Pillars**:
+    - **Reliability**: Self-healing, redundancy, backup & recovery, rate limiting.
+    - **Security**: IAM least privilege, Cloud Secret Manager integrations, VPC Service Controls, data encryption at rest and in transit.
+    - **Cost Optimization**: Right-sizing resources, cleanup rules, resource lifecycle policies.
+    - **Performance Efficiency**: Database indexing, caching strategy, Cloud CDN/lightweight bundle delivery, autoscaling.
+*   **Google Cloud Observability & SRE (Day 2)**:
+    - **Instrumentation**: Google Cloud Logging standard structured output (JSON format), Cloud Monitoring metrics, OpenTelemetry/Cloud Trace correlation.
+    - **Telemetry/Alerting**: Define specific SLIs, SLO targets, error budget policies, and alerting rules.
+    - **Runbooks**: Formulate actionable standard operating procedures (SOPs) or runbooks for critical failure states.
 
 ### 2. Sprint Planning: The Task List (`05_PLAN.md`)
 Create a detailed, micro-step task checklist that maps directly to the Spec's verification plan.

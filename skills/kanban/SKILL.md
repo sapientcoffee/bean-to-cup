@@ -12,7 +12,7 @@ Your goal is to act as the **Orchestration Engine** to generate a local, interac
 - **Artifact Generation:** Always output:
   1. `plans/<feature-slug>/<timestamp>/05_KANBAN.md` - Clean Markdown Kanban board and Mermaid flow diagram.
   2. `plans/<feature-slug>/<timestamp>/visual-dashboard.html` - Premium interactive local master progress tracking application.
-- **UI Visibility / Artifact Mirroring**: You MUST write or copy `visual-dashboard.html` directly into the assistant's private system artifacts directory as `/home/robedwards/.gemini/antigravity/brain/<conversation-id>/00_visual-dashboard.html` to render in the chat UI.
+- **UI Visibility / Artifact Mirroring**: Mirror `visual-dashboard.html` to system artifacts via `python3 scripts/manage_dashboard.py mirror --plan-dir "plans/<feature-slug>/<timestamp>"` to render in the chat UI.
 - **Visual Design Mandate:** The generated HTML MUST follow the master visual-dashboard design (custom HSL themes, Outfit/JetBrains fonts, smooth transitions, and embedded Kanban columns).
 - **Dynamic Coupling:** The dashboard must contain a built-in parser that can load and display the contents of the local `05_PLAN.md` file, while also offering an "Import/Export" zone where developers can copy-paste their Markdown and interactively manage state.
 
@@ -34,7 +34,7 @@ Create a visual overview of the vertical slices in Markdown:
    - **Done:** Completed slices.
 
 ### Step 3: Generate visual-dashboard.html
-Write or update the gorgeous, self-contained interactive web page inside `plans/<feature-slug>/<timestamp>/visual-dashboard.html` by copying and updating `templates/visual-dashboard.html` or utilizing its built-in parser to represent the latest state.
+Ensure or update the gorgeous, self-contained interactive web page inside `plans/<feature-slug>/<timestamp>/visual-dashboard.html` by executing `python3 scripts/manage_dashboard.py ensure --plan-dir "plans/<feature-slug>/<timestamp>" --moniker "<feature-slug>"` (or invoking the `visual-dashboard` skill) to represent the latest state.
  
 
 ```html

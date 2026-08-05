@@ -15,13 +15,13 @@
     *   **Naming Consistency:** The `<feature-name>` MUST be used as the slug for both the artifact directory and the Git branch (prefixed with `feature/`).
     *   **Timestamping:** Use `date +%Y-%m-%d_%H%M` from the Linux subsystem for the directory name.
     *   **Standard Artifacts (Versioned Directory & Global Docs):**
-        - `00_IDEATION.md` (Stage 0: Discovery outline, if initiated)
+        - `00_IDEATION.md` & `visual-dashboard.html` (Stage 0: Discovery outline, if initiated & Discovery Tab)
         - `docs/glossary.md` & `visual-dashboard.html` (Stage 1: Global Ubiquitous Glossary & Glossary Tab)
         - `02_PRD.md` & `visual-dashboard.html` (Stage 2: Product Requirements & PRD Tab)
         - `03_EXTRACTION.md` (Stage 3: Technical Extraction: Factual codebase mapping via sub-agents)
         - `04_SPEC.md` & `visual-dashboard.html` (Stage 4: Design Specification & Spec Tab)
-        - `05_PLAN.md` (Stage 5: Implementation Plan: Sequential TDD tasks)
-        - `07_VERIFICATION.md` & `visual-dashboard.html` (Stage 7: Validation Report & Kanban Tab)
+        - `05_PLAN.md` & `visual-dashboard.html` (Stage 5: Implementation Plan & Kanban Board on Overview Tab)
+        - `07_VERIFICATION.md` & `visual-dashboard.html` (Stage 7: Validation Report & Kanban Board on Overview Tab)
         - `08_WALKTHROUGH.md` & `visual-dashboard.html` (Stage 8: Automated Walkthrough & Recap Tab)
     *   **Dual-Existence & Stage Handoff Protocol:** The markdown files (`02_PRD.md`, `04_SPEC.md`, `05_PLAN.md`, `07_VERIFICATION.md`, and `08_WALKTHROUGH.md`) coexist perfectly with `visual-dashboard.html` as the definitive, machine-parseable source of truth representing each stage. They are used directly by the test harness and model parsers as high-fidelity stage handoffs, ensuring full backward compatibility and automated parser interoperability.
 6.  **Human Gating (Upstream Design Alignment):** Use the `ask_user` tool for ALL technical decision gating, discovery, and design choices. You MUST solicit user approval on the **Design Discussion and contracts** in Stage 6 before moving from Strategy/Design to active Implementation. You do not ask the developer to read 1,000-line tactical plans; you align on high-leverage design and contracts.
@@ -73,11 +73,11 @@ Identify the current state of the project and execute the corresponding phase.
 
 ### STAGE 6: HUMAN REVIEW GATE (🛑 STOP)
 *   **Trigger:** Spec Contracts are physicalized and the tactical `plans/05_PLAN.md` is generated.
-*   **Action:** **STOP.** Present the Design Discussion and structure contracts (and the Kanban tasks inside the Kanban Tab of the unified master `visual-dashboard.html`) to the user. Do not proceed to execution until the user approves.
+*   **Action:** **STOP.** Present the Design Discussion and structure contracts (and the Kanban tasks inside the Interactive Kanban Board on the Brew Overview tab of the unified master `visual-dashboard.html`) to the user. Do not proceed to execution until the user approves.
 
 ### STAGE 7: TEST-DRIVEN IMPLEMENTATION
 *   **Trigger:** User says "Approve".
-*   **Action:** Iterate through pending Tasks one by one using TDD (`/tdd` guardrail loop). Implement red-green-refactor steps. Stage verified files. Commit milestoned progress only upon approval. Save verification log as `plans/07_VERIFICATION.md` and manage cards inside the Kanban Tab of the unified master `visual-dashboard.html`.
+*   **Action:** Iterate through pending Tasks one by one using TDD (`/tdd` guardrail loop). Implement red-green-refactor steps. Stage verified files. Commit milestoned progress only upon approval. Save verification log as `plans/07_VERIFICATION.md` and manage cards inside the Interactive Kanban Board on the Brew Overview tab of the unified master `visual-dashboard.html`.
 
 ### STAGE 8: AUTOMATED WALKTHROUGH
 *   **Trigger:** All tasks in the Implementation Loop are completed and committed.

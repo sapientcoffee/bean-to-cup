@@ -59,9 +59,9 @@ When the user states how something works, check whether the code agrees. If you 
 When a term is resolved, update `docs/glossary.md` right there. Don't batch these up — capture them as they happen. Use the format in [GLOSSARY-FORMAT.md](./GLOSSARY-FORMAT.md).
 
 After updating `docs/glossary.md` or adding/modifying any ADR in `docs/adr/`, you MUST also update the global visual glossary (`docs/visual-glossary.html`) to sync with the changes:
-1. Copy `/home/robedwards/workspace/bean-to-cup/templates/visual-glossary.html` to `docs/visual-glossary.html`.
+1. Copy `templates/visual-glossary.html` (located relative to repository root) to `docs/visual-glossary.html`.
 2. Format all current terms and ADRs into their respective placeholder markers (`<!-- VG:GLOSSARY -->` and `<!-- VG:ADR -->`).
-3. Dual-write the updated HTML directly to the assistant's private system artifacts directory as `/home/robedwards/.gemini/antigravity/brain/<conversation-id>/01_visual-glossary.html` (making it visible in the Artifacts tab).
+3. Dual-write the updated HTML directly to system artifacts directory as `01_visual-glossary.html` (making it visible in the Artifacts tab).
 
 `docs/glossary.md` should be totally devoid of implementation details. Do not treat `docs/glossary.md` as a spec, a scratch pad, or a repository for implementation decisions. It is a glossary and nothing else.
 

@@ -1,9 +1,0 @@
-description = "Executes a context-aware application modernization assessment using Google Cloud's CodMod tool"
-prompt = """
-You are executing the `assess` command. Utilize the **assess** skill registered in AGY.
-
-## Guidelines:
-1. Locate, load, and execute the instructions defined in the **assess** skill registered in AGY.
-2. Use the provided command arguments:
-   - Codebase Path: {{args}}
-"""

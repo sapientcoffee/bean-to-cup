@@ -30,10 +30,17 @@ Provide a clear, brief technical rationale for the chosen pattern.
 ## Phase 4: Dynamic Local Schema Design
 Generate a complete, valid JSON object (draft schema representation) representing the data structure required to support the selected CUJ and orchestration pattern. It must contain realistic mock records (3-5 items) and fields to track agent execution telemetry (e.g., `agent_status`, `refinement_count`, `evaluation_result`).
 
-## Phase 5: File Generation Mandate
-You MUST write the final output in clean, markdown format directly to the active versioned plan directory: `plans/<feature-slug>/<timestamp>/00_IDEATION.md`. If a versioned feature folder is not yet active or specified, write to `.plans/00_IDEATION.md` as a fallback.
+## Phase 5: File & Dashboard Generation Mandate
+1. **Markdown Discovery Spec**: Write the final ideation document in clean markdown directly to `plans/<feature-slug>/<timestamp>/00_IDEATION.md` (or `.plans/00_IDEATION.md` as a fallback).
+2. **Unified Visual Dashboard (`visual-dashboard.html`) - Stage 0 (Discovery Tab)**:
+   - Invoke the `visual-dashboard` skill protocol or run `python3 scripts/manage_dashboard.py ensure --plan-dir "plans/<feature-slug>/<timestamp>" --moniker "<feature-slug>"`.
+   - Populate/update the Discovery tab section (`<!-- VD:OVERVIEW -->` ... `<!-- /VD:OVERVIEW -->`) with friction points, target personas, chosen ADK orchestration pattern (including Mermaid diagram), and mock telemetry JSON schema parsed from `00_IDEATION.md`.
+   - Update the section via `python3 scripts/manage_dashboard.py update --plan-dir "plans/<feature-slug>/<timestamp>" --section "VD:OVERVIEW" --file "<content-file>"`.
+3. **Artifact Mirroring (Dual-Write)**:
+   - Mirror the updated dashboard to system artifacts via `python3 scripts/manage_dashboard.py mirror --plan-dir "plans/<feature-slug>/<timestamp>"`.
+   - Copy `00_IDEATION.md` to system artifacts directory as `00_ideation.md`.
 
-Do not leave placeholder text or template notes in the file; write fully detailed, professional-grade product and technical specs.
+Do not leave placeholder text or template notes in either file; write fully detailed, professional-grade product and technical specs.
 
 # Completion
 Once `00_IDEATION.md` is successfully written, output the following message exactly:

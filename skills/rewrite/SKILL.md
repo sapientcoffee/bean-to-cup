@@ -14,7 +14,7 @@ This skill provides a generic orchestrator that walks through analyzing legacy a
 ## 🛠️ Unified Workspace Skills Mapping
 An application rewrite leverages the repository's suite of specialized autonomous barista swarm skills:
 1. **Assessment & Scanning (Phase 1):** Use the `assess` skill to run codebase pre-scans, check active credentials, select `codmod` intents, and execute the remote assessment.
-2. **Requirements & Discovery (Phase 2):** Use the `feature` / `write-prd` skill to initialize directories, draft `02_PRD.md`, and compile `02_visual-prd.html`.
+2. **Requirements & Discovery (Phase 2):** Use the `feature` / `write-prd` skill to initialize directories, draft `02_PRD.md`, and compile the master `visual-dashboard.html`.
 3. **Parity Extraction (Phase 3):** Use the `research` skill to do blind, factual extraction of legacy models, endpoints, and business rules to build `docs/glossary.md` and `docs/visual-glossary.html`.
 4. **Domain Architecture (Phase 4):** Use the `domain-modeling` skill to define target bounded contexts and architectural decisions.
 5. **Socratic Alignment (Phase 4):** Use the `grill` / `grilling` skill to stress-test your rewrite specification and implementation plan.
@@ -47,11 +47,11 @@ An application rewrite leverages the repository's suite of specialized autonomou
 1. **Initialize Versioned Directory:**
    - Determine a target slug name (e.g., `rewrite-<app-slug>`).
    - Create the versioned path: `plans/<slug>/<YYYY-MM-DD_HHMM>/`.
-2. **Draft the PRD (`02_PRD.md` & `02_visual-prd.html`):**
+2. **Draft the PRD (`02_PRD.md` & `visual-dashboard.html`):**
    - Incorporate the report findings and strategic recommendations directly.
    - Mandate strict API, input validation, and layout/view parity for existing screens and routes.
    - Specify **Non-Goals** (e.g., "We are NOT adding new user features in this pass; this is a strict rewrite for technical modernization, security, and performance").
-   - Follow the **Dual-Write Requirement** (Rule 5) to mirror `02_PRD.md` and `02_visual-prd.html` to the system artifacts directory.
+   - Follow the **Dual-Write Requirement** (Rule 5) via `python3 scripts/manage_dashboard.py mirror --plan-dir "plans/<slug>/<timestamp>"` to mirror `visual-dashboard.html` and `02_PRD.md` to system artifacts as `00_visual-dashboard.html` and `02_prd.md` respectively.
 
 ### Step 3: Domain Extraction & Ubiquitous Glossary (Stage 3 - Extraction)
 1. **Launch Research Subagent:** Run the `research` skill to scan the legacy code and extract factual specifications:

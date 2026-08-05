@@ -67,21 +67,21 @@ def parse_plan_file(plan_path):
     tasks_order = []
 
     # First Pass: Find all checklist items
-    checklist_pattern = re.compile(r'^\s*[\-\*]\s+\[([ xX])\]\s+(Step\s+([\w\.]+))[:\-]\s*(.*)$', re.IGNORECASE)
+    checklist_pattern = re.compile(r'^\s*[\-\*]\s+\[([ xX])\]\s*(?:\*\*)?\s*((?:Step|Task)\s+([\w\.]+))(?:\s+\[[^\]]+\])?(?:\*\*)?[:\-]\s*(?:\*\*)?\s*(.*)$', re.IGNORECASE)
     
     for line in lines:
         match = checklist_pattern.match(line)
         if match:
             is_done = match.group(1).lower() == 'x'
             step_label = match.group(2).strip().upper()
-            step_name = match.group(4).strip()
+            step_name = match.group(4).strip().rstrip("*").strip()
             
             task = Task(step_label, step_name, is_done)
             tasks_by_label[step_label] = task
             tasks_order.append(step_label)
 
     # Second Pass: Extract detailed instructions and metadata under #### headers
-    step_header_pattern = re.compile(r'^####\s+(Step\s+([\w\.]+))\s*(.*)$', re.IGNORECASE)
+    step_header_pattern = re.compile(r'^####\s*(?:\*\*)?\s*((?:Step|Task)\s+([\w\.]+))(?:\*\*)?\s*(.*)$', re.IGNORECASE)
     
     current_task = None
     detail_lines = []

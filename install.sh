@@ -16,31 +16,16 @@ echo -e "${BLUE}${BOLD}===================================================${NC}"
 echo -e "${BLUE}${BOLD}      ☕ Bean-to-Cup Plugin Installer ☕          ${NC}"
 echo -e "${BLUE}${BOLD}===================================================${NC}"
 
-# implement robust logging to help troubleshoot
-
 # Help message
 show_help() {
     echo -e "Usage: $0 [GIT_URL] [OPTIONS]"
     echo ""
     echo -e "Options:"
-    echo -e "  -g, --global      Install globally into ~/.gemini/skills/ (Default)"
-    echo -e "  -w, --workspace   Install into the current workspace (.agents/skills/)"
-    echo -e "  -l, --link        Create a symlink for local development instead of copying files"
+    echo -e "  -g, --global      Install globally into ~/.gemini/ (Default)"
+    echo -e "  -w, --workspace   Install into the current workspace (.agents/)"
+    echo -e "  -l, --link        Create symlinks for local development instead of copying files"
     echo -e "  -f, --force       Overwrite any existing plugin installation without prompting"
     echo -e "  -h, --help        Show this help message"
-    echo ""
-    echo -e "Examples:"
-    echo -e "  Install the local directory globally (copies files):"
-    echo -e "    $0"
-    echo ""
-    echo -e "  Link the local directory globally for development (symlinks):"
-    echo -e "    $0 --link"
-    echo ""
-    echo -e "  Install from a remote git repository globally:"
-    echo -e "    $0 https://github.com/sapientcoffee/bean-to-cup.git"
-    echo ""
-    echo -e "  Install from a remote git repository into the current workspace:"
-    echo -e "    $0 https://github.com/sapientcoffee/bean-to-cup.git --workspace"
 }
 
 # Defaults
@@ -87,9 +72,9 @@ done
 
 # Resolve paths
 if [[ "$SCOPE" == "global" ]]; then
-    TARGET_DIR="$HOME/.gemini/skills"
+    PLUGIN_BASE_DIR="$HOME/.gemini/config/plugins"
+    SKILLS_BASE_DIR="$HOME/.gemini/skills"
 else
-    # Find active workspace root (first directory up that has .git, or current directory)
     CURRENT_DIR="$PWD"
     WORKSPACE_ROOT=""
     while [[ "$CURRENT_DIR" != "/" ]]; do
@@ -102,10 +87,10 @@ else
     if [[ -z "$WORKSPACE_ROOT" ]]; then
         WORKSPACE_ROOT="$PWD"
     fi
-    TARGET_DIR="$WORKSPACE_ROOT/.agents/skills"
+    PLUGIN_BASE_DIR="$WORKSPACE_ROOT/.agents/plugins"
+    SKILLS_BASE_DIR="$WORKSPACE_ROOT/.agents/skills"
 fi
 
-# Function to extract plugin name from plugin.json
 get_plugin_name() {
     local dir="$1"
     if [[ ! -f "$dir/plugin.json" ]]; then
@@ -121,7 +106,6 @@ get_plugin_name() {
     echo "$name"
 }
 
-# Setup clean-up handler for temp directory if needed
 TMP_DIR=""
 cleanup() {
     if [[ -n "$TMP_DIR" && -d "$TMP_DIR" ]]; then
@@ -130,7 +114,6 @@ cleanup() {
 }
 trap cleanup EXIT
 
-# 1. Determine Source & Plugin Name
 SCRIPT_DIR=""
 if [[ -f "./plugin.json" ]]; then
     SCRIPT_DIR="$PWD"
@@ -139,201 +122,79 @@ elif [[ -n "${BASH_SOURCE[0]:-}" && -f "$BASH_SOURCE" ]]; then
 fi
 
 if [[ -n "$GIT_URL" ]]; then
-    # Remote Git installation specified
     SOURCE_MODE="git"
 elif [[ -n "$SCRIPT_DIR" && -f "$SCRIPT_DIR/plugin.json" ]]; then
-    # Local installation from current/script directory
     SOURCE_MODE="local"
     SOURCE_DIR="$SCRIPT_DIR"
     PLUGIN_NAME=$(get_plugin_name "$SOURCE_DIR")
 else
-    # Run via curl / pipe, or run in a folder without plugin.json
-    # Default to cloning the main bean-to-cup repository!
     GIT_URL="https://github.com/sapientcoffee/bean-to-cup.git"
     SOURCE_MODE="git"
-    echo -e "${YELLOW}No local plugin.json found. Defaulting to remote installation from:${NC}"
-    echo -e "  ${BOLD}$GIT_URL${NC}"
-    echo ""
 fi
 
 if [[ "$SOURCE_MODE" == "git" ]]; then
-    # Remote Git installation
     echo -e "${BLUE}Cloning remote repository...${NC}"
     TMP_DIR=$(mktemp -d -t agy-plugin-XXXXXX)
-    
     if ! git clone --quiet "$GIT_URL" "$TMP_DIR"; then
         echo -e "${RED}Error: Failed to clone repository from $GIT_URL${NC}"
         exit 1
     fi
-    
     PLUGIN_NAME=$(get_plugin_name "$TMP_DIR")
+    SOURCE_DIR="$TMP_DIR"
 fi
 
-# 2. Prepare Target Directory
-mkdir -p "$TARGET_DIR"
-FINAL_TARGET="$TARGET_DIR/$PLUGIN_NAME"
+# 1. Install Plugin Package to PLUGIN_BASE_DIR
+mkdir -p "$PLUGIN_BASE_DIR"
+FINAL_PLUGIN_TARGET="$PLUGIN_BASE_DIR/$PLUGIN_NAME"
 
-UPDATED_IN_PLACE=false
-
-# 3. Handle pre-existing installations
-if [[ -e "$FINAL_TARGET" || -L "$FINAL_TARGET" ]]; then
-    if [[ "$LINK" == "true" ]]; then
-        # Handle symlink request
-        if [[ -L "$FINAL_TARGET" ]]; then
-            local_link_target=$(readlink "$FINAL_TARGET" || true)
-            if [[ "$local_link_target" == "$SOURCE_DIR" ]]; then
-                echo -e "${GREEN}Plugin '$PLUGIN_NAME' is already symlinked correctly to $SOURCE_DIR.${NC}"
-                UPDATED_IN_PLACE=true
-            else
-                echo -e "${YELLOW}Symlink exists but points elsewhere. Re-linking...${NC}"
-                ln -sfn "$SOURCE_DIR" "$FINAL_TARGET"
-                UPDATED_IN_PLACE=true
-            fi
-        else
-            # It's a directory but user wants a symlink. We must replace it.
-            if [[ "$FORCE" == "true" ]]; then
-                echo -e "${YELLOW}Force option active. Replacing directory with symlink...${NC}"
-                rm -rf "$FINAL_TARGET"
-                ln -sfn "$SOURCE_DIR" "$FINAL_TARGET"
-                UPDATED_IN_PLACE=true
-            else
-                echo -e "${YELLOW}Warning: Directory already exists at $FINAL_TARGET but symlink requested.${NC}"
-                read -p "Do you want to replace the directory with a symlink? [y/N] " -n 1 -r
-                echo ""
-                if [[ $REPLY =~ ^[Yy]$ ]]; then
-                    rm -rf "$FINAL_TARGET"
-                    ln -sfn "$SOURCE_DIR" "$FINAL_TARGET"
-                    UPDATED_IN_PLACE=true
-                else
-                    echo -e "${RED}Installation cancelled.${NC}"
-                    exit 0
-                fi
-            fi
-        fi
-    else
-        # User wants a real directory (LINK == "false")
-        if [[ -L "$FINAL_TARGET" ]]; then
-            # Mismatch: Currently a symlink, but user wants a real directory.
-            echo -e "${YELLOW}Existing symlink found where real directory is requested. Removing symlink...${NC}"
-            rm -f "$FINAL_TARGET"
-            # Now FINAL_TARGET is clear, and we let the rest of the script install the files normally (UPDATED_IN_PLACE=false).
-        elif [[ -d "$FINAL_TARGET/.git" ]]; then
-            # Handle git repository pull
-            if [[ "$FORCE" == "true" ]]; then
-                echo -e "${YELLOW}Force option active. Overwriting existing repository...${NC}"
-                rm -rf "$FINAL_TARGET"
-            else
-                echo -e "${BLUE}Existing Git repository found at $FINAL_TARGET.${NC}"
-                echo -e "${BLUE}Attempting to update via git pull...${NC}"
-                set +e
-                git -C "$FINAL_TARGET" pull --quiet
-                PULL_STATUS=$?
-                set -e
-                if [[ $PULL_STATUS -eq 0 ]]; then
-                    echo -e "${GREEN}Plugin successfully updated in-place via git pull!${NC}"
-                    UPDATED_IN_PLACE=true
-                else
-                    echo -e "${YELLOW}Warning: git pull failed (possibly due to local conflicts).${NC}"
-                    read -p "Do you want to force overwrite the existing folder? [y/N] " -n 1 -r
-                    echo ""
-                    if [[ $REPLY =~ ^[Yy]$ ]]; then
-                        echo -e "${YELLOW}Overwriting existing installation...${NC}"
-                        rm -rf "$FINAL_TARGET"
-                    else
-                        echo -e "${RED}Update cancelled due to unresolved merge conflicts.${NC}"
-                        exit 1
-                    fi
-                fi
-            fi
-        elif [[ "$SOURCE_MODE" == "local" ]]; then
-            # Handle in-place copy update
-            if [[ "$FORCE" == "true" ]]; then
-                echo -e "${YELLOW}Force option active. Overwriting existing installation...${NC}"
-                rm -rf "$FINAL_TARGET"
-            else
-                echo -e "${BLUE}Existing directory found at $FINAL_TARGET.${NC}"
-                echo -e "${BLUE}Performing in-place file sync...${NC}"
-                # We skip deleting the folder, letting copying logic run in-place
-                UPDATED_IN_PLACE=false
-            fi
-        else
-            # Fallback for plain remote folder without git repo or other mismatch
-            if [[ "$FORCE" == "true" ]]; then
-                rm -rf "$FINAL_TARGET"
-            else
-                echo -e "${YELLOW}Warning: Installation already exists at $FINAL_TARGET${NC}"
-                read -p "Do you want to overwrite it? [y/N] " -n 1 -r
-                echo ""
-                if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-                    echo -e "${RED}Installation cancelled.${NC}"
-                    exit 0
-                fi
-                rm -rf "$FINAL_TARGET"
-            fi
-        fi
-    fi
+if [[ -L "$FINAL_PLUGIN_TARGET" || -d "$FINAL_PLUGIN_TARGET" ]]; then
+    rm -rf "$FINAL_PLUGIN_TARGET"
 fi
 
-# 4. Install the Plugin (Only if not already updated in-place)
-if [[ "$UPDATED_IN_PLACE" == "false" ]]; then
-    if [[ "$SOURCE_MODE" == "git" ]]; then
-        echo -e "${BLUE}Installing plugin '$PLUGIN_NAME' to $FINAL_TARGET...${NC}"
-        # Move the temporary clone to the final destination
-        mv "$TMP_DIR" "$FINAL_TARGET"
-        # Nullify TMP_DIR so cleanup doesn't try to rm it
-        TMP_DIR=""
-    else
-        if [[ "$LINK" == "true" ]]; then
-            echo -e "${BLUE}Linking local plugin '$PLUGIN_NAME' to $FINAL_TARGET...${NC}"
-            # Create symlink pointing to the local directory
-            ln -sfn "$SOURCE_DIR" "$FINAL_TARGET"
-        else
-            echo -e "${BLUE}Copying local plugin '$PLUGIN_NAME' to $FINAL_TARGET...${NC}"
-            mkdir -p "$FINAL_TARGET"
-            # Copy files robustly, excluding git/temporary folders if present
-            if command -v rsync &>/dev/null; then
-                rsync -a --exclude='.git' --exclude='.agents' --exclude='.plans' --exclude='.plan' --exclude='plans' --exclude='scratch' "$SOURCE_DIR/" "$FINAL_TARGET/"
-            else
-                cp -R "$SOURCE_DIR"/. "$FINAL_TARGET/"
-                # Clean up git/scratch folders if they got copied
-                rm -rf "$FINAL_TARGET/.git" "$FINAL_TARGET/.agents" "$FINAL_TARGET/.plans" "$FINAL_TARGET/.plan" "$FINAL_TARGET/plans" "$FINAL_TARGET/scratch"
-            fi
-        fi
-    fi
-fi
-
-
-# 5. Native agy CLI registration
-if command -v agy &>/dev/null; then
-    echo -e "${BLUE}Registering plugin natively with Antigravity CLI...${NC}"
-    set +e
-    agy plugin install "$FINAL_TARGET"
-    REG_STATUS=$?
-    set -e
-    if [[ $REG_STATUS -eq 0 ]]; then
-        echo -e "${GREEN}Plugin registered successfully in agy!${NC}"
-    else
-        echo -e "${YELLOW}Warning: Native registration via 'agy plugin install' returned an error (code $REG_STATUS), but files are successfully placed.${NC}"
-    fi
+if [[ "$LINK" == "true" ]]; then
+    echo -e "${BLUE}Linking plugin '$PLUGIN_NAME' into $FINAL_PLUGIN_TARGET...${NC}"
+    ln -sfn "$SOURCE_DIR" "$FINAL_PLUGIN_TARGET"
 else
-    echo -e "${YELLOW}Warning: 'agy' CLI binary not found on PATH. Please ensure it is installed.${NC}"
+    echo -e "${BLUE}Syncing plugin '$PLUGIN_NAME' into $FINAL_PLUGIN_TARGET...${NC}"
+    mkdir -p "$FINAL_PLUGIN_TARGET"
+    if command -v rsync &>/dev/null; then
+        rsync -a --exclude='.git' --exclude='.agents' --exclude='.plans' --exclude='.plan' --exclude='plans' --exclude='scratch' "$SOURCE_DIR/" "$FINAL_PLUGIN_TARGET/"
+    else
+        cp -R "$SOURCE_DIR"/. "$FINAL_PLUGIN_TARGET/"
+        rm -rf "$FINAL_PLUGIN_TARGET/.git" "$FINAL_PLUGIN_TARGET/.agents" "$FINAL_PLUGIN_TARGET/.plans" "$FINAL_PLUGIN_TARGET/.plan" "$FINAL_PLUGIN_TARGET/plans" "$FINAL_PLUGIN_TARGET/scratch"
+    fi
 fi
 
-# 6. Show beautiful completion message
+# 2. Register Individual Skills in SKILLS_BASE_DIR
+mkdir -p "$SKILLS_BASE_DIR"
+if [[ -d "$SOURCE_DIR/skills" ]]; then
+    for skill_dir in "$SOURCE_DIR/skills"/*; do
+        if [[ -d "$skill_dir" ]]; then
+            skill_name=$(basename "$skill_dir")
+            skill_target="$SKILLS_BASE_DIR/$skill_name"
+            if [[ "$LINK" == "true" ]]; then
+                ln -sfn "$skill_dir" "$skill_target"
+            else
+                mkdir -p "$skill_target"
+                if command -v rsync &>/dev/null; then
+                    rsync -a "$skill_dir/" "$skill_target/"
+                else
+                    cp -R "$skill_dir"/. "$skill_target/"
+                fi
+            fi
+            echo -e "${GREEN}  ✔ Registered skill: $skill_name${NC}"
+        fi
+    done
+fi
+
+# 3. Completion confirmation
+echo -e "${GREEN}Plugin files and skills synchronized successfully!${NC}"
+
 echo -e "${GREEN}${BOLD}===================================================${NC}"
 echo -e "${GREEN}${BOLD} 🎉 Installation Successful! 🎉                   ${NC}"
 echo -e "${GREEN}${BOLD}===================================================${NC}"
 echo -e "Plugin Name:  ${BOLD}$PLUGIN_NAME${NC}"
 echo -e "Scope:        ${BOLD}$SCOPE${NC}"
-echo -e "Location:     ${BOLD}$FINAL_TARGET${NC}"
-if [[ "$SOURCE_MODE" == "local" ]]; then
-    if [[ "$LINK" == "true" ]]; then
-        echo -e "Type:         ${BLUE}Symlinked Local Directory (Development)${NC}"
-    else
-        echo -e "Type:         ${BLUE}Copied Local Directory${NC}"
-    fi
-else
-    echo -e "Type:         ${BLUE}Cloned Remote Git Repository${NC}"
-fi
+echo -e "Plugin Path:  ${BOLD}$FINAL_PLUGIN_TARGET${NC}"
+echo -e "Skills Path:  ${BOLD}$SKILLS_BASE_DIR${NC}"
 echo ""
-echo -e "Antigravity CLI will automatically detect and load this plugin on your next session."

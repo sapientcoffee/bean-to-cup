@@ -1,7 +1,0 @@
-description = "Parse 05_PLAN.md and synchronize tasks to GitHub issues using the sync skill"
-prompt = """
-You are executing the `sync` command. Utilize the **sync** skill registered in AGY.
-
-## Guidelines:
-1. Locate, load, and execute the instructions defined in the **sync** skill registered in AGY.
-"""
