@@ -1344,6 +1344,11 @@ flowchart TD
     document.addEventListener("keydown", function (e) {
       if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
 
+      if (e.key === "d" || e.key === "D") {
+        if (demoBtn) demoBtn.click();
+        return;
+      }
+
       var tabButtons = Array.prototype.slice.call(document.querySelectorAll(".va-tab"));
       var activeIndex = tabButtons.findIndex(function (b) { return b.classList.contains("active"); });
       if (activeIndex === -1) return;
@@ -1354,6 +1359,10 @@ flowchart TD
       } else if (e.key === "ArrowLeft") {
         var prevIndex = (activeIndex - 1 + tabButtons.length) % tabButtons.length;
         tabButtons[prevIndex].click();
+      } else if (e.key === "Home") {
+        tabButtons[0].click();
+      } else if (e.key === "End") {
+        tabButtons[tabButtons.length - 1].click();
       }
     });
 
@@ -1370,8 +1379,9 @@ flowchart TD
     /* ---- CDNs Loading Checks ---- */
     var mermaidOk = typeof window.mermaid !== "undefined";
     var hljsOk = typeof window.hljs !== "undefined";
-    if (!mermaidOk || !hljsOk) {
-      document.getElementById("cdn-banner").classList.add("show");
+    var banner = document.getElementById("cdn-banner");
+    if ((!mermaidOk || !hljsOk) && banner) {
+      banner.classList.add("show");
     }
 
     if (mermaidOk) {
