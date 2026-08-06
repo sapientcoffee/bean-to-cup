@@ -50,7 +50,9 @@ Identify the current state of the project and execute the corresponding phase.
 ### STAGE 2: PRODUCT REQUIREMENTS (PRD)
 *   **Trigger:** Socratic Alignment is complete.
 *   **Action:** 
-    1.  Trigger the **`/to-prd`** command to synthesize the Socratic discussion and compile a highly structured Product Requirements Document at `plans/<feature-slug>/<timestamp>/02_PRD.md` and write requirements to the PRD Tab of the unified master **`visual-dashboard.html`**. Keep requirements strictly focused on business logic and customer value, completely technology-agnostic.
+    1.  Trigger the **`/to-prd`** command to synthesize the Socratic discussion and compile a highly structured Product Requirements Document at `plans/<feature-slug>/<timestamp>/02_PRD.md` and write requirements to the PRD Tab of the unified master **`visual-dashboard.html`**.
+    2.  **Adversarial Red-Team Gate:** Dispatch subagent **`@red-team-reviewer`** to audit the PRD for unhandled negative paths, missing rate limits, and ambiguous scenarios. Refine `02_PRD.md` accordingly.
+    3.  **Executable Evals:** Auto-generate programmatic KPI benchmark test scripts at `evals/test_kpis.py`.
 *   **Exit Criteria:** User confirms the PRD is accurate. Both files must be mirrored to the system artifacts directory (`02_prd.md` and `00_visual-dashboard.html`).
 
 ### STAGE 3: CONTEXT EXTRACTION (Research)
@@ -64,16 +66,17 @@ Identify the current state of the project and execute the corresponding phase.
 
 ### STAGE 4: TECHNICAL SPECIFICATION (Spec)
 *   **Trigger:** `02_PRD.md` and `03_EXTRACTION.md` are ready.
-*   **Action:** Dispatch `system-design` to create a detailed Technical Specification at `plans/04_SPEC.md` and write design spec to the Design Spec Tab of the unified master **`visual-dashboard.html`**.
-*   **Instruction:** Read the PRD and Extraction Report. Design the architecture aligned with `design.md`, write `04_SPEC.md`, copy `templates/visual-dashboard.html` to `visual-dashboard.html` (if not already copied), fill the Spec Tab, and mirror both files to the system artifacts directory.
+*   **Action:** Dispatch `@architect` (`system-design`) to create a detailed Technical Specification at `plans/04_SPEC.md`, emit physical schema files to `contracts/`, and write design spec to the Design Spec Tab of the unified master **`visual-dashboard.html`**.
+*   **Instruction:** Read the PRD and Extraction Report. Design the architecture aligned with `design.md`, write `04_SPEC.md`, emit `contracts/`, copy `templates/visual-dashboard.html` to `visual-dashboard.html` (if not already copied), fill the Spec Tab, and mirror files to system artifacts directory.
 
 ### STAGE 5: EXECUTION PLANNING (Plan)
 *   **Trigger:** Design Spec (`04_SPEC.md` & `visual-dashboard.html`) is ready.
-*   **Action:** Dispatch `system-design` to establish contracts and plan tactical execution. Write interface contracts first. Cut vertical slices. Create a step-by-step implementation plan `plans/05_PLAN.md` (checkbox format, prefixed with `[Serial]` or `[Parallel]`).
+*   **Action:** Dispatch `@architect` (`system-design`) to establish contracts and plan tactical execution. Write interface contracts first. Cut vertical slices. Create a step-by-step implementation plan `plans/05_PLAN.md` (checkbox format, prefixed with `[Serial]` or `[Parallel]`).
+*   **Adversarial Red-Team Gate:** Dispatch subagent **`@red-team-reviewer`** to audit `04_SPEC.md` and `05_PLAN.md` for race conditions, DB deadlocks, and unhandled failure states before Stage 6.
 
 ### STAGE 6: HUMAN REVIEW GATE (🛑 STOP)
-*   **Trigger:** Spec Contracts are physicalized and the tactical `plans/05_PLAN.md` is generated.
-*   **Action:** **STOP.** Present the Design Discussion and structure contracts (and the Kanban tasks inside the Interactive Kanban Board on the Brew Overview tab of the unified master `visual-dashboard.html`) to the user. Do not proceed to execution until the user approves.
+*   **Trigger:** Spec Contracts are physicalized, red-team audit is complete, and the tactical `plans/05_PLAN.md` is generated.
+*   **Action:** **STOP.** Present the Design Discussion, physical contracts, red-team audit summary, and structure contracts (and the Kanban tasks inside the Interactive Kanban Board on the Brew Overview tab of the unified master `visual-dashboard.html`) to the user. Do not proceed to execution until the user approves.
 
 ### STAGE 7: TEST-DRIVEN IMPLEMENTATION
 *   **Trigger:** User says "Approve".

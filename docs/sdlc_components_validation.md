@@ -235,11 +235,11 @@ This topology map explicitly details how parent commands and skills nest child s
 
 ### ☕ STAGE 2: PRODUCT REQUIREMENTS (PRD)
 *   **What It Does:** Captures technology-agnostic product requirements, non-goals, measurable KPIs, target personas, and user story acceptance criteria in Gherkin format.
-*   **Trigger / Orchestration:** Head Barista invokes skill [`write-prd`](file:///home/robedwards/workspace/bean-to-cup/skills/write-prd/SKILL.md).
+*   **Trigger / Orchestration:** Head Barista invokes skill [`write-prd`](file:///home/robedwards/workspace/bean-to-cup/skills/write-prd/SKILL.md) and dispatches subagent `@red-team-reviewer` ([`red-team-reviewer.md`](file:///home/robedwards/workspace/bean-to-cup/agents/red-team-reviewer.md)) for adversarial auditing.
 *   **Inputs Required:** `docs/glossary.md`, Stage 1 interview alignment notes.
-*   **Outputs Produced:** `plans/<slug>/<timestamp>/02_PRD.md`, `visual-dashboard.html` (PRD Tab).
+*   **Outputs Produced:** `plans/<slug>/<timestamp>/02_PRD.md`, `evals/test_kpis.py`, `02_RED_TEAM_AUDIT.md`, `visual-dashboard.html` (PRD Tab).
 *   **Data Pulled In:** Business constraints, glossary terms, persona friction points.
-*   **Human Gate:** User reviews `02_PRD.md` in chat UI and approves before proceeding.
+*   **Human Gate:** User reviews `02_PRD.md`, red-team audit summary, and `evals/test_kpis.py` before approving.
 
 ---
 
@@ -258,27 +258,27 @@ This topology map explicitly details how parent commands and skills nest child s
 ---
 
 ### ☕ STAGE 4: TECHNICAL SPECIFICATION (Spec)
-*   **What It Does:** Designs physical software architecture, data schemas, API contracts, threat models, and SRE custom telemetry.
+*   **What It Does:** Designs physical software architecture, data schemas, physical contract files, API contracts, threat models, and SRE custom telemetry.
 *   **Trigger / Orchestration:** Head Barista dispatches subagent `@architect` ([`system-design.md`](file:///home/robedwards/workspace/bean-to-cup/agents/system-design.md)).
 *   **Inputs Required:** `02_PRD.md`, `03_EXTRACTION.md`, existing `design.md` in root.
-*   **Outputs Produced:** `plans/<slug>/<timestamp>/04_SPEC.md`, `visual-dashboard.html` (Spec Tab).
+*   **Outputs Produced:** `plans/<slug>/<timestamp>/04_SPEC.md`, `contracts/` (physical schema files), `visual-dashboard.html` (Spec Tab).
 *   **Data Pulled In:** Design guidelines, existing API signatures, database schemas, security policies.
 
 ---
 
 ### ☕ STAGE 5: EXECUTION PLANNING (Plan)
-*   **What It Does:** Cuts vertical "tracer bullet" slices, designs physical contracts/interfaces, and formats a sequential TDD checklist with an interactive Kanban board.
-*   **Trigger / Orchestration:** Head Barista dispatches subagent `@architect` ([`system-design.md`](file:///home/robedwards/workspace/bean-to-cup/agents/system-design.md)) and skill [`kanban`](file:///home/robedwards/workspace/bean-to-cup/skills/kanban/SKILL.md).
+*   **What It Does:** Cuts vertical "tracer bullet" slices, designs physical contracts/interfaces, formats a sequential TDD checklist, and dispatches `@red-team-reviewer` for adversarial audit.
+*   **Trigger / Orchestration:** Head Barista dispatches subagent `@architect` ([`system-design.md`](file:///home/robedwards/workspace/bean-to-cup/agents/system-design.md)), subagent `@red-team-reviewer` ([`red-team-reviewer.md`](file:///home/robedwards/workspace/bean-to-cup/agents/red-team-reviewer.md)), and skill [`kanban`](file:///home/robedwards/workspace/bean-to-cup/skills/kanban/SKILL.md).
 *   **Inputs Required:** `04_SPEC.md`, `02_PRD.md`.
-*   **Outputs Produced:** `plans/<slug>/<timestamp>/05_PLAN.md`, `visual-dashboard.html` (Overview Tab Kanban board).
+*   **Outputs Produced:** `plans/<slug>/<timestamp>/05_PLAN.md`, `05_RED_TEAM_AUDIT.md`, `visual-dashboard.html` (Overview Tab Kanban board).
 *   **Data Pulled In:** Task dependency trees, physical API contracts.
 
 ---
 
 ### ☕ STAGE 6: HUMAN REVIEW GATE (🛑 STOP)
-*   **What It Does:** Halts execution to present physical contracts, API schemas, and execution slices to the user for explicit approval before writing code.
+*   **What It Does:** Halts execution to present physical contracts, red-team audit summary, API schemas, and execution slices to the user for explicit approval before writing code.
 *   **Trigger / Orchestration:** Automated protocol halt.
-*   **Inputs Required:** `04_SPEC.md`, `05_PLAN.md`, `visual-dashboard.html`.
+*   **Inputs Required:** `04_SPEC.md`, `05_PLAN.md`, `contracts/`, `visual-dashboard.html`.
 *   **Outputs Produced:** Human approval record.
 *   **Exit Criteria:** User explicitly reviews and types `"approve"`.
 
