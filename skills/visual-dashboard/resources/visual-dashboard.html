@@ -168,23 +168,138 @@
     .step-node.active .step-label { color: var(--fg); font-weight: 700; }
     .step-node.completed .step-label { color: var(--badge-new-fg); font-weight: 600; }
 
-    /* ---- Sticky tab nav ------------------------------------------------ */
+    /* ---- Universal App Layout & Sidebar Navigation ---------------------- */
+    .va-app-layout {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+    }
+
     nav.va-nav {
-      position: sticky; top: 0; z-index: 20;
-      background: var(--nav-bg); border-bottom: 1px solid var(--card-border);
-      box-shadow: var(--shadow); transition: background 0.3s, border 0.3s;
+      width: 260px;
+      min-width: 260px;
+      flex-shrink: 0;
+      background: var(--nav-bg);
+      border-right: 1px solid var(--card-border);
+      border-bottom: none;
+      box-shadow: 2px 0 12px rgba(44, 37, 32, 0.04);
+      position: sticky;
+      top: 0;
+      align-self: flex-start;
+      height: 100vh;
+      max-height: 100vh;
+      overflow-y: auto;
+      padding: 24px 12px;
+      transition: background 0.3s, border 0.3s;
+      z-index: 20;
     }
-    nav.va-nav .wrap { display: flex; gap: 4px; overflow-x: auto; padding: 0 24px; }
+
+    .nav-header {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      padding: 0 12px 10px 12px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    nav.va-nav #va-tabs {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 100%;
+      padding: 0;
+    }
+
     .va-tab {
-      appearance: none; border: 0; background: transparent; color: var(--muted);
-      padding: 16px 16px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap;
-      border-bottom: 3px solid transparent; transition: all 0.2s ease;
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 10px 14px;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      border-left: 3px solid transparent;
+      border-bottom: none;
+      border-radius: 8px;
+      text-align: left;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
     }
-    .va-tab:hover { color: var(--fg); }
-    .va-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 700; }
+
+    .va-tab:hover {
+      color: var(--fg);
+      background: var(--faint);
+    }
+
+    .va-tab.active {
+      color: var(--accent);
+      background: var(--accent-soft);
+      border-left-color: var(--accent);
+      font-weight: 700;
+      box-shadow: inset 0 0 0 1px rgba(142, 98, 76, 0.15);
+    }
+
+    .va-tab .tab-icon {
+      font-size: 16px;
+      line-height: 1;
+      opacity: 0.85;
+    }
+
+    .va-tab.active .tab-icon {
+      opacity: 1;
+    }
+
+    @media (max-width: 900px) {
+      .va-app-layout {
+        flex-direction: column;
+      }
+      nav.va-nav {
+        width: 100%;
+        min-width: 100%;
+        height: auto;
+        max-height: none;
+        position: static;
+        border-right: none;
+        border-bottom: 1px solid var(--card-border);
+        padding: 12px;
+      }
+      nav.va-nav #va-tabs {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 4px;
+      }
+      .va-tab {
+        border-left: none;
+        border-bottom: 3px solid transparent;
+        border-radius: 6px;
+        padding: 8px 12px;
+        width: auto;
+      }
+      .va-tab.active {
+        border-left-color: transparent;
+        border-bottom-color: var(--accent);
+      }
+      main {
+        padding: 20px 16px;
+      }
+    }
 
     /* ---- Sections ------------------------------------------------------ */
-    main .wrap { padding-top: 32px; padding-bottom: 64px; }
+    main {
+      flex: 1;
+      min-width: 0;
+      padding: 32px 32px 64px 32px;
+    }
+    main .wrap { max-width: 1200px; margin: 0; padding: 0; }
     .va-section[hidden] { display: none; }
     .va-section h2 { font-size: 24px; margin: 0 0 8px; }
     .va-section > .lede { color: var(--muted); margin: 0 0 24px; font-size: 15px; }
@@ -543,21 +658,41 @@
     </div>
   </header>
 
-  <nav class="va-nav">
-    <div class="wrap" id="va-tabs">
-      <button class="va-tab active" data-target="dashboard" onclick="showTab('dashboard', true)">Brew Overview</button>
-      <button class="va-tab" data-target="discovery" onclick="showTab('discovery', true)">Stage 0: Discovery</button>
-      <button class="va-tab" data-target="glossary" onclick="showTab('glossary', true)">Stage 1: Glossary &amp; ADRs</button>
-      <button class="va-tab" data-target="prd" onclick="showTab('prd', true)">Stage 2: Product PRD</button>
-      <button class="va-tab" data-target="extraction" onclick="showTab('extraction', true)">Stage 3: Extraction</button>
-      <button class="va-tab" data-target="spec" onclick="showTab('spec', true)">Stage 4: Technical Spec</button>
-      <button class="va-tab" data-target="plan" onclick="showTab('plan', true)">Stage 5: Execution Plan</button>
-      <button class="va-tab" data-target="verification" onclick="showTab('verification', true)">Stage 7: TDD Verification</button>
-      <button class="va-tab" data-target="recap" onclick="showTab('recap', true)">Stage 8: Walkthrough Recap</button>
-    </div>
-  </nav>
+  <div class="va-app-layout">
+    <nav class="va-nav">
+      <div class="nav-header">SDLC Navigation</div>
+      <div id="va-tabs">
+        <button class="va-tab active" data-target="dashboard" onclick="showTab('dashboard', true)">
+          <span class="tab-icon">📊</span> <span class="tab-label">Brew Overview</span>
+        </button>
+        <button class="va-tab" data-target="discovery" onclick="showTab('discovery', true)">
+          <span class="tab-icon">💡</span> <span class="tab-label">Stage 0: Discovery</span>
+        </button>
+        <button class="va-tab" data-target="glossary" onclick="showTab('glossary', true)">
+          <span class="tab-icon">📖</span> <span class="tab-label">Stage 1: Glossary &amp; ADRs</span>
+        </button>
+        <button class="va-tab" data-target="prd" onclick="showTab('prd', true)">
+          <span class="tab-icon">📋</span> <span class="tab-label">Stage 2: Product PRD</span>
+        </button>
+        <button class="va-tab" data-target="extraction" onclick="showTab('extraction', true)">
+          <span class="tab-icon">🔍</span> <span class="tab-label">Stage 3: Context Extraction</span>
+        </button>
+        <button class="va-tab" data-target="spec" onclick="showTab('spec', true)">
+          <span class="tab-icon">📐</span> <span class="tab-label">Stage 4: Technical Spec</span>
+        </button>
+        <button class="va-tab" data-target="plan" onclick="showTab('plan', true)">
+          <span class="tab-icon">🗺️</span> <span class="tab-label">Stage 5: Execution Plan</span>
+        </button>
+        <button class="va-tab" data-target="verification" onclick="showTab('verification', true)">
+          <span class="tab-icon">🧪</span> <span class="tab-label">Stage 7: TDD Verification</span>
+        </button>
+        <button class="va-tab" data-target="recap" onclick="showTab('recap', true)">
+          <span class="tab-icon">🎬</span> <span class="tab-label">Stage 8: Walkthrough Recap</span>
+        </button>
+      </div>
+    </nav>
 
-  <main>
+    <main>
     <div class="wrap">
 
       <!-- ================= BREW DASHBOARD ================= -->
@@ -1310,6 +1445,7 @@ flowchart TD
 
     </div>
   </main>
+</div>
 
   <!-- IMPORT MODAL -->
   <div class="modal" id="importModal">
@@ -1400,10 +1536,10 @@ flowchart TD
       var activeIndex = tabButtons.findIndex(function (b) { return b.classList.contains("active"); });
       if (activeIndex === -1) return;
 
-      if (e.key === "ArrowRight") {
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
         var nextIndex = (activeIndex + 1) % tabButtons.length;
         tabButtons[nextIndex].click();
-      } else if (e.key === "ArrowLeft") {
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
         var prevIndex = (activeIndex - 1 + tabButtons.length) % tabButtons.length;
         tabButtons[prevIndex].click();
       } else if (e.key === "Home") {

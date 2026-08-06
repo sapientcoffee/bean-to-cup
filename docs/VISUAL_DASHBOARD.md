@@ -66,7 +66,7 @@ skills/visual-dashboard/
 ### File Responsibilities
 
 *   **[`resources/visual-dashboard.html`](../skills/visual-dashboard/resources/visual-dashboard.html)**:
-    A standalone, zero-dependency HTML file containing CSS design tokens for light/dark mode, tab navigation headers, an animated timeline stepper, responsive card grids, and predefined comment markers for each stage.
+    A standalone, zero-dependency HTML file containing CSS design tokens for light/dark mode, sticky vertical sidebar navigation on the left hand side, an animated timeline stepper, responsive card grids, and predefined comment markers for each stage.
 *   **[`scripts/manage_dashboard.py`](../skills/visual-dashboard/scripts/manage_dashboard.py)**:
     The central Python authority that parses markdown artifacts, calculates progress metrics, updates comment blocks in `visual-dashboard.html`, and mirrors files to the AGY brain directory.
 *   **[`SKILL.md`](../skills/visual-dashboard/SKILL.md)**:
