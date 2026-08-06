@@ -28,13 +28,14 @@ Commands are registered as flat `.toml` files matching the namespace standard in
 
 ---
 
-## 🤖 2. Active Specialized Subagents (8 Active Swarm)
+## 🤖 2. Active Specialized Subagents (9 Active Swarm)
 
 Specialized subagents reside in `agents/` and are dispatched with targeted system prompts. They are invoked using `@<alias>` in developer prompts or by parent skills.
 
 | Agent Alias | Config File | Assigned Role | Target SDLC Stage | Inputs Required | Primary Outputs | Data Pulled In | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **`@architect`** | **[`system-design.md`](file:///home/robedwards/workspace/bean-to-cup/agents/system-design.md)** | Strategic Planner | **Stage 4 & 5** | `02_PRD.md`, `03_EXTRACTION.md`, `design.md` | `04_SPEC.md`, `05_PLAN.md`, `visual-dashboard.html` (Spec & Overview Tabs) | Design guidelines, telemetry specs, physical API contracts | **Active** |
+| **`@red-team-reviewer`** | **[`red-team-reviewer.md`](file:///home/robedwards/workspace/bean-to-cup/agents/red-team-reviewer.md)** | Adversarial Critic | **Stage 2, 4, 5** | `02_PRD.md`, `04_SPEC.md`, `05_PLAN.md` proposals | `0X_RED_TEAM_AUDIT.md`, edge case critique | Security checklists, unhandled failure scenarios | **Active** |
 | **`@engineer`** | **[`code-implementation.md`](file:///home/robedwards/workspace/bean-to-cup/agents/code-implementation.md)** | Code Builder | **Stage 7** | `04_SPEC.md`, `05_PLAN.md` slice | Source code, unit tests, passing test suites | Existing codebase patterns, lint rules, package manifests | **Active** |
 | **`@auditor`** | **[`quality-verification.md`](file:///home/robedwards/workspace/bean-to-cup/agents/quality-verification.md)** | Quality Gatekeeper | **Stage 7** | `04_SPEC.md`, `05_PLAN.md`, implementation diffs | `07_VERIFICATION.md`, audit logs, regression reports | Test execution outputs, build logs, API contract definitions | **Active** |
 | **`@scout`** | **[`context-discovery.md`](file:///home/robedwards/workspace/bean-to-cup/agents/context-discovery.md)** | Investigative Researcher | **Stage 3** | User query or research scope | Factual file listings, symbol definitions, import graphs | Codebase file system, AST maps, module declarations | **Active** |
@@ -42,6 +43,7 @@ Specialized subagents reside in `agents/` and are dispatched with targeted syste
 | **`@context-mapping`** | **[`context-mapping.md`](file:///home/robedwards/workspace/bean-to-cup/agents/context-mapping.md)** | Codebase Navigator | **Stage 3** | High-level feature concept | Entry point inventory, file boundary map | Project folder hierarchy, routing tables, configuration files | **Active** |
 | **`@pattern-recognition`** | **[`pattern-recognition.md`](file:///home/robedwards/workspace/bean-to-cup/agents/pattern-recognition.md)** | Architecture Librarian | **Stage 3** | Architectural pattern request | Pattern reference examples, conventions guide | Codebase utilities, middleware chains, factory/repository instances | **Active** |
 | **`@code-review`** | **[`code-inspection.md`](file:///home/robedwards/workspace/bean-to-cup/agents/code-inspection.md)** | Architectural Critic | **Stage 7** | Git diff / modified files | Code inspection report, smell analysis, polish recommendations | Staged diffs, coding standards, complexity metrics | **Active** |
+
 
 ### 📦 Archived / Holding-Pen Agents (5 Total)
 The following subagents are safely moved to `holding-pen/agents/` to maintain workspace cleanliness and focus:

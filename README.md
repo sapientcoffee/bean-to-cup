@@ -222,11 +222,12 @@ The heart of the extension is the `bean-to-cup.md` file. It acts as the **Head B
 
 ## 🤖 The Brewing Swarm (Agents)
 
-The Bean-to-Cup plugin manages an autonomous network of **8 active specialized sub-agents** in the `agents/` directory (plus **5 archived agents** in the holding pen). You can invoke active agents in your chat prompts using `@<name>`. For a detailed description of each agent's config file and target SDLC stage, see the [Swarm & Command Registry](docs/swarm-registry.md#-2-specialized-agents--swarm-13-total).
+The Bean-to-Cup plugin manages an autonomous network of **9 active specialized sub-agents** in the `agents/` directory (plus **5 archived agents** in the holding pen). You can invoke active agents in your chat prompts using `@<name>`. For a detailed description of each agent's config file and target SDLC stage, see the [Swarm & Command Registry](docs/swarm-registry.md#-2-specialized-agents--swarm-13-total).
 
 | Agent | Role | Expertise & Focus | Status |
 | :--- | :--- | :--- | :--- |
 | **`@architect`** | The Planner | Strategic design patterns, `04_SPEC.md` specs, and `05_PLAN.md` roadmaps. | **CORE (Active)** |
+| **`@red-team-reviewer`** | The Red-Team Critic | Adversarial audits of PRDs, Specs, and Plans for missing edge cases & flaws. | **CORE (Active)** |
 | **`@engineer`** | The Builder | TDD implementation, Red-Green-Refactor, and production logic. | **CORE (Active)** |
 | **`@auditor`** | The Gatekeeper | Spec validation, regression checking, and QA cupping. | **CORE (Active)** |
 | **`@scout`** | The Investigator | Context-isolated codebase queries and raw context extraction. | **CORE (Active)** |

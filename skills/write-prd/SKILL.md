@@ -27,11 +27,17 @@ Your goal as the Product Manager is to turn raw, unstructured user ideas into a 
    - **Non-Functional Requirements (NFRs) / Google Cloud Well-Architected Framework Pillars**: Reliability (self-healing, backups), Security (least-privilege IAM, VPC Service Controls, Cloud Secret Manager), Cost Optimization (right-sizing, cleanups), Performance Efficiency (indexes, cache, autoscaling thresholds).
    - **Deployment & DevOps Strategy**: Target GCP runtimes, Terraform Infrastructure-as-Code resources, CI/CD setup, and progressive release strategies (canary, rolling, blue-green).
    - **SRE & Observability Integration**: Google Cloud Logging (JSON formats), Cloud Monitoring metrics, Cloud Trace integration, SLIs/SLOs targets, error budget rules, and operational runbooks.
-3. **Compile the Visual PRD inside the Unified Dashboard (`visual-dashboard.html`)**:
+3. **Adversarial Red-Team Review Gate**:
+   - Dispatch the subagent `@red-team-reviewer` to audit `02_PRD.md` for unhandled negative paths, missing rate-limiting bounds, ambiguous Gherkin steps, and security blind spots.
+   - Refine `02_PRD.md` based on any Critical/High flaws identified during the adversarial audit.
+4. **Generate Executable Evals (`evals/test_kpis.py`)**:
+   - Parse all measurable KPIs and non-functional requirements in `02_PRD.md` and generate programmatic benchmark test scripts in `evals/test_kpis.py` (e.g. testing latency thresholds, error rate bounds, and payload limits).
+5. **Compile the Visual PRD inside the Unified Dashboard (`visual-dashboard.html`)**:
    - Ensure `visual-dashboard.html` exists by executing `python3 ~/.gemini/config/plugins/bean-to-cup/skills/visual-dashboard/scripts/manage_dashboard.py ensure --plan-dir "plans/{feature-slug}/{timestamp}" --moniker "{feature-slug}"` (or invoke the `visual-dashboard` skill).
    - Automatically compile all PRD sections into full-fidelity HTML cards and render raw markdown by running:
      `python3 ~/.gemini/config/plugins/bean-to-cup/skills/visual-dashboard/scripts/manage_dashboard.py sync-prd --plan-dir "plans/{feature-slug}/{timestamp}" --moniker "{feature-slug}"`
-   - **Zero Intermediate Snippet Files**: Do NOT write any temporary HTML files (such as `*_snippet.html`). `sync-prd` parses `02_PRD.md` directly and updates `visual-dashboard.html` in-place.
-4. Save the documents.
-5. **Halt Execution**: Explicitly ask the user: "Do you approve of these product requirements and PRD? Please review `02_PRD.md` and the visual dashboard `visual-dashboard.html`. Once approved, we will proceed to Stage 3: Context Extraction."
+   - **Zero Intermediate Snippet Files**: Do NOT write any temporary HTML files. `sync-prd` parses `02_PRD.md` directly and updates `visual-dashboard.html` in-place.
+6. Save all documents (`02_PRD.md`, `evals/test_kpis.py`, `visual-dashboard.html`).
+7. **Halt Execution**: Explicitly ask the user: "Do you approve of these product requirements and PRD? Please review `02_PRD.md`, the executable KPIs in `evals/test_kpis.py`, and the visual dashboard `visual-dashboard.html`. Once approved, we will proceed to Stage 3: Context Extraction."
+
 
