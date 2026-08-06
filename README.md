@@ -281,7 +281,8 @@ Each modular skill in the `skills/` directory complies with the open **Agent Ski
 
 ### Skills
 *   **`ideator`** [CORE]: **Stage 0 (Optional)**: Generates a product discovery and technical architecture draft from any raw product idea, feature request, or prompt, writing the results to `00_IDEATION.md`.
-*   **`grill` / `grilling`** [CORE]: **Stage 1**: Relentless interactive interview and requirements stress-testing.
+*   **`grill`** [CORE]: **Stage 1**: Relentless interactive interview, requirements stress-testing, glossary update (`docs/glossary.md`), ADRs (`docs/adr/`), and `visual-dashboard.html` synchronization.
+*   **`grilling`** [DEPRECATED]: Replaced by the Stage 1 `grill` skill.
 *   **`domain-modeling`** [CORE]: **Stage 1, 4 & 5**: Builds, refines, and maintains the ubiquitous glossary and domain models.
 *   **`write-prd`** [CORE]: **Stage 2**: Standardizes requirements, non-goals, and KPIs into a machine-parsable `02_PRD.md`.
 *   **`rewrite`** [CORE]: **Stage 1 & 2**: Orchestrates a legacy application rewrite workflow by analyzing modernization assessments and coordinating specialized skills.
@@ -303,15 +304,30 @@ Each modular skill in the `skills/` directory complies with the open **Agent Ski
 
 ## 🧪 Testing & Verification
 
-Developing and maintaining an autonomous swarm requires a resilient testing protocol. We have established a comprehensive **5-layer isolation and behavioral testing suite** that operates entirely locally and independently of the Agent Development Kit (ADK).
+Developing and maintaining an autonomous swarm requires a resilient testing protocol. We have established a comprehensive **5-layer isolation and behavioral testing suite** located in the [`tests/`](file:///home/robedwards/workspace/bean-to-cup/tests) directory that operates entirely locally and independently of external dependencies.
 
-*   **Isolated Testing Strategy**: See our detailed **[Isolated Testing & Verification Strategy Guide](docs/testing_and_verification.md)** to learn how we isolate workspace states, mock stage inputs, execute deterministic validation gates, and run pseudo-terminal simulations.
-*   **End-to-End Audit Evidence**: View our live **[End-to-End Testing & Evaluation Report](docs/test_report.md)** which showcases real test execution traces, negative/positive gating checks, and a full behavior audit of over 700 step logs.
+### 📋 The Automated Test Suite (`tests/`)
+
+*   **[`test_skills_schema.py`](file:///home/robedwards/workspace/bean-to-cup/tests/test_skills_schema.py)**: Validates YAML frontmatter, name, and schema compliance across all 25 skills.
+*   **[`test_hooks_and_scripts.py`](file:///home/robedwards/workspace/bean-to-cup/tests/test_hooks_and_scripts.py)**: Verifies script execution and context injection for all lifecycle hooks (`hooks/*.sh`).
+*   **[`test_manage_dashboard.py`](file:///home/robedwards/workspace/bean-to-cup/tests/test_manage_dashboard.py)**: Tests deterministic `visual-dashboard.html` updates (`auto-sync`, `sync-glossary`, `sync-prd`, `sync-spec`, `sync-plan`, `sync-verification`, `sync-recap`).
+*   **[`test_sdlc_headless_e2e.py`](file:///home/robedwards/workspace/bean-to-cup/tests/test_sdlc_headless_e2e.py)**: Headless end-to-end simulation harness that populates stage markdown artifacts across Stages 0 through 8, invokes all stage skills, and verifies 100% full-fidelity content parity in `visual-dashboard.html`.
+
+### 🏃 Running the Test Suite locally
+
+Run all automated unit and E2E simulation tests in standard Python:
+
+```bash
+python3 -m unittest discover -s tests
+```
+
+*   **Isolated Testing Strategy Guide**: See our detailed **[Isolated Testing & Verification Strategy Guide](docs/testing_and_verification.md)** to learn how we isolate workspace states, mock stage inputs, execute deterministic validation gates, and run pseudo-terminal simulations.
+*   **End-to-End Audit Evidence**: View our live **[End-to-End Testing & Evaluation Report](docs/test_report.md)** which showcases real test execution traces, negative/positive gating checks, and a full behavior audit.
 
 ### Why this is set up:
-*   **Deterministic Safety (Option 1)**: Traditional unit testing doesn't catch AI-specific failures like bracket placeholder leaks (`[TODO]`), missing licenses, or broken markdown structures.
-*   **Behavioral Assurance (Option 2)**: Programmatic transcript checking ensures subagents (such as `@architect` or `@engineer`) are spawned with exactly the correct arguments and that tools execute error-free.
-*   **Extreme Velocity**: Input mocking allows testing late stages (like Stage 7 TDD or Stage 8 Walkthrough) in a lightweight sandbox (`scratch/sandbox-app`) in seconds, without having to run through Stages 0 to 6 first.
+*   **Deterministic Safety**: Catches AI-specific failures like bracket placeholder leaks (`[TODO]`), missing licenses, or broken markdown structures.
+*   **Behavioral Assurance**: Programmatic transcript checking ensures subagents (such as `@architect` or `@engineer`) are spawned with exact arguments and that tools execute error-free.
+*   **Extreme Velocity**: Input mocking allows testing late stages (like Stage 7 TDD or Stage 8 Walkthrough) in a lightweight sandbox in seconds without running full interactive sessions.
 
 ---
 
