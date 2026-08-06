@@ -62,10 +62,6 @@ def get_template_path():
         return sibling_resource
 
     repo_root = find_repo_root()
-    repo_template = os.path.join(repo_root, "templates", "visual-dashboard.html")
-    if os.path.exists(repo_template):
-        return repo_template
-
     skill_resource = os.path.join(repo_root, "skills", "visual-dashboard", "resources", "visual-dashboard.html")
     if os.path.exists(skill_resource):
         return skill_resource

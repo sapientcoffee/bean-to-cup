@@ -44,7 +44,7 @@ Run the environment, execute PTY record scenarios (`record`) when working with C
 
 ### Phase 5: Visual Implementation Recap (`visual-dashboard.html` - Recap Tab)
 Compile the visual recap:
-*   Copy `/home/robedwards/workspace/bean-to-cup/templates/visual-dashboard.html` to the target path `visual-dashboard.html` (if not already copied).
+*   Instantiate `visual-dashboard.html` from `skills/visual-dashboard/resources/visual-dashboard.html` (if not already instantiated).
 *   Replace `{{MONIKER}}` and `{{TIMESTAMP}}` in the header.
 *   Fill the Recap Tab surfaces between their paired HTML comment markers (`<!-- VIR:OVERVIEW -->` ... `<!-- /VIR:OVERVIEW -->`, etc.):
     - `OVERVIEW`: headline metrics (files changed, insertions, deletions, audit verdict), brief summary, and details.

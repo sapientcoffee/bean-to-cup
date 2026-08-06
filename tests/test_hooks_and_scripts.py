@@ -92,7 +92,7 @@ class TestHooksAndScripts(unittest.TestCase):
                     self.fail(f"Python compilation failed for {rel_path}: {e}")
 
     def test_visual_dashboard_template_placeholders(self):
-        template_path = os.path.join(self.repo_root, "templates", "visual-dashboard.html")
+        template_path = os.path.join(self.repo_root, "skills", "visual-dashboard", "resources", "visual-dashboard.html")
         self.assertTrue(os.path.exists(template_path), f"Template missing at {template_path}")
 
         with open(template_path, "r", encoding="utf-8") as f:

@@ -59,7 +59,7 @@ Create a detailed, micro-step task checklist that maps directly to the Spec's ve
 
 ### 3. Visual Specification (`visual-dashboard.html` - Design Spec Tab)
 Compile the visual design using the template:
-*   Copy `/home/robedwards/workspace/bean-to-cup/templates/visual-dashboard.html` to the target path `visual-dashboard.html`.
+*   Instantiate `visual-dashboard.html` from `skills/visual-dashboard/resources/visual-dashboard.html`.
 *   Replace `{{MONIKER}}` and `{{TIMESTAMP}}` in the header.
 *   Fill the Design Spec Tab surfaces between their paired HTML comment markers (`<!-- VA:OVERVIEW -->` ... `<!-- /VA:OVERVIEW -->`, etc.):
     - `OVERVIEW`: Summary of objective, target user, execution stats, and concrete walk-through.
