@@ -391,7 +391,72 @@
       padding-top: 8px;
       margin-top: 4px;
     }
-  </style>
+
+    /* ---- Demo Mode & Stage Explainer Styles ---------------------------- */
+    .explainer-card {
+      background: light-dark(rgba(243, 236, 230, 0.9), rgba(37, 32, 28, 0.9));
+      border: 1px dashed var(--accent);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 16px rgba(142, 98, 76, 0.12);
+      position: relative;
+    }
+    .explainer-card summary {
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+    }
+    .explainer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--card-border);
+    }
+    .explainer-item {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .explainer-item h4 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin: 0 0 6px;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .explainer-item p {
+      font-size: 13px;
+      margin: 0;
+      color: var(--fg);
+      line-height: 1.45;
+    }
+
+    /* Presenter Demo Mode Overrides */
+    body.demo-mode .explainer-card details {
+      open: true;
+    }
+    body.demo-mode .va-header {
+      border-bottom: 3px solid var(--accent);
+    }
+    body.demo-mode .card {
+      box-shadow: 0 6px 24px rgba(142, 98, 76, 0.2);
+    }
+    body.demo-mode .mermaid {
+      transform: scale(1.02);
+      transition: transform 0.3s ease;
+    }
 
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
@@ -447,6 +512,7 @@
         <span>Model: <span class="mono" id="modelLabel">{{MODEL_VERSION}}</span></span>
         <span>Thinking: <span class="mono" id="thinkingLabel">{{THINKING_MODE}}</span></span>
       </div>
+      <button class="toggle" id="demo-toggle" title="Toggle Presenter/Demo Mode (Use ←/→ arrow keys to navigate stages)">🎬 Demo Mode</button>
       <button class="toggle" id="theme-toggle" title="Toggle light/dark">🌓 Theme</button>
     </div>
   </header>
@@ -692,6 +758,27 @@ flowchart TD
         <h2>Stage 0: Product Discovery &amp; Ideation</h2>
         <p class="lede">Initial product discovery, friction analysis, target personas, Customer User Journeys, and ADK agent topologies parsed from <code>00_IDEATION.md</code>.</p>
         
+        <!-- STAGE EXPLAINER CARD -->
+        <div class="explainer-card">
+          <details open>
+            <summary>💡 Stage 0 Explainer: What, Why &amp; How</summary>
+            <div class="explainer-grid">
+              <div class="explainer-item">
+                <h4>🎯 WHAT IT DOES</h4>
+                <p>Structures raw feature requests, problem statements, persona friction, Customer User Journeys (CUJs), and ADK agent routing topologies into <code>00_IDEATION.md</code>.</p>
+              </div>
+              <div class="explainer-item">
+                <h4>💡 WHY IT MATTERS</h4>
+                <p>Establishes strategic product clarity and user intent early before technical implementation constraints skew product design.</p>
+              </div>
+              <div class="explainer-item">
+                <h4>⚙️ HOW IT WORKS</h4>
+                <p>Invokes skill <code>ideator</code> to analyze prompts, map persona friction, and output structured ideation markdown into the plan folder.</p>
+              </div>
+            </div>
+          </details>
+        </div>
+        
         <!-- VD:OVERVIEW -->
         <div class="grid cols-3">
           <div class="card" style="border-top: 4px solid var(--accent);">
@@ -778,6 +865,27 @@ flowchart TD
         <h2>Ubiquitous Glossary &amp; ADRs</h2>
         <p class="lede">Stage 1 Socratic Alignment results. Derived view of <code>docs/glossary.md</code> and <code>docs/adr/</code>.</p>
         
+        <!-- STAGE EXPLAINER CARD -->
+        <div class="explainer-card">
+          <details open>
+            <summary>💡 Stage 1 Explainer: What, Why &amp; How</summary>
+            <div class="explainer-grid">
+              <div class="explainer-item">
+                <h4>🎯 WHAT IT DOES</h4>
+                <p>Builds the global Ubiquitous Language definitions in <code>docs/glossary.md</code> and records hard-to-reverse Architectural Decision Records in <code>docs/adr/</code>.</p>
+              </div>
+              <div class="explainer-item">
+                <h4>💡 WHY IT MATTERS</h4>
+                <p>Eliminates domain misalignment between engineers, product leads, and AI agents by enforcing a single shared terminology dictionary.</p>
+              </div>
+              <div class="explainer-item">
+                <h4>⚙️ HOW IT WORKS</h4>
+                <p>Executes Socratic interview skills <code>grill</code> and <code>domain-modeling</code>, syncing terms directly to the dashboard.</p>
+              </div>
+            </div>
+          </details>
+        </div>
+        
         <div class="search-container">
           <input type="text" id="glossary-search" placeholder="Search terms..." class="search-input" />
         </div>
@@ -808,6 +916,27 @@ flowchart TD
       <section class="va-section" id="prd" hidden>
         <h2>Product Requirements Document</h2>
         <p class="lede">Stage 2 Product requirements and user-facing boundary specifications sitting in <code>02_PRD.md</code>.</p>
+        
+        <!-- STAGE EXPLAINER CARD -->
+        <div class="explainer-card">
+          <details open>
+            <summary>💡 Stage 2 Explainer: What, Why &amp; How</summary>
+            <div class="explainer-grid">
+              <div class="explainer-item">
+                <h4>🎯 WHAT IT DOES</h4>
+                <p>Formulates technology-agnostic product requirements (<code>02_PRD.md</code>), Gherkin acceptance scenarios, and programmatic KPI tests in <code>evals/test_kpis.py</code>.</p>
+              </div>
+              <div class="explainer-item">
+                <h4>💡 WHY IT MATTERS</h4>
+                <p>Focuses on customer value while establishing programmatic KPI evals and adversarial audits to eliminate AI self-confirmation bias.</p>
+              </div>
+              <div class="explainer-item">
+                <h4>⚙️ HOW IT WORKS</h4>
+                <p>Invokes <code>write-prd</code> skill, dispatches <code>@red-team-reviewer</code> for adversarial auditing, and compiles executable KPI tests.</p>
+              </div>
+            </div>
+          </details>
+        </div>
         
         <button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('raw-prd-box'); box.style.display = box.style.display === 'block' ? 'none' : 'block';">
           📄 View Raw 02_PRD.md Document
@@ -852,6 +981,27 @@ flowchart TD
         <h2>Stage 3: Context Extraction &amp; Research</h2>
         <p class="lede">Factual codebase research, file mappings, and architectural context sitting in <code>03_EXTRACTION.md</code>.</p>
         
+        <!-- STAGE EXPLAINER CARD -->
+        <div class="explainer-card">
+          <details open>
+            <summary>💡 Stage 3 Explainer: What, Why &amp; How</summary>
+            <div class="explainer-grid">
+              <div class="explainer-item">
+                <h4>🎯 WHAT IT DOES</h4>
+                <p>Performs blind, factual codebase research to map entrypoints, component trees, AST symbol definitions, and architectural patterns into <code>03_EXTRACTION.md</code>.</p>
+              </div>
+              <div class="explainer-item">
+                <h4>💡 WHY IT MATTERS</h4>
+                <p>Isolates research from hallucination by operating under a strict Context Firewall without making unverified assumptions.</p>
+              </div>
+              <div class="explainer-item">
+                <h4>⚙️ HOW IT WORKS</h4>
+                <p>Dispatches 4 parallel subagents (<code>@scout</code>, <code>@context-mapping</code>, <code>@codebase-analyzer</code>, <code>@pattern-recognition</code>).</p>
+              </div>
+            </div>
+          </details>
+        </div>
+        
         <button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('raw-extraction-box'); box.style.display = box.style.display === 'block' ? 'none' : 'block';">
           📄 View Raw 03_EXTRACTION.md Document
         </button>
@@ -885,6 +1035,27 @@ flowchart TD
       <section class="va-section" id="spec" hidden>
         <h2>Stage 4: Technical Specification &amp; Design</h2>
         <p class="lede">Stage 4 Architectural Design layouts, threat models, database schemas, and service specs sitting in <code>04_SPEC.md</code>.</p>
+
+        <!-- STAGE EXPLAINER CARD -->
+        <div class="explainer-card">
+          <details open>
+            <summary>💡 Stage 4 Explainer: What, Why &amp; How</summary>
+            <div class="explainer-grid">
+              <div class="explainer-item">
+                <h4>🎯 WHAT IT DOES</h4>
+                <p>Designs system architecture (<code>04_SPEC.md</code>), OpenAPI cards, ER schemas, wireframes, telemetry SLIs/SLOs, and physical contract files in <code>contracts/</code>.</p>
+              </div>
+              <div class="explainer-item">
+                <h4>💡 WHY IT MATTERS</h4>
+                <p>Establishes formal software boundaries, security policies, and physical interface contracts before production code is written.</p>
+              </div>
+              <div class="explainer-item">
+                <h4>⚙️ HOW IT WORKS</h4>
+                <p>Authored by <code>@architect</code> subagent following Google Cloud Well-Architected Framework and SRE observability standards.</p>
+              </div>
+            </div>
+          </details>
+        </div>
 
         <button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('raw-spec-box'); box.style.display = box.style.display === 'block' ? 'none' : 'block';">
           📄 View Raw 04_SPEC.md Document
@@ -932,6 +1103,27 @@ flowchart TD
         <h2>Stage 5: Execution Planning &amp; Contracts</h2>
         <p class="lede">Physical contracts, vertical slices, dependency trees, and risk analysis sitting in <code>05_PLAN.md</code>.</p>
         
+        <!-- STAGE EXPLAINER CARD -->
+        <div class="explainer-card">
+          <details open>
+            <summary>💡 Stage 5 Explainer: What, Why &amp; How</summary>
+            <div class="explainer-grid">
+              <div class="explainer-item">
+                <h4>🎯 WHAT IT DOES</h4>
+                <p>Cuts vertical "tracer bullet" sprint slices, builds a sequential TDD task checklist (<code>05_PLAN.md</code>), and tracks execution on an interactive Kanban board.</p>
+              </div>
+              <div class="explainer-item">
+                <h4>💡 WHY IT MATTERS</h4>
+                <p>Replaces monolithic code dumps with micro-step TDD verification (Red-Green-Refactor), guaranteeing code quality with lint back-pressure.</p>
+              </div>
+              <div class="explainer-item">
+                <h4>⚙️ HOW IT WORKS</h4>
+                <p>Managed interactively by <code>@engineer</code>, <code>@auditor</code>, and <code>@code-review</code> subagents as tasks progress across Kanban columns.</p>
+              </div>
+            </div>
+          </details>
+        </div>
+        
         <button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('raw-plan-box'); box.style.display = box.style.display === 'block' ? 'none' : 'block';">
           📄 View Raw 05_PLAN.md Document
         </button>
@@ -963,6 +1155,27 @@ flowchart TD
         <h2>Stage 7: TDD Implementation &amp; Verification</h2>
         <p class="lede">Test execution reports, verified code slices, coverage metrics, and audit logs sitting in <code>07_VERIFICATION.md</code>.</p>
         
+        <!-- STAGE EXPLAINER CARD -->
+        <div class="explainer-card">
+          <details open>
+            <summary>💡 Stage 7 Explainer: What, Why &amp; How</summary>
+            <div class="explainer-grid">
+              <div class="explainer-item">
+                <h4>🎯 WHAT IT DOES</h4>
+                <p>Executes Red-Green-Refactor TDD implementation slices, runs automated unit &amp; contract tests, and compiles <code>07_VERIFICATION.md</code>.</p>
+              </div>
+              <div class="explainer-item">
+                <h4>💡 WHY IT MATTERS</h4>
+                <p>Enforces zero code drift against physical contracts; ensures linting back-pressure and QA gates pass before committing.</p>
+              </div>
+              <div class="explainer-item">
+                <h4>⚙️ HOW IT WORKS</h4>
+                <p>Subagents <code>@engineer</code> and <code>@auditor</code> execute test suites and record empirical execution logs.</p>
+              </div>
+            </div>
+          </details>
+        </div>
+        
         <button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('raw-verification-box'); box.style.display = box.style.display === 'block' ? 'none' : 'block';">
           📄 View Raw 07_VERIFICATION.md Document
         </button>
@@ -990,6 +1203,27 @@ flowchart TD
       <section class="va-section" id="recap" hidden>
         <h2>Stage 8 Verification &amp; Walkthrough Recap</h2>
         <p class="lede">Detailed retrospective report and visual validation walkthrough parsed from <code>08_WALKTHROUGH.md</code>.</p>
+        
+        <!-- STAGE EXPLAINER CARD -->
+        <div class="explainer-card">
+          <details open>
+            <summary>💡 Stage 8 Explainer: What, Why &amp; How</summary>
+            <div class="explainer-grid">
+              <div class="explainer-item">
+                <h4>🎯 WHAT IT DOES</h4>
+                <p>Generates retrospective walkthrough reports (<code>08_WALKTHROUGH.md</code>), embeds browser screenshots, and compiles terminal recording playbacks (<code>record</code>).</p>
+              </div>
+              <div class="explainer-item">
+                <h4>💡 WHY IT MATTERS</h4>
+                <p>Delivers empirical, visual proof of feature execution and quality verification for reviewers and business stakeholders.</p>
+              </div>
+              <div class="explainer-item">
+                <h4>⚙️ HOW IT WORKS</h4>
+                <p>Captured via <code>@browser_agent</code> walkthroughs and <code>record</code> terminal recordings, summarized on the Recap tab.</p>
+              </div>
+            </div>
+          </details>
+        </div>
         
         <!-- VIR:RAW_RECAP -->
         <!-- /VIR:RAW_RECAP -->
@@ -1066,7 +1300,7 @@ flowchart TD
     "use strict";
     var root = document.documentElement;
 
-    /* ---- Theme Management ---- */
+    /* ---- Theme & Presenter Demo Mode Management ---- */
     try {
       var saved = localStorage.getItem("va-theme");
       if (saved) {
@@ -1085,6 +1319,41 @@ flowchart TD
         resetMermaid();
         var active = document.querySelector(".va-section:not([hidden])");
         if (active) renderMermaid(active);
+      }
+    });
+
+    /* ---- 🎬 Demo Mode Presenter Controller ---- */
+    var demoBtn = document.getElementById("demo-toggle");
+    var isDemoMode = false;
+    if (demoBtn) {
+      demoBtn.addEventListener("click", function () {
+        isDemoMode = !isDemoMode;
+        document.body.classList.toggle("demo-mode", isDemoMode);
+        demoBtn.style.background = isDemoMode ? "var(--accent)" : "";
+        demoBtn.style.color = isDemoMode ? "#ffffff" : "";
+        demoBtn.innerText = isDemoMode ? "🎬 Demo Mode: ON (←/→ Nav)" : "🎬 Demo Mode";
+
+        // Auto-expand all stage explainer cards
+        document.querySelectorAll(".explainer-card details").forEach(function (d) {
+          d.open = true;
+        });
+      });
+    }
+
+    // Keyboard Arrow Key Presentation Navigation
+    document.addEventListener("keydown", function (e) {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+
+      var tabButtons = Array.prototype.slice.call(document.querySelectorAll(".va-tab"));
+      var activeIndex = tabButtons.findIndex(function (b) { return b.classList.contains("active"); });
+      if (activeIndex === -1) return;
+
+      if (e.key === "ArrowRight") {
+        var nextIndex = (activeIndex + 1) % tabButtons.length;
+        tabButtons[nextIndex].click();
+      } else if (e.key === "ArrowLeft") {
+        var prevIndex = (activeIndex - 1 + tabButtons.length) % tabButtons.length;
+        tabButtons[prevIndex].click();
       }
     });
 
