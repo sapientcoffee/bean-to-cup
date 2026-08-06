@@ -139,10 +139,10 @@ def get_model_and_thinking_info(override_model=None, override_thinking=None):
     return model, thinking
 
 
-def ensure_dashboard(plan_dir, moniker, timestamp=None, model_version=None, thinking_mode=None):
+def ensure_dashboard(plan_dir, moniker, timestamp=None, model_version=None, thinking_mode=None, force=False):
     """
     Checks if visual-dashboard.html exists in plan_dir.
-    If missing, creates it from template and populates placeholders.
+    If missing or outdated, creates/upgrades it from template and populates placeholders.
     Returns path to the dashboard HTML file.
     """
     template_path = get_template_path()
@@ -159,8 +159,8 @@ def ensure_dashboard(plan_dir, moniker, timestamp=None, model_version=None, thin
 
     model_ver, thinking = get_model_and_thinking_info(model_version, thinking_mode)
 
-    if not os.path.exists(target_dashboard):
-        print(f"Instantiating missing dashboard from template ({template_path}) -> {target_dashboard}")
+    if force or not os.path.exists(target_dashboard):
+        print(f"Instantiating missing/upgraded dashboard from template ({template_path}) -> {target_dashboard}")
         with open(template_path, "r", encoding="utf-8") as f:
             content = f.read()
 
@@ -174,9 +174,15 @@ def ensure_dashboard(plan_dir, moniker, timestamp=None, model_version=None, thin
         with open(target_dashboard, "w", encoding="utf-8") as f:
             f.write(content)
     else:
-        print(f"Preserving existing dashboard at {target_dashboard}")
         with open(target_dashboard, "r", encoding="utf-8") as f:
             content = f.read()
+
+        # Automatically upgrade outdated dashboard instances missing new markers or features
+        if "<!-- VP:OVERVIEW -->" not in content or "demo-toggle" not in content:
+            print(f"Upgrading outdated dashboard at {target_dashboard} to match latest template...")
+            return ensure_dashboard(plan_dir, moniker, timestamp, model_version, thinking_mode, force=True)
+
+        print(f"Preserving existing dashboard at {target_dashboard}")
 
         updated = content.replace("{{MODEL_VERSION}}", model_ver).replace("{{THINKING_MODE}}", thinking)
         updated = re.sub(r'<span class="mono" id="modelLabel">.*?</span>', f'<span class="mono" id="modelLabel">{html.escape(model_ver)}</span>', updated)
