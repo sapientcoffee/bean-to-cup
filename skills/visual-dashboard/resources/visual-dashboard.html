@@ -9,44 +9,69 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   
   <style>
-    /* ---- Theme tokens (HSL coffee-inspired palette with native light-dark support) ----------------- */
-    :root {
-      color-scheme: light dark;
-      
-      --bg: light-dark(#faf8f5, #12100e);
-      --fg: light-dark(#2c2520, #eae5e2);
-      --muted: light-dark(#7a6e67, #a49791);
-      --faint: light-dark(#f0ebe4, #1f1b18);
-      --accent: light-dark(#8e624c, #d4a373);
-      --accent-soft: light-dark(#f3ece6, #25201c);
-      --card: light-dark(rgba(255, 255, 255, 0.85), rgba(28, 23, 21, 0.85));
-      --card-border: light-dark(#e6ded7, #2d2522);
-      --code-bg: light-dark(#fdfdfc, #151210);
-      --header-bg: light-dark(rgba(234, 227, 219, 0.85), rgba(28, 23, 21, 0.85));
-      --nav-bg: light-dark(rgba(255, 255, 255, 0.85), rgba(18, 16, 14, 0.85));
+    /* ---- Universal CSS Theme Tokens (Full webview iframe compatibility) ---- */
+    :root, [data-theme="light"] {
+      color-scheme: light;
+      --bg: #faf8f5;
+      --fg: #2c2520;
+      --muted: #7a6e67;
+      --faint: #f0ebe4;
+      --accent: #8e624c;
+      --accent-soft: #f3ece6;
+      --card: #ffffff;
+      --card-border: #e6ded7;
+      --code-bg: #fdfdfc;
+      --header-bg: #eae3db;
+      --nav-bg: #ffffff;
       --glass-backdrop: blur(12px);
       
-      --badge-new-bg: light-dark(#dafbe1, #12261e);
-      --badge-new-fg: light-dark(#1a7f37, #3fb950);
-      --badge-mod-bg: light-dark(#fff8c5, #272115);
-      --badge-mod-fg: light-dark(#9a6700, #d29922);
-      --badge-del-bg: light-dark(#ffebe9, #2d1416);
-      --badge-del-fg: light-dark(#cf222e, #f85149);
+      --badge-new-bg: #dafbe1;
+      --badge-new-fg: #1a7f37;
+      --badge-mod-bg: #fff8c5;
+      --badge-mod-fg: #9a6700;
+      --badge-del-bg: #ffebe9;
+      --badge-del-fg: #cf222e;
       
-      --sev-high: light-dark(#cf222e, #f85149);
-      --sev-med: light-dark(#9a6700, #d29922);
-      --sev-low: light-dark(#0969da, #4493f8);
-      --shadow: light-dark(0 4px 16px rgba(44, 37, 32, 0.08), 0 4px 20px rgba(0, 0, 0, 0.45));
+      --sev-high: #cf222e;
+      --sev-med: #9a6700;
+      --sev-low: #0969da;
+      --shadow: 0 4px 16px rgba(44, 37, 32, 0.08);
       
-      --kanban-bg: light-dark(#f0ebe4, #11111b);
-      --kanban-card: light-dark(rgba(255, 255, 255, 0.9), rgba(49, 50, 68, 0.5));
-      --kanban-border: light-dark(rgba(142, 98, 76, 0.2), rgba(147, 153, 178, 0.25));
+      --kanban-bg: #f0ebe4;
+      --kanban-card: #ffffff;
+      --kanban-border: rgba(142, 98, 76, 0.2);
     }
-    :root[data-theme="light"] {
-      color-scheme: only light;
-    }
-    :root[data-theme="dark"] {
-      color-scheme: only dark;
+
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #12100e;
+      --fg: #eae5e2;
+      --muted: #a49791;
+      --faint: #1f1b18;
+      --accent: #d4a373;
+      --accent-soft: #25201c;
+      --card: #1c1715;
+      --card-border: #2d2522;
+      --code-bg: #151210;
+      --header-bg: #1c1715;
+      --nav-bg: #12100e;
+      --glass-backdrop: blur(12px);
+      
+      --badge-new-bg: #12261e;
+      --badge-new-fg: #3fb950;
+      --badge-mod-bg: #272115;
+      --badge-mod-fg: #d29922;
+      --badge-del-bg: #2d1416;
+      --badge-del-fg: #f85149;
+      
+      --sev-high: #f85149;
+      --sev-med: #d29922;
+      --sev-low: #4493f8;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+      
+      --kanban-bg: #11111b;
+      --kanban-card: #1f1a17;
+      --kanban-border: rgba(147, 153, 178, 0.25);
     }
 
     /* ---- Base ---------------------------------------------------------- */
