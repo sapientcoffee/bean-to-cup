@@ -519,15 +519,15 @@
 
   <nav class="va-nav">
     <div class="wrap" id="va-tabs">
-      <button class="va-tab active" data-target="dashboard">Brew Overview</button>
-      <button class="va-tab" data-target="discovery">Stage 0: Discovery</button>
-      <button class="va-tab" data-target="glossary">Stage 1: Glossary &amp; ADRs</button>
-      <button class="va-tab" data-target="prd">Stage 2: Product PRD</button>
-      <button class="va-tab" data-target="extraction">Stage 3: Extraction</button>
-      <button class="va-tab" data-target="spec">Stage 4: Technical Spec</button>
-      <button class="va-tab" data-target="plan">Stage 5: Execution Plan</button>
-      <button class="va-tab" data-target="verification">Stage 7: TDD Verification</button>
-      <button class="va-tab" data-target="recap">Stage 8: Walkthrough Recap</button>
+      <button class="va-tab active" data-target="dashboard" onclick="showTab('dashboard', true)">Brew Overview</button>
+      <button class="va-tab" data-target="discovery" onclick="showTab('discovery', true)">Stage 0: Discovery</button>
+      <button class="va-tab" data-target="glossary" onclick="showTab('glossary', true)">Stage 1: Glossary &amp; ADRs</button>
+      <button class="va-tab" data-target="prd" onclick="showTab('prd', true)">Stage 2: Product PRD</button>
+      <button class="va-tab" data-target="extraction" onclick="showTab('extraction', true)">Stage 3: Extraction</button>
+      <button class="va-tab" data-target="spec" onclick="showTab('spec', true)">Stage 4: Technical Spec</button>
+      <button class="va-tab" data-target="plan" onclick="showTab('plan', true)">Stage 5: Execution Plan</button>
+      <button class="va-tab" data-target="verification" onclick="showTab('verification', true)">Stage 7: TDD Verification</button>
+      <button class="va-tab" data-target="recap" onclick="showTab('recap', true)">Stage 8: Walkthrough Recap</button>
     </div>
   </nav>
 
@@ -1397,6 +1397,7 @@ flowchart TD
       if (push && history.replaceState) history.replaceState(null, "", "#" + id);
       window.scrollTo({ top: 0, behavior: "auto" });
     }
+    window.showTab = showTab;
 
     document.getElementById("va-tabs").addEventListener("click", function (e) {
       var btn = e.target.closest(".va-tab");
