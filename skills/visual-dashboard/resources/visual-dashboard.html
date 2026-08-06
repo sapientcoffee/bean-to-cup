@@ -168,23 +168,138 @@
     .step-node.active .step-label { color: var(--fg); font-weight: 700; }
     .step-node.completed .step-label { color: var(--badge-new-fg); font-weight: 600; }
 
-    /* ---- Sticky tab nav ------------------------------------------------ */
+    /* ---- Universal App Layout & Sidebar Navigation ---------------------- */
+    .va-app-layout {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+    }
+
     nav.va-nav {
-      position: sticky; top: 0; z-index: 20;
-      background: var(--nav-bg); border-bottom: 1px solid var(--card-border);
-      box-shadow: var(--shadow); transition: background 0.3s, border 0.3s;
+      width: 260px;
+      min-width: 260px;
+      flex-shrink: 0;
+      background: var(--nav-bg);
+      border-right: 1px solid var(--card-border);
+      border-bottom: none;
+      box-shadow: 2px 0 12px rgba(44, 37, 32, 0.04);
+      position: sticky;
+      top: 0;
+      align-self: flex-start;
+      height: 100vh;
+      max-height: 100vh;
+      overflow-y: auto;
+      padding: 24px 12px;
+      transition: background 0.3s, border 0.3s;
+      z-index: 20;
     }
-    nav.va-nav .wrap { display: flex; gap: 4px; overflow-x: auto; padding: 0 24px; }
+
+    .nav-header {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      padding: 0 12px 10px 12px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    nav.va-nav #va-tabs {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 100%;
+      padding: 0;
+    }
+
     .va-tab {
-      appearance: none; border: 0; background: transparent; color: var(--muted);
-      padding: 16px 16px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap;
-      border-bottom: 3px solid transparent; transition: all 0.2s ease;
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 10px 14px;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      border-left: 3px solid transparent;
+      border-bottom: none;
+      border-radius: 8px;
+      text-align: left;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
     }
-    .va-tab:hover { color: var(--fg); }
-    .va-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 700; }
+
+    .va-tab:hover {
+      color: var(--fg);
+      background: var(--faint);
+    }
+
+    .va-tab.active {
+      color: var(--accent);
+      background: var(--accent-soft);
+      border-left-color: var(--accent);
+      font-weight: 700;
+      box-shadow: inset 0 0 0 1px rgba(142, 98, 76, 0.15);
+    }
+
+    .va-tab .tab-icon {
+      font-size: 16px;
+      line-height: 1;
+      opacity: 0.85;
+    }
+
+    .va-tab.active .tab-icon {
+      opacity: 1;
+    }
+
+    @media (max-width: 900px) {
+      .va-app-layout {
+        flex-direction: column;
+      }
+      nav.va-nav {
+        width: 100%;
+        min-width: 100%;
+        height: auto;
+        max-height: none;
+        position: static;
+        border-right: none;
+        border-bottom: 1px solid var(--card-border);
+        padding: 12px;
+      }
+      nav.va-nav #va-tabs {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 4px;
+      }
+      .va-tab {
+        border-left: none;
+        border-bottom: 3px solid transparent;
+        border-radius: 6px;
+        padding: 8px 12px;
+        width: auto;
+      }
+      .va-tab.active {
+        border-left-color: transparent;
+        border-bottom-color: var(--accent);
+      }
+      main {
+        padding: 20px 16px;
+      }
+    }
 
     /* ---- Sections ------------------------------------------------------ */
-    main .wrap { padding-top: 32px; padding-bottom: 64px; }
+    main {
+      flex: 1;
+      min-width: 0;
+      padding: 32px 32px 64px 32px;
+    }
+    main .wrap { max-width: 1200px; margin: 0; padding: 0; }
     .va-section[hidden] { display: none; }
     .va-section h2 { font-size: 24px; margin: 0 0 8px; }
     .va-section > .lede { color: var(--muted); margin: 0 0 24px; font-size: 15px; }
@@ -224,6 +339,12 @@
     .raw-prd-toggle-btn { background: var(--card); border: 1px solid var(--card-border); color: var(--fg); padding: 8px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 16px; transition: all 0.2s ease; }
     .raw-prd-toggle-btn:hover { border-color: var(--accent); color: var(--accent); }
     .raw-prd-box { background: var(--card); border: 1px solid var(--card-border); border-radius: 8px; padding: 20px; margin-bottom: 20px; font-family: monospace; font-size: 13px; white-space: pre-wrap; word-break: break-word; line-height: 1.5; color: var(--fg); display: none; }
+
+    /* ---- Red-Team Audit & Mitigation Styles ------------------------------ */
+    .audit-toggle-btn { border-color: var(--sev-high); color: var(--sev-high); }
+    .audit-toggle-btn:hover { background: var(--badge-del-bg); border-color: var(--sev-high); color: var(--sev-high); }
+    .audit-box { display: none; margin-bottom: 20px; }
+
 
     /* ---- Locked Stage Card style ----------------------------------------- */
     .locked-stage-card {
@@ -543,21 +664,44 @@
     </div>
   </header>
 
-  <nav class="va-nav">
-    <div class="wrap" id="va-tabs">
-      <button class="va-tab active" data-target="dashboard" onclick="showTab('dashboard', true)">Brew Overview</button>
-      <button class="va-tab" data-target="discovery" onclick="showTab('discovery', true)">Stage 0: Discovery</button>
-      <button class="va-tab" data-target="glossary" onclick="showTab('glossary', true)">Stage 1: Glossary &amp; ADRs</button>
-      <button class="va-tab" data-target="prd" onclick="showTab('prd', true)">Stage 2: Product PRD</button>
-      <button class="va-tab" data-target="extraction" onclick="showTab('extraction', true)">Stage 3: Extraction</button>
-      <button class="va-tab" data-target="spec" onclick="showTab('spec', true)">Stage 4: Technical Spec</button>
-      <button class="va-tab" data-target="plan" onclick="showTab('plan', true)">Stage 5: Execution Plan</button>
-      <button class="va-tab" data-target="verification" onclick="showTab('verification', true)">Stage 7: TDD Verification</button>
-      <button class="va-tab" data-target="recap" onclick="showTab('recap', true)">Stage 8: Walkthrough Recap</button>
-    </div>
-  </nav>
+  <div class="va-app-layout">
+    <nav class="va-nav">
+      <div class="nav-header">SDLC Navigation</div>
+      <div id="va-tabs">
+        <button class="va-tab active" data-target="dashboard" onclick="showTab('dashboard', true)">
+          <span class="tab-icon">📊</span> <span class="tab-label">Brew Overview</span>
+        </button>
+        <button class="va-tab" data-target="discovery" onclick="showTab('discovery', true)">
+          <span class="tab-icon">💡</span> <span class="tab-label">Stage 0: Discovery</span>
+        </button>
+        <button class="va-tab" data-target="glossary" onclick="showTab('glossary', true)">
+          <span class="tab-icon">📖</span> <span class="tab-label">Stage 1: Glossary &amp; ADRs</span>
+        </button>
+        <button class="va-tab" data-target="prd" onclick="showTab('prd', true)">
+          <span class="tab-icon">📋</span> <span class="tab-label">Stage 2: Product PRD</span>
+        </button>
+        <button class="va-tab" data-target="extraction" onclick="showTab('extraction', true)">
+          <span class="tab-icon">🔍</span> <span class="tab-label">Stage 3: Context Extraction</span>
+        </button>
+        <button class="va-tab" data-target="spec" onclick="showTab('spec', true)">
+          <span class="tab-icon">📐</span> <span class="tab-label">Stage 4: Technical Spec</span>
+        </button>
+        <button class="va-tab" data-target="plan" onclick="showTab('plan', true)">
+          <span class="tab-icon">🗺️</span> <span class="tab-label">Stage 5: Execution Plan</span>
+        </button>
+        <button class="va-tab" data-target="kanban" onclick="showTab('kanban', true)">
+          <span class="tab-icon">⚡</span> <span class="tab-label">Execution Kanban</span>
+        </button>
+        <button class="va-tab" data-target="verification" onclick="showTab('verification', true)">
+          <span class="tab-icon">🧪</span> <span class="tab-label">Stage 7: TDD Verification</span>
+        </button>
+        <button class="va-tab" data-target="recap" onclick="showTab('recap', true)">
+          <span class="tab-icon">🎬</span> <span class="tab-label">Stage 8: Walkthrough Recap</span>
+        </button>
+      </div>
+    </nav>
 
-  <main>
+    <main>
     <div class="wrap">
 
       <!-- ================= BREW DASHBOARD ================= -->
@@ -707,74 +851,161 @@
           </div>
         </div>
 
-        <!-- Interactive Kanban Board -->
-        <div class="card" style="margin-top: 32px; padding: 24px;">
-          <h3 style="margin-bottom: 4px;">📋 Interactive Kanban Board</h3>
-          <p class="lede" style="margin-bottom: 20px;">Real-time vertical slices tracker compiled from <code>05_PLAN.md</code>. Drag-and-drop enabled.</p>
+        <!-- Slice Execution Pulse Summary -->
+        <div class="card" style="margin-top: 32px; padding: 24px; border-left: 5px solid var(--accent);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <h3 style="margin-bottom: 4px; font-size: 18px;">⚡ Slice Execution Pulse</h3>
+              <p class="lede" style="margin: 0; font-size: 13.5px;">Real-time progress overview for vertical sprint slices compiled from <code>05_PLAN.md</code> &amp; <code>07_VERIFICATION.md</code>.</p>
+            </div>
+            <button class="toggle" onclick="showTab('kanban', true)" style="background: var(--accent); color: #ffffff; border-color: var(--accent); padding: 8px 16px; font-weight: 600;">
+              🚀 Open Full Execution Kanban Board →
+            </button>
+          </div>
           
-          <div class="kanban-container">
-            <!-- Sidebar Controls -->
-            <div class="kanban-sidebar">
-              <h3 style="margin:0; font-size: 15px; color: var(--accent);">📊 Status Controls</h3>
-              <div style="font-size: 12px; color: var(--muted); margin-bottom: 8px;">
-                Manage implementation slices interactively. Refreshing preserves progress.
+          <div class="grid cols-3" style="margin-top: 20px;">
+            <div class="card" style="background: var(--faint); margin: 0; padding: 14px; text-align: center;">
+              <div style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Backlog (To Do)</div>
+              <div style="font-size: 24px; font-weight: 700; color: var(--accent);" id="pulseTodoCount">0</div>
+            </div>
+            <div class="card" style="background: var(--faint); margin: 0; padding: 14px; text-align: center;">
+              <div style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Active (Brewing)</div>
+              <div style="font-size: 24px; font-weight: 700; color: var(--sev-low);" id="pulseProgCount">0</div>
+            </div>
+            <div class="card" style="background: var(--faint); margin: 0; padding: 14px; text-align: center;">
+              <div style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Verified (Done)</div>
+              <div style="font-size: 24px; font-weight: 700; color: var(--badge-new-fg);" id="pulseDoneCount">0</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= INTERACTIVE EXECUTION KANBAN ================= -->
+      <section class="va-section" id="kanban" hidden>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 12px;">
+          <div>
+            <h2>⚡ Interactive Execution Kanban &amp; Dependency Tracker</h2>
+            <p class="lede" style="margin-bottom: 0;">Real-time vertical slices tracker, parallel/serial lane analyzer, and dependency graph compiled automatically from <code>05_PLAN.md</code> &amp; <code>07_VERIFICATION.md</code>.</p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="toggle" onclick="openModal('importModal')">📥 Import Plan</button>
+            <button class="toggle" onclick="exportMarkdown()">📤 Export Plan</button>
+            <button class="toggle" onclick="loadLocalPlan()" style="border-color: var(--accent);">🔄 Sync Live Plan</button>
+          </div>
+        </div>
+
+        <!-- View Switcher Toggles -->
+        <div class="card" style="padding: 12px 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; background: var(--faint);">
+          <div style="display: flex; gap: 8px;" id="kanbanViewToggles">
+            <button class="toggle active" id="btn-view-board" onclick="switchKanbanView('board')" style="font-weight: 700;">📋 Board View</button>
+            <button class="toggle" id="btn-view-lanes" onclick="switchKanbanView('lanes')">⚡ Parallel &amp; Serial Lanes</button>
+            <button class="toggle" id="btn-view-tree" onclick="switchKanbanView('tree')">📊 Dependency DAG Tree</button>
+          </div>
+          <div style="font-size: 12px; color: var(--muted); display: flex; gap: 12px; align-items: center;">
+            <span class="badge" style="background: rgba(63, 185, 80, 0.15); color: var(--badge-new-fg);">⚡ Parallel Ready</span>
+            <span class="badge" style="background: rgba(9, 105, 218, 0.15); color: var(--sev-low);">🔗 Serial Chain</span>
+            <span class="badge" style="background: rgba(207, 34, 46, 0.15); color: var(--sev-high);">🔒 Blocked</span>
+          </div>
+        </div>
+
+        <!-- STAGE EXPLAINER CARD -->
+        <div class="explainer-card">
+          <details open>
+            <summary>💡 Execution Board Explainer: Parallel, Serial &amp; Dependencies</summary>
+            <div class="explainer-grid">
+              <div class="explainer-item">
+                <h4>⚡ PARALLEL SLICES</h4>
+                <p>Tasks with zero unfulfilled dependencies. Multiple subagents (e.g. <code>@engineer</code>) can execute these concurrently without race conditions.</p>
               </div>
-              
-              <button class="toggle" onclick="openModal('importModal')" style="width: 100%;">📥 Import Plan (05_PLAN.md)</button>
-              <button class="toggle" onclick="exportMarkdown()" style="width: 100%; margin-top: 8px;">📤 Export Updated Plan</button>
-              <button class="toggle" onclick="loadLocalPlan()" style="width: 100%; margin-top: auto; border-color: var(--accent);">🔄 Fetch Local Plan</button>
+              <div class="explainer-item">
+                <h4>🔗 SERIAL CHAINS</h4>
+                <p>Tasks that must execute sequentially due to explicit file locks or strict step-by-step state dependencies.</p>
+              </div>
+              <div class="explainer-item">
+                <h4>🔒 BLOCKED PREREQUISITES</h4>
+                <p>Tasks waiting on upstream slices to finish verification before they are automatically unlocked for execution.</p>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- VIEW 1: KANBAN BOARD VIEW -->
+        <div id="view-kanban-board" class="kanban-view-container">
+          <div class="kanban-columns">
+            <!-- To Do -->
+            <div class="kanban-column column-todo" id="todoColumn" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'todo')">
+              <div class="column-header">
+                <span>📋 BACKLOG (TO DO)</span>
+                <span class="badge" style="background:var(--faint);" id="todoHeaderCount">0</span>
+              </div>
+              <div class="column-body" id="todoList"></div>
             </div>
 
-            <!-- Kanban Workspace -->
-            <div class="kanban-board">
-              <div class="kanban-columns">
-                <!-- To Do -->
-                <div class="kanban-column column-todo" id="todoColumn" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'todo')">
-                  <div class="column-header">
-                    <span>📋 BACKLOG (TO DO)</span>
-                    <span class="badge" style="background:var(--faint);" id="todoHeaderCount">0</span>
-                  </div>
-                  <div class="column-body" id="todoList"></div>
-                </div>
-
-                <!-- In Progress -->
-                <div class="kanban-column column-progress" id="progressColumn" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'inprogress')">
-                  <div class="column-header">
-                    <span>⚡ ACTIVE (BREWING)</span>
-                    <span class="badge" style="background:var(--faint);" id="progressHeaderCount">0</span>
-                  </div>
-                  <div class="column-body" id="progressList"></div>
-                </div>
-
-                <!-- Done -->
-                <div class="kanban-column column-done" id="doneColumn" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'done')">
-                  <div class="column-header">
-                    <span>✔ VERIFIED (DONE)</span>
-                    <span class="badge" style="background:var(--faint);" id="doneHeaderCount">0</span>
-                  </div>
-                  <div class="column-body" id="doneList"></div>
-                </div>
+            <!-- In Progress -->
+            <div class="kanban-column column-progress" id="progressColumn" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'inprogress')">
+              <div class="column-header">
+                <span>⚡ ACTIVE (BREWING)</span>
+                <span class="badge" style="background:var(--faint);" id="progressHeaderCount">0</span>
               </div>
+              <div class="column-body" id="progressList"></div>
+            </div>
 
-              <!-- Lower Panels (Mermaid Dependency Tree & Inspector) -->
-              <div class="kanban-lower">
-                <div class="kanban-lower-panel">
-                  <h3>📊 Pipeline Dependency Tree</h3>
-                  <div class="kanban-viewport" id="mermaidContainer">
-                    <pre class="mermaid" id="mermaidOutput">
+            <!-- Done -->
+            <div class="kanban-column column-done" id="doneColumn" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'done')">
+              <div class="column-header">
+                <span>✔ VERIFIED (DONE)</span>
+                <span class="badge" style="background:var(--faint);" id="doneHeaderCount">0</span>
+              </div>
+              <div class="column-body" id="doneList"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 2: EXECUTION LANES VIEW -->
+        <div id="view-kanban-lanes" class="kanban-view-container" style="display: none;">
+          <div class="grid cols-3">
+            <!-- Parallel Lane -->
+            <div class="card" style="border-top: 4px solid var(--badge-new-fg);">
+              <h3 style="font-size: 15px; margin-bottom: 8px; color: var(--badge-new-fg);">⚡ Parallel Execution Track</h3>
+              <p style="font-size: 12px; color: var(--muted); margin-bottom: 12px;">Slices unblocked &amp; ready to run concurrently across swarm subagents.</p>
+              <div id="parallelLanesList" style="display: flex; flex-direction: column; gap: 10px;"></div>
+            </div>
+
+            <!-- Serial Lane -->
+            <div class="card" style="border-top: 4px solid var(--sev-low);">
+              <h3 style="font-size: 15px; margin-bottom: 8px; color: var(--sev-low);">🔗 Serial Execution Chain</h3>
+              <p style="font-size: 12px; color: var(--muted); margin-bottom: 12px;">Slices that must run sequentially due to explicit dependency locking.</p>
+              <div id="serialLanesList" style="display: flex; flex-direction: column; gap: 10px;"></div>
+            </div>
+
+            <!-- Blocked Lane -->
+            <div class="card" style="border-top: 4px solid var(--sev-high);">
+              <h3 style="font-size: 15px; margin-bottom: 8px; color: var(--sev-high);">🔒 Blocked Prerequisites</h3>
+              <p style="font-size: 12px; color: var(--muted); margin-bottom: 12px;">Slices waiting on upstream prerequisite completion.</p>
+              <div id="blockedLanesList" style="display: flex; flex-direction: column; gap: 10px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 3: DEPENDENCY DAG TREE VIEW -->
+        <div id="view-kanban-tree" class="kanban-view-container" style="display: none;">
+          <div class="card">
+            <h3>📊 Pipeline Dependency Tree (DAG)</h3>
+            <p class="lede" style="margin-bottom: 16px;">Visual parent-child relationship graph showing unblocked paths and completed slice nodes.</p>
+            <div class="kanban-viewport" id="mermaidContainer" style="min-height: 350px;">
+              <pre class="mermaid" id="mermaidOutput">
 flowchart TD
   Start([Ready to Import 05_PLAN.md])
-                    </pre>
-                  </div>
-                </div>
-                <div class="kanban-lower-panel">
-                  <h3>🔍 Slice Inspector</h3>
-                  <div class="kanban-viewport" id="detailsPanel" style="display:flex; align-items:center; justify-content:center; color: var(--muted); font-style: italic;">
-                    Select a vertical slice task card to inspect instruction details and verification criteria.
-                  </div>
-                </div>
-              </div>
+              </pre>
             </div>
+          </div>
+        </div>
+
+        <!-- Slice Inspector Drawer/Card -->
+        <div class="card" style="margin-top: 20px;">
+          <h3>🔍 Slice Inspector</h3>
+          <div id="detailsPanel" style="color: var(--muted); font-style: italic;">
+            Select a slice task card above to inspect target files, instructions, verification steps, and dependency locks.
           </div>
         </div>
       </section>
@@ -980,9 +1211,20 @@ flowchart TD
           </details>
         </div>
         
-        <button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('raw-prd-box'); box.style.display = box.style.display === 'block' ? 'none' : 'block';">
-          📄 View Raw 02_PRD.md Document
-        </button>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('raw-prd-box'); box.style.display = box.style.display === 'block' ? 'none' : 'block';">
+            📄 View Raw 02_PRD.md Document
+          </button>
+          <button class="raw-prd-toggle-btn audit-toggle-btn" onclick="toggleAuditPane('prd-audit-pane')">
+            🛡️ View Red-Team Audit &amp; Mitigations Pane
+          </button>
+        </div>
+
+        <!-- VPO:AUDIT -->
+        <div class="audit-box" id="prd-audit-pane">
+          <!-- Rendered dynamically by manage_dashboard.py -->
+        </div>
+        <!-- /VPO:AUDIT -->
 
         <!-- VPO:RAW_PRD -->
         <div class="raw-prd-box" id="raw-prd-box">Raw 02_PRD.md content will load here...</div>
@@ -1099,9 +1341,20 @@ flowchart TD
           </details>
         </div>
 
-        <button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('raw-spec-box'); box.style.display = box.style.display === 'block' ? 'none' : 'block';">
-          📄 View Raw 04_SPEC.md Document
-        </button>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('raw-spec-box'); box.style.display = box.style.display === 'block' ? 'none' : 'block';">
+            📄 View Raw 04_SPEC.md Document
+          </button>
+          <button class="raw-prd-toggle-btn audit-toggle-btn" onclick="toggleAuditPane('spec-audit-pane')">
+            🛡️ View Red-Team Audit &amp; Mitigations Pane
+          </button>
+        </div>
+
+        <!-- VA:AUDIT -->
+        <div class="audit-box" id="spec-audit-pane">
+          <!-- Rendered dynamically by manage_dashboard.py -->
+        </div>
+        <!-- /VA:AUDIT -->
 
         <!-- VA:RAW_SPEC -->
         <div class="raw-prd-box" id="raw-spec-box">Raw 04_SPEC.md content will load here...</div>
@@ -1166,9 +1419,20 @@ flowchart TD
           </details>
         </div>
         
-        <button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('raw-plan-box'); box.style.display = box.style.display === 'block' ? 'none' : 'block';">
-          📄 View Raw 05_PLAN.md Document
-        </button>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('raw-plan-box'); box.style.display = box.style.display === 'block' ? 'none' : 'block';">
+            📄 View Raw 05_PLAN.md Document
+          </button>
+          <button class="raw-prd-toggle-btn audit-toggle-btn" onclick="toggleAuditPane('plan-audit-pane')">
+            🛡️ View Red-Team Audit &amp; Mitigations Pane
+          </button>
+        </div>
+
+        <!-- VP:AUDIT -->
+        <div class="audit-box" id="plan-audit-pane">
+          <!-- Rendered dynamically by manage_dashboard.py -->
+        </div>
+        <!-- /VP:AUDIT -->
 
         <!-- VP:RAW_PLAN -->
         <div class="raw-prd-box" id="raw-plan-box">Raw 05_PLAN.md content will load here...</div>
@@ -1310,6 +1574,7 @@ flowchart TD
 
     </div>
   </main>
+</div>
 
   <!-- IMPORT MODAL -->
   <div class="modal" id="importModal">
@@ -1400,10 +1665,10 @@ flowchart TD
       var activeIndex = tabButtons.findIndex(function (b) { return b.classList.contains("active"); });
       if (activeIndex === -1) return;
 
-      if (e.key === "ArrowRight") {
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
         var nextIndex = (activeIndex + 1) % tabButtons.length;
         tabButtons[nextIndex].click();
-      } else if (e.key === "ArrowLeft") {
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
         var prevIndex = (activeIndex - 1 + tabButtons.length) % tabButtons.length;
         tabButtons[prevIndex].click();
       } else if (e.key === "Home") {
@@ -1455,6 +1720,13 @@ flowchart TD
       window.scrollTo({ top: 0, behavior: "auto" });
     }
     window.showTab = showTab;
+
+    window.toggleAuditPane = function (paneId) {
+      var pane = document.getElementById(paneId);
+      if (!pane) return;
+      var isHidden = pane.style.display === "none" || pane.style.display === "";
+      pane.style.display = isHidden ? "block" : "none";
+    };
 
     document.getElementById("va-tabs").addEventListener("click", function (e) {
       var btn = e.target.closest(".va-tab");
@@ -1608,6 +1880,7 @@ flowchart TD
     let tasks = [];
     let originalMarkdown = '';
     let draggedCardId = null;
+    let activeKanbanView = 'board';
 
     window.openModal = function (id) { document.getElementById(id).style.display = "flex"; };
     window.closeModal = function (id) { document.getElementById(id).style.display = "none"; };
@@ -1628,12 +1901,26 @@ flowchart TD
       moveTask(cardId, targetCol);
     };
 
+    window.switchKanbanView = function (viewName) {
+      activeKanbanView = viewName;
+      document.getElementById('view-kanban-board').style.display = (viewName === 'board') ? 'block' : 'none';
+      document.getElementById('view-kanban-lanes').style.display = (viewName === 'lanes') ? 'block' : 'none';
+      document.getElementById('view-kanban-tree').style.display = (viewName === 'tree') ? 'block' : 'none';
+
+      document.getElementById('btn-view-board').classList.toggle('active', viewName === 'board');
+      document.getElementById('btn-view-lanes').classList.toggle('active', viewName === 'lanes');
+      document.getElementById('btn-view-tree').classList.toggle('active', viewName === 'tree');
+
+      if (viewName === 'tree') {
+        renderMermaidDiagram();
+      }
+    };
+
     function moveTask(taskId, targetCol) {
       const taskIndex = tasks.findIndex(t => t.id === taskId);
       if (taskIndex === -1) return;
       tasks[taskIndex].status = targetCol;
       
-      // Save state to local storage
       try {
         localStorage.setItem("va-kanban-tasks-" + "{{MONIKER}}", JSON.stringify(tasks));
       } catch (e) {}
@@ -1643,13 +1930,11 @@ flowchart TD
     }
 
     window.loadLocalPlan = function () {
-      // 1. First parse embedded raw plan if present in DOM
       const rawPlanBox = document.getElementById('raw-plan-box');
       if (rawPlanBox && rawPlanBox.innerText.trim()) {
         parseMarkdownPlan(rawPlanBox.innerText);
       }
 
-      // 2. Try fetching live 05_PLAN.md file from local server / HTTP
       fetch('05_PLAN.md')
         .then(response => {
           if (!response.ok) throw new Error('CORS or file not found');
@@ -1665,7 +1950,6 @@ flowchart TD
           }
         })
         .catch(err => {
-          console.log("Offline local 05_PLAN.md fallback to embedded/localStorage.");
           if (!tasks.length) {
             try {
               const saved = localStorage.getItem("va-kanban-tasks-" + "{{MONIKER}}");
@@ -1698,11 +1982,10 @@ flowchart TD
       
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
-        if (line.startsWith('##') && line.includes('Phase')) {
+        if (line.startsWith('##') && (line.includes('Phase') || line.includes('Slice'))) {
           currentPhase = line.replace(/##\s*/, '');
         }
         
-        // Parse checkboxes (- [ ], - [x], - [X], - [/], * [ ], 1. [ ])
         const taskMatch = line.match(/^(?:-\s+|\*\s+|\d+\.\s+)?\[([ xX\/])\]\s+(.*)$/);
         if (taskMatch) {
           const mark = taskMatch[1].toLowerCase();
@@ -1710,13 +1993,16 @@ flowchart TD
           const inProgress = mark === '/';
           const rawTitle = taskMatch[2].replace(/\*\*/g, '').trim();
           
-          // Generate deterministic ID from text
+          const isSerial = rawTitle.toLowerCase().includes('[serial]') || rawTitle.toLowerCase().includes('serial');
           const cleanText = rawTitle.replace(/[^\w]/g, '').toLowerCase();
+          
           const taskObj = {
             id: 'task-' + cleanText.substring(0, 24),
             title: rawTitle,
             phase: currentPhase,
             status: checked ? 'done' : (inProgress ? 'inprogress' : 'todo'),
+            executionMode: isSerial ? 'serial' : 'parallel',
+            prerequisites: [],
             instructions: '',
             target: '',
             verification: ''
@@ -1725,38 +2011,58 @@ flowchart TD
         }
       }
 
-      // Populate instructions if matches found below
+      // Populate instructions, targets, and prerequisite dependencies
       let currentTaskObj = null;
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
-        if (line.startsWith('#### Step') || line.startsWith('### Phase')) {
+        if (line.startsWith('#### Step') || line.startsWith('### Phase') || line.startsWith('### Slice') || line.startsWith('#### Slice')) {
           const words = line.toLowerCase().replace(/[^\w\s]/g, '').split(' ');
           currentTaskObj = tasks.find(t => words.every(w => t.title.toLowerCase().includes(w) || t.phase.toLowerCase().includes(w)));
         }
-        if (currentTaskObj && line.startsWith('*')) {
+        if (currentTaskObj) {
           if (line.toLowerCase().includes('target file:')) {
-            currentTaskObj.target = line.replace(/\*\s*[Tt]arget\s*[Ff]ile:\s*/, '').replace(/`/g, '');
+            currentTaskObj.target = line.replace(/.*[Tt]arget\s*[Ff]ile:\s*/, '').replace(/`/g, '');
           } else if (line.toLowerCase().includes('verification:')) {
-            currentTaskObj.verification = line.replace(/\*\s*[Vv]erification:\s*/, '').replace(/`/g, '');
+            currentTaskObj.verification = line.replace(/.*[Vv]erification:\s*/, '').replace(/`/g, '');
           } else if (line.toLowerCase().includes('instructions:')) {
-            currentTaskObj.instructions = line.replace(/\*\s*[Ii]nstructions:\s*/, '').replace(/`/g, '');
+            currentTaskObj.instructions = line.replace(/.*[Ii]nstructions:\s*/, '').replace(/`/g, '');
+          } else if (line.toLowerCase().includes('prerequisite') || line.toLowerCase().includes('dependencies:')) {
+            const reqText = line.replace(/.*(?:[Pp]rerequisite[s]?|[Dd]ependenc(?:ies|y)):\s*/, '').trim();
+            if (reqText && !reqText.toLowerCase().includes('none')) {
+              currentTaskObj.prerequisites.push(reqText);
+            }
+          } else if (line.toLowerCase().includes('execution mode:')) {
+            if (line.toLowerCase().includes('serial')) currentTaskObj.executionMode = 'serial';
+            else if (line.toLowerCase().includes('parallel')) currentTaskObj.executionMode = 'parallel';
           }
         }
       }
 
-      // Check if verification raw box exists and has checked items
-      const rawVerifBox = document.getElementById('raw-verification-box');
-      if (rawVerifBox && rawVerifBox.innerText.trim()) {
-        const verifText = rawVerifBox.innerText;
-        tasks.forEach(t => {
-          const titleSnippet = t.title.substring(0, 20);
-          if (titleSnippet.length > 5 && verifText.includes(titleSnippet)) {
-            if (verifText.toLowerCase().includes('[x]') || verifText.toLowerCase().includes('verified')) {
-              // Keep status synced if verified
+      // Automatically determine blocked state based on prerequisites
+      tasks.forEach((t, idx) => {
+        let blocked = false;
+        let blockedBy = [];
+        
+        // If predecessor task in sequence exists and current task is explicitly serial or has prerequisite
+        if (t.prerequisites.length > 0) {
+          t.prerequisites.forEach(prereq => {
+            const reqTask = tasks.find(other => other.title.toLowerCase().includes(prereq.toLowerCase()));
+            if (reqTask && reqTask.status !== 'done') {
+              blocked = true;
+              blockedBy.push(reqTask.title.substring(0, 18));
             }
+          });
+        } else if (t.executionMode === 'serial' && idx > 0) {
+          const prevTask = tasks[idx - 1];
+          if (prevTask && prevTask.status !== 'done') {
+            blocked = true;
+            blockedBy.push(prevTask.title.substring(0, 18));
           }
-        });
-      }
+        }
+
+        t.isBlocked = blocked && t.status !== 'done';
+        t.blockedBy = blockedBy;
+      });
 
       // Overlay saved drag-and-drop statuses from localStorage
       try {
@@ -1781,11 +2087,17 @@ flowchart TD
       const progressList = document.getElementById("progressList");
       const doneList = document.getElementById("doneList");
 
-      if (!todoList || !progressList || !doneList) return;
+      const parallelLanesList = document.getElementById("parallelLanesList");
+      const serialLanesList = document.getElementById("serialLanesList");
+      const blockedLanesList = document.getElementById("blockedLanesList");
 
-      todoList.innerHTML = '';
-      progressList.innerHTML = '';
-      doneList.innerHTML = '';
+      if (todoList) todoList.innerHTML = '';
+      if (progressList) progressList.innerHTML = '';
+      if (doneList) doneList.innerHTML = '';
+
+      if (parallelLanesList) parallelLanesList.innerHTML = '';
+      if (serialLanesList) serialLanesList.innerHTML = '';
+      if (blockedLanesList) blockedLanesList.innerHTML = '';
 
       let todoCount = 0;
       let progCount = 0;
@@ -1799,22 +2111,50 @@ flowchart TD
         card.ondragstart = drag;
         card.onclick = () => inspectTask(task.id);
 
+        let badgeHtml = '';
+        if (task.status === 'done') {
+          badgeHtml = `<span class="badge" style="background: rgba(63, 185, 80, 0.15); color: var(--badge-new-fg);">✅ Verified</span>`;
+        } else if (task.status === 'inprogress') {
+          badgeHtml = `<span class="badge" style="background: rgba(9, 105, 218, 0.15); color: var(--sev-low);">⚡ Brewing</span>`;
+        } else if (task.isBlocked) {
+          badgeHtml = `<span class="badge" style="background: rgba(207, 34, 46, 0.15); color: var(--sev-high);">🔒 Blocked (${task.blockedBy.join(', ') || 'Prereq'})</span>`;
+        } else if (task.executionMode === 'parallel') {
+          badgeHtml = `<span class="badge" style="background: rgba(63, 185, 80, 0.15); color: var(--badge-new-fg);">⚡ Parallel Ready</span>`;
+        } else {
+          badgeHtml = `<span class="badge" style="background: rgba(9, 105, 218, 0.15); color: var(--sev-low);">🔗 Serial Chain</span>`;
+        }
+
         card.innerHTML = `
-          <div class="card-title">${task.title}</div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px;">
+            <div class="card-title" style="flex: 1;">${task.title}</div>
+            ${badgeHtml}
+          </div>
           <div class="card-meta">
             <span>📂 ${task.target || 'General'}</span>
           </div>
         `;
 
         if (task.status === 'todo') {
-          todoList.appendChild(card);
+          if (todoList) todoList.appendChild(card);
           todoCount++;
         } else if (task.status === 'inprogress') {
-          progressList.appendChild(card);
+          if (progressList) progressList.appendChild(card);
           progCount++;
         } else {
-          doneList.appendChild(card);
+          if (doneList) doneList.appendChild(card);
           doneCount++;
+        }
+
+        // Render into Execution Lanes View
+        const laneCard = card.cloneNode(true);
+        laneCard.onclick = () => inspectTask(task.id);
+        
+        if (task.isBlocked && task.status !== 'done') {
+          if (blockedLanesList) blockedLanesList.appendChild(laneCard);
+        } else if (task.executionMode === 'parallel') {
+          if (parallelLanesList) parallelLanesList.appendChild(laneCard);
+        } else {
+          if (serialLanesList) serialLanesList.appendChild(laneCard);
         }
       });
 
@@ -1824,6 +2164,14 @@ flowchart TD
       if (todoHeader) todoHeader.innerText = todoCount;
       if (progHeader) progHeader.innerText = progCount;
       if (doneHeader) doneHeader.innerText = doneCount;
+
+      // Update Brew Overview Pulse Widgets
+      const pTodo = document.getElementById("pulseTodoCount");
+      const pProg = document.getElementById("pulseProgCount");
+      const pDone = document.getElementById("pulseDoneCount");
+      if (pTodo) pTodo.innerText = todoCount;
+      if (pProg) pProg.innerText = progCount;
+      if (pDone) pDone.innerText = doneCount;
 
       renderMermaidDiagram();
     }
@@ -1838,11 +2186,18 @@ flowchart TD
       p.style.color = "inherit";
       p.style.fontStyle = "normal";
 
+      let statusBadge = `<span class="badge ${task.status === 'done' ? 'new' : (task.status === 'inprogress' ? 'mod' : 'del')}">${task.status.toUpperCase()}</span>`;
+      let modeBadge = `<span class="badge" style="background: rgba(137, 180, 250, 0.2); color: var(--accent);">${task.executionMode.toUpperCase()}</span>`;
+
       p.innerHTML = `
-        <h4 style="color: var(--accent); margin-bottom: 12px; font-size: 15px;">🔍 ${task.title}</h4>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h4 style="color: var(--accent); margin: 0; font-size: 15px;">🔍 ${task.title}</h4>
+          <div>${modeBadge} ${statusBadge}</div>
+        </div>
         <dl class="kv">
           <dt>Phase</dt><dd><code>${task.phase}</code></dd>
-          <dt>Status</dt><dd><span class="badge ${task.status === 'done' ? 'new' : (task.status === 'inprogress' ? 'mod' : 'del')}">${task.status.toUpperCase()}</span></dd>
+          <dt>Execution Mode</dt><dd><code>${task.executionMode.toUpperCase()}</code></dd>
+          <dt>Prerequisites</dt><dd><code>${task.prerequisites.join(', ') || 'None (Unblocked)'}</code></dd>
           <dt>Target File</dt><dd><code>${task.target || 'N/A'}</code></dd>
           <dt>Verification</dt><dd><code>${task.verification || 'N/A'}</code></dd>
         </dl>
@@ -1858,15 +2213,17 @@ flowchart TD
 
       let md = 'flowchart TD\n';
       tasks.forEach((t, i) => {
-        const cleanName = t.title.substring(0, 32).replace(/"/g, "'");
-        md += `  node${i}["${cleanName}"]\n`;
+        const cleanName = t.title.substring(0, 28).replace(/"/g, "'");
+        md += `  node${i}["${t.executionMode === 'parallel' ? '⚡ ' : '🔗 '}${cleanName}"]\n`;
         md += `  classDef done fill:#dafbe1,stroke:#1a7f37,color:#1a7f37;\n`;
         md += `  classDef prog fill:#ddf4ff,stroke:#0969da,color:#0969da;\n`;
-        md += `  classDef todo fill:#fff8c5,stroke:#9a6700,color:#9a6700;\n`;
+        md += `  classDef ready fill:#fff8c5,stroke:#9a6700,color:#9a6700;\n`;
+        md += `  classDef blocked fill:#ffebe9,stroke:#cf222e,color:#cf222e;\n`;
         
         if (t.status === 'done') md += `  class node${i} done;\n`;
         else if (t.status === 'inprogress') md += `  class node${i} prog;\n`;
-        else md += `  class node${i} todo;\n`;
+        else if (t.isBlocked) md += `  class node${i} blocked;\n`;
+        else md += `  class node${i} ready;\n`;
 
         if (i > 0) {
           md += `  node${i-1} --> node${i}\n`;

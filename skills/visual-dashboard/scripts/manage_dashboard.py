@@ -178,7 +178,7 @@ def ensure_dashboard(plan_dir, moniker, timestamp=None, model_version=None, thin
             content = f.read()
 
         # Automatically upgrade outdated dashboard instances missing new markers or features
-        if "<!-- VP:OVERVIEW -->" not in content or "demo-toggle" not in content or "completedTasksText" not in content:
+        if "<!-- VP:OVERVIEW -->" not in content or "<!-- VPO:AUDIT -->" not in content or "demo-toggle" not in content or 'id="kanban"' not in content or 'id="btn-view-board"' not in content or "pulseTodoCount" not in content:
             print(f"Upgrading outdated dashboard at {target_dashboard} to match latest template...")
             return ensure_dashboard(plan_dir, moniker, timestamp, model_version, thinking_mode, force=True)
 
@@ -484,6 +484,86 @@ def render_full_markdown_cards(dashboard_path, raw_md, raw_marker, overview_mark
     update_section(dashboard_path, overview_marker, "\n\n".join(blocks))
 
 
+def parse_red_team_audit(plan_dir, stage_prefix="02"):
+    """
+    Parses a stage red-team audit report (e.g. 02_RED_TEAM_AUDIT.md or 05_RED_TEAM_AUDIT.md)
+    and generates a styled HTML card for the audit pane in the corresponding visual dashboard tab.
+    """
+    audit_files = [
+        f"{stage_prefix}_RED_TEAM_AUDIT.md",
+        f"{stage_prefix}_red_team_audit.md",
+        "02_RED_TEAM_AUDIT.md",
+        "05_RED_TEAM_AUDIT.md",
+        "RED_TEAM_AUDIT.md",
+        "red_team_audit.md"
+    ]
+    filepath = None
+    for af in audit_files:
+        cand = find_stage_file(plan_dir, af)
+        if cand and os.path.exists(cand):
+            filepath = cand
+            break
+
+    if not filepath:
+        return f"""<div class="card" style="border-left: 4px solid var(--muted); margin-bottom: 20px;">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <h3 style="margin: 0; font-size: 15px; color: var(--muted);">⚪ Adversarial Red-Team Audit Pending</h3>
+      <p style="margin: 4px 0 0; font-size: 13px; color: var(--muted);">Dispatch <code>@red-team-reviewer</code> to audit this stage proposal for unhandled edge cases, race conditions, and security risks.</p>
+    </div>
+    <span class="badge" style="background: var(--faint); color: var(--muted);">Pending</span>
+  </div>
+</div>"""
+
+    with open(filepath, "r", encoding="utf-8") as f:
+        raw = f.read()
+
+    # Extract Risk Level
+    risk_match = re.search(r"\*\*Risk Level\*\*:\s*\[?(CRITICAL|HIGH|MEDIUM|LOW|PASSED)\]?", raw, re.IGNORECASE)
+    risk_level = risk_match.group(1).upper() if risk_match else "MEDIUM"
+
+    badge_style_map = {
+        "CRITICAL": "background: var(--badge-del-bg); color: var(--badge-del-fg); font-weight: 700;",
+        "HIGH": "background: var(--badge-del-bg); color: var(--badge-del-fg); font-weight: 700;",
+        "MEDIUM": "background: var(--badge-mod-bg); color: var(--badge-mod-fg); font-weight: 700;",
+        "LOW": "background: rgba(9, 105, 218, 0.15); color: #0969da; font-weight: 700;",
+        "PASSED": "background: var(--badge-new-bg); color: var(--badge-new-fg); font-weight: 700;"
+    }
+    border_color_map = {
+        "CRITICAL": "var(--sev-high)",
+        "HIGH": "var(--sev-high)",
+        "MEDIUM": "var(--sev-med)",
+        "LOW": "var(--sev-low)",
+        "PASSED": "var(--badge-new-fg)"
+    }
+
+    badge_style = badge_style_map.get(risk_level, "background: var(--faint); color: var(--fg);")
+    border_color = border_color_map.get(risk_level, "var(--card-border)")
+
+    flaws_match = re.search(r"\*\*Flaws Identified\*\*:\s*\[?(\d+|\w+)\]?", raw, re.IGNORECASE)
+    flaw_count = flaws_match.group(1) if flaws_match else "0"
+
+    rendered_body = render_markdown_content(raw)
+
+    return f"""<div class="card" style="border-left: 5px solid {border_color}; margin-bottom: 20px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+    <div>
+      <h3 style="margin: 0; font-size: 16px; display: flex; align-items: center; gap: 8px;">
+        🛡️ Adversarial Red-Team Audit &amp; Mitigations
+      </h3>
+      <p style="margin: 4px 0 0; font-size: 13px; color: var(--muted);">File: <code>{html.escape(os.path.basename(filepath))}</code> — Stress-tested by <code>@red-team-reviewer</code></p>
+    </div>
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <span class="badge" style="{badge_style}">Risk: {html.escape(risk_level)}</span>
+      <span class="badge" style="background: var(--faint); color: var(--fg);">Flaws: {html.escape(flaw_count)}</span>
+    </div>
+  </div>
+  <div style="font-size: 14px; color: var(--fg); line-height: 1.6;">
+    {rendered_body}
+  </div>
+</div>"""
+
+
 def sync_prd(plan_dir, moniker="feature"):
     """Parses 02_PRD.md and populates Stage 2 (Product Requirements Document)."""
     dashboard_path = ensure_dashboard(plan_dir, moniker)
@@ -495,6 +575,9 @@ def sync_prd(plan_dir, moniker="feature"):
         raw = f.read()
 
     render_full_markdown_cards(dashboard_path, raw, "VPO:RAW_PRD", "VPO:OVERVIEW", "02_PRD.md")
+    audit_html = parse_red_team_audit(plan_dir, "02")
+    update_section(dashboard_path, "VPO:AUDIT", audit_html, optional=True)
+
     for extra in ["VPO:STORIES", "VPO:CRITERIA", "VPO:FLOWS", "VPO:CONSTRAINTS", "VPO:PROTO", "VPO:QUESTIONS", "VPO:COMMENTS"]:
         update_section(dashboard_path, extra, "", optional=True)
     return True
@@ -527,6 +610,9 @@ def sync_spec(plan_dir, moniker="feature"):
         raw = f.read()
 
     render_full_markdown_cards(dashboard_path, raw, "VA:RAW_SPEC", "VA:OVERVIEW", "04_SPEC.md")
+    audit_html = parse_red_team_audit(plan_dir, "04")
+    update_section(dashboard_path, "VA:AUDIT", audit_html, optional=True)
+
     for extra in ["VA:ARCHITECTURE", "VA:FILEMAP", "VA:CODE", "VA:API", "VA:SCHEMA", "VA:PROTO", "VA:QUESTIONS", "VA:COMMENTS"]:
         update_section(dashboard_path, extra, "", optional=True)
     return True
@@ -545,6 +631,7 @@ def update_overview_metrics(dashboard_path, plan_dir, stage_presence=None):
     total_tasks = 0
     completed_tasks = 0
 
+    in_prog_tasks = 0
     if plan_file and os.path.exists(plan_file):
         with open(plan_file, "r", encoding="utf-8") as f:
             plan_text = f.read()
@@ -554,6 +641,8 @@ def update_overview_metrics(dashboard_path, plan_dir, stage_presence=None):
             total_tasks += 1
             if mark.lower() == "x":
                 completed_tasks += 1
+            elif mark.lower() == "/":
+                in_prog_tasks += 1
 
     verif_file = find_stage_file(plan_dir, "07_VERIFICATION.md")
     if verif_file and os.path.exists(verif_file):
@@ -566,6 +655,7 @@ def update_overview_metrics(dashboard_path, plan_dir, stage_presence=None):
                 if mark.lower() == "x":
                     completed_tasks += 1
 
+    todo_tasks = max(0, total_tasks - completed_tasks - in_prog_tasks)
     pct = round((completed_tasks / total_tasks) * 100) if total_tasks > 0 else 0
     slices_str = f"{completed_tasks} / {total_tasks}" if total_tasks > 0 else "0 / 0"
     progress_str = f"{pct}%"
@@ -594,6 +684,10 @@ def update_overview_metrics(dashboard_path, plan_dir, stage_presence=None):
     content = re.sub(r'(<div[^>]*id="completedTasksText"[^>]*>)[^<]*(</div>)', rf'\g<1>{slices_str}\2', content)
     content = re.sub(r'(<div[^>]*id="currentStageBadge"[^>]*>)[^<]*(</div>)', rf'\g<1>{active_stage_str}\2', content)
 
+    content = re.sub(r'(<div[^>]*id="pulseTodoCount"[^>]*>)[^<]*(</div>)', rf'\g<1>{todo_tasks}\2', content)
+    content = re.sub(r'(<div[^>]*id="pulseProgCount"[^>]*>)[^<]*(</div>)', rf'\g<1>{in_prog_tasks}\2', content)
+    content = re.sub(r'(<div[^>]*id="pulseDoneCount"[^>]*>)[^<]*(</div>)', rf'\g<1>{completed_tasks}\2', content)
+
     with open(dashboard_path, "w", encoding="utf-8") as f:
         f.write(content)
 
@@ -609,6 +703,9 @@ def sync_plan(plan_dir, moniker="feature"):
         raw = f.read()
 
     render_full_markdown_cards(dashboard_path, raw, "VP:RAW_PLAN", "VP:OVERVIEW", "05_PLAN.md")
+    audit_html = parse_red_team_audit(plan_dir, "05")
+    update_section(dashboard_path, "VP:AUDIT", audit_html, optional=True)
+
     for extra in ["VP:SLICES", "VP:CONTRACTS", "VP:RISKS"]:
         update_section(dashboard_path, extra, "", optional=True)
     update_overview_metrics(dashboard_path, plan_dir)
@@ -744,6 +841,21 @@ def auto_sync(plan_dir, moniker="feature", brain_dir=None):
                             pass
                     try:
                         shutil.copy2(found_path, t_path)
+                    except Exception:
+                        pass
+            
+            # Mirror red team audit reports if present
+            for audit_file in ["02_RED_TEAM_AUDIT.md", "04_RED_TEAM_AUDIT.md", "05_RED_TEAM_AUDIT.md"]:
+                found_audit = find_stage_file(plan_dir, audit_file)
+                if found_audit:
+                    t_path = os.path.join(b_dir, audit_file.lower())
+                    if os.path.exists(t_path):
+                        try:
+                            os.chmod(t_path, 0o644)
+                        except Exception:
+                            pass
+                    try:
+                        shutil.copy2(found_audit, t_path)
                     except Exception:
                         pass
 

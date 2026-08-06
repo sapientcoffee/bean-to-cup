@@ -11,10 +11,11 @@ Your goal is to act as the **Orchestration Engine** to generate a local, interac
 ## Rules of Engagement
 - **Artifact Generation:** Always output:
   1. `plans/<feature-slug>/<timestamp>/05_KANBAN.md` - Clean Markdown Kanban board and Mermaid flow diagram.
-  2. `plans/<feature-slug>/<timestamp>/visual-dashboard.html` - Premium interactive local master progress tracking application.
+  2. `plans/<feature-slug>/<timestamp>/visual-dashboard.html` - Premium interactive local master progress tracking application with a dedicated `Execution Kanban` tab (`#kanban`).
 - **UI Visibility / Artifact Mirroring**: Mirror `visual-dashboard.html` to system artifacts via `python3 scripts/manage_dashboard.py mirror --plan-dir "plans/<feature-slug>/<timestamp>"` to render in the chat UI.
-- **Visual Design Mandate:** The generated HTML MUST follow the master visual-dashboard design (custom HSL themes, Outfit/JetBrains fonts, smooth transitions, and embedded Kanban columns).
-- **Dynamic Coupling:** The dashboard must contain a built-in parser that can load and display the contents of the local `05_PLAN.md` file, while also offering an "Import/Export" zone where developers can copy-paste their Markdown and interactively manage state.
+- **Dedicated Tab Location**: The full interactive Kanban board, Parallel/Serial execution lanes, and Dependency DAG tree live on the dedicated `Execution Kanban` tab in `visual-dashboard.html`. The `Brew Overview` tab features a compact Slice Execution Pulse widget.
+- **Visual Design Mandate:** The generated HTML MUST follow the master visual-dashboard design (custom HSL themes, Outfit/JetBrains fonts, smooth transitions, embedded Kanban columns, and view toggles).
+- **Dynamic Coupling & Dependency Mapping:** The dashboard contains an automated parser that extracts slice checklist items, prerequisites, target files, and execution modes (`Parallel` / `Serial`) directly from `05_PLAN.md` and `07_VERIFICATION.md`, computing `⚡ PARALLEL READY`, `🔗 SERIAL CHAIN`, and `🔒 BLOCKED` states in real time.
 
 ## Instructions
 
@@ -30,12 +31,12 @@ Create a visual overview of the vertical slices in Markdown:
    - In-progress slices: Fill with cyan/blue (`#89b4fa`), stroke with blue.
    - Pending slices: Fill with mocha gray (`#313244`), stroke with lighter gray.
 2. **Markdown Kanban Columns:**
-   - **Backlog / To Do:** List of pending slices.
+   - **Backlog / To Do:** List of pending slices with `[Parallel]` or `[Serial]` tags.
    - **In Progress:** The active slice currently being implemented.
    - **Done:** Completed slices.
 
 ### Step 3: Generate visual-dashboard.html
-Ensure or update the gorgeous, self-contained interactive web page inside `plans/<feature-slug>/<timestamp>/visual-dashboard.html` by executing `python3 scripts/manage_dashboard.py ensure --plan-dir "plans/<feature-slug>/<timestamp>" --moniker "<feature-slug>"` (or invoking the `visual-dashboard` skill) to represent the latest state.
+Ensure or update the gorgeous, self-contained interactive web page inside `plans/<feature-slug>/<timestamp>/visual-dashboard.html` by executing `python3 scripts/manage_dashboard.py ensure --plan-dir "plans/<feature-slug>/<timestamp>" --moniker "<feature-slug>"` (or invoking the `visual-dashboard` skill) to represent the latest state on the dedicated `Execution Kanban` tab.
  
 
 ```html
