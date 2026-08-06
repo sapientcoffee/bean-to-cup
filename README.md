@@ -62,6 +62,8 @@ The markdown files (`02_PRD.md`, `04_SPEC.md`, `05_PLAN.md`, `07_VERIFICATION.md
 
 A core innovation of Bean-to-Cup is the **Unified Master Visual Dashboard** (`visual-dashboard.html`). Created as a persistent visual artifact in your feature plan directory (`plans/<feature-slug>/<timestamp>/visual-dashboard.html`), it provides an interactive, rich UI dashboard that aggregates real-time insights across **all SDLC stages**:
 
+![Brew Overview & Interactive Kanban](docs/images/visual-dashboard-overview.png)
+
 *   **Discovery Tab (Stage 0)**: Displays raw ideation flows, target persona friction points, and mock data schemas.
 *   **Glossary & ADR Tab (Stage 1)**: Visualizes the global Ubiquitous Glossary terms and Architecture Decision Records (ADRs).
 *   **PRD Tab (Stage 2)**: Renders business requirements, Gherkin acceptance scenarios, and explicit non-goals.
@@ -70,9 +72,14 @@ A core innovation of Bean-to-Cup is the **Unified Master Visual Dashboard** (`vi
 *   **Brew Overview / Interactive Kanban (Stages 5 & 7)**: Interactive Kanban board tracking vertical sprint slices and TDD task execution progress in real-time.
 *   **Recap Tab (Stage 8)**: Retrospective report, terminal recording playback, and walkthrough verification proof.
 
+![Technical Design Spec Tab](docs/images/visual-dashboard-spec.png)
+
 > [!TIP]
 > **Live Chat UI Panel Integration**:
 > Every stage update automatically mirrors `visual-dashboard.html` directly to the assistant's private system artifacts directory (`<appDataDir>/brain/<conversation-id>/00_visual-dashboard.html`), allowing you to view and inspect live feature progress in the side-panel artifact viewer without leaving the chat interface!
+>
+> 📖 **Deep Dive Documentation**:
+> Read our comprehensive **[Unified Master Visual Dashboard Guide](docs/VISUAL_DASHBOARD.md)** for a detailed technical discussion on how section markers, markdown-to-HTML rendering, dual-write brain artifact mirroring, and multi-stage lifecycle protocols operate under the hood.
 
 ---
 

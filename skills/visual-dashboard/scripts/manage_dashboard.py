@@ -178,7 +178,7 @@ def ensure_dashboard(plan_dir, moniker, timestamp=None, model_version=None, thin
             content = f.read()
 
         # Automatically upgrade outdated dashboard instances missing new markers or features
-        if "<!-- VP:OVERVIEW -->" not in content or "demo-toggle" not in content:
+        if "<!-- VP:OVERVIEW -->" not in content or "demo-toggle" not in content or "completedTasksText" not in content:
             print(f"Upgrading outdated dashboard at {target_dashboard} to match latest template...")
             return ensure_dashboard(plan_dir, moniker, timestamp, model_version, thinking_mode, force=True)
 
@@ -221,58 +221,7 @@ def update_section(dashboard_path, section_marker, new_content, optional=False):
         print(f"Warning: Marker [{start_marker}] not found in {dashboard_path}", file=sys.stderr)
 
 
-def sync_prd(plan_dir, moniker="feature"):
-    """
-    Parses 02_PRD.md directly and updates visual-dashboard.html with full-fidelity HTML cards.
-    Zero temporary snippet files created on disk.
-    """
-    dashboard_path = ensure_dashboard(plan_dir, moniker)
 
-    prd_candidates = [
-        os.path.join(plan_dir, "02_PRD.md"),
-        os.path.join(".plans", "02_PRD.md"),
-        "02_PRD.md",
-    ]
-    prd_path = next((p for p in prd_candidates if os.path.exists(p)), None)
-
-    if not prd_path:
-        print(f"Warning: No 02_PRD.md found under {plan_dir}", file=sys.stderr)
-        return
-
-    with open(prd_path, "r", encoding="utf-8") as f:
-        prd_raw = f.read()
-
-    # 1. Update Raw PRD text container
-    raw_escaped = html.escape(prd_raw)
-    update_section(dashboard_path, "VPO:RAW_PRD", f'<div class="raw-prd-box" id="raw-prd-box">{raw_escaped}</div>', optional=True)
-
-    # 2. Render all sections into full-fidelity HTML cards
-    blocks = [
-        f"""<button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('raw-prd-box'); box.style.display = box.style.display === 'block' ? 'none' : 'block';" style="margin-bottom:12px;">
-  📄 View Raw 02_PRD.md Document
-</button>"""
-    ]
-
-    sections = re.split(r"(?=\n##\s+)", prd_raw)
-    for sec in sections:
-        sec_str = sec.strip()
-        if not sec_str:
-            continue
-        lines = sec_str.split("\n", 1)
-        header_line = lines[0].strip()
-        body = lines[1].strip() if len(lines) > 1 else ""
-        title = re.sub(r"^#+\s*", "", header_line).strip()
-        body = re.sub(r"\n---\s*$", "", body).strip()
-        if not body and not title:
-            continue
-        rendered_body = render_markdown_content(body)
-        blocks.append(f"""<div class="card" style="margin-bottom:16px;">
-  <h3 style="margin-bottom:12px;">📄 {html.escape(title)}</h3>
-  <div style="font-size: 14px; color: var(--fg); white-space: pre-wrap; line-height: 1.6;">{rendered_body}</div>
-</div>""")
-
-    update_section(dashboard_path, "VPO:OVERVIEW", "\n\n".join(blocks))
-    mirror_artifact(dashboard_path)
 
 
 def sync_glossary(plan_dir, moniker="feature", active_stage="Stage 1"):
@@ -304,6 +253,8 @@ def sync_glossary(plan_dir, moniker="feature", active_stage="Stage 1"):
     if glossary_path and os.path.exists(glossary_path):
         with open(glossary_path, "r", encoding="utf-8") as f:
             glossary_raw = f.read()
+
+        update_section(dashboard_path, "VG:RAW_GLOSSARY", f'<div class="raw-prd-box" id="raw-glossary-box">{html.escape(glossary_raw)}</div>', optional=True)
 
         terms_html = ['<div class="grid cols-2">']
         # Extract term blocks (### Term or **Term**:)
@@ -373,12 +324,26 @@ def mirror_artifact(dashboard_path, target_filename="00_visual-dashboard.html", 
             except Exception as e:
                 print(f"Warning: Failed to mirror artifact to {artifact_path}: {e}", file=sys.stderr)
 def find_stage_file(plan_dir, filename):
+    fname_lower = filename.lower()
+    fname_upper = filename.upper()
     candidates = [
         os.path.join(plan_dir, filename),
+        os.path.join(plan_dir, fname_lower),
+        os.path.join(plan_dir, fname_upper),
         os.path.join(".plans", filename),
+        os.path.join(".plans", fname_lower),
         filename,
+        fname_lower,
     ]
-    return next((p for p in candidates if os.path.exists(p)), None)
+    for c in candidates:
+        if os.path.exists(c):
+            return c
+
+    if os.path.exists(plan_dir):
+        for entry in os.listdir(plan_dir):
+            if entry.lower() == fname_lower:
+                return os.path.join(plan_dir, entry)
+    return None
 
 
 def render_markdown_content(md_text):
@@ -444,11 +409,7 @@ def sync_ideation(plan_dir, moniker="feature"):
 
     update_section(dashboard_path, "VD:RAW_IDEATION", f'<div class="raw-prd-box" id="raw-ideation-box">{html.escape(raw)}</div>', optional=True)
 
-    blocks = [
-        f"""<button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('raw-ideation-box'); box.style.display = box.style.display === 'block' ? 'none' : 'block';" style="margin-bottom:12px;">
-  📄 View Raw 00_IDEATION.md Document
-</button>"""
-    ]
+    blocks = []
 
     # Split markdown by top-level section headers (## Section)
     sections = re.split(r"(?=\n##\s+)", raw)
@@ -482,17 +443,25 @@ def sync_ideation(plan_dir, moniker="feature"):
     return True
 
 
-def render_full_markdown_cards(dashboard_path, raw_md, raw_marker, overview_marker, doc_name):
+def render_full_markdown_cards(dashboard_path, raw_md, raw_marker, overview_marker, doc_name, raw_box_id=None):
     """Renders 100% full-fidelity section cards from markdown into the specified section markers."""
     raw_escaped = html.escape(raw_md)
-    raw_box_id = f"raw-{raw_marker.lower().replace(':', '-')}-box"
+    if not raw_box_id:
+        default_id_map = {
+            "VD:RAW_IDEATION": "raw-ideation-box",
+            "VG:RAW_GLOSSARY": "raw-glossary-box",
+            "VPO:RAW_PRD": "raw-prd-box",
+            "VX:RAW_EXTRACTION": "raw-extraction-box",
+            "VA:RAW_SPEC": "raw-spec-box",
+            "VP:RAW_PLAN": "raw-plan-box",
+            "VV:RAW_VERIFICATION": "raw-verification-box",
+            "VIR:RAW_RECAP": "raw-recap-box",
+        }
+        raw_box_id = default_id_map.get(raw_marker, f"raw-{raw_marker.lower().replace(':', '-')}-box")
+
     update_section(dashboard_path, raw_marker, f'<div class="raw-prd-box" id="{raw_box_id}">{raw_escaped}</div>', optional=True)
 
-    blocks = [
-        f"""<button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('{raw_box_id}'); box.style.display = box.style.display === 'block' ? 'none' : 'block';" style="margin-bottom:12px;">
-  📄 View Raw {doc_name} Document
-</button>"""
-    ]
+    blocks = []
 
     sections = re.split(r"(?=\n##\s+)", raw_md)
     for sec in sections:
@@ -563,6 +532,72 @@ def sync_spec(plan_dir, moniker="feature"):
     return True
 
 
+def update_overview_metrics(dashboard_path, plan_dir, stage_presence=None):
+    """
+    Parses 05_PLAN.md and 07_VERIFICATION.md in plan_dir to compute total, completed,
+    and active stage metrics, updating #mainProgressText, #completedTasksText, and
+    #currentStageBadge directly in visual-dashboard.html.
+    """
+    if not os.path.exists(dashboard_path):
+        return
+
+    plan_file = find_stage_file(plan_dir, "05_PLAN.md")
+    total_tasks = 0
+    completed_tasks = 0
+
+    if plan_file and os.path.exists(plan_file):
+        with open(plan_file, "r", encoding="utf-8") as f:
+            plan_text = f.read()
+
+        matches = re.findall(r"^\s*(?:-\s+|\*\s+|\d+\.\s+)?\[([ xX\/])\]\s+(.*)", plan_text, re.MULTILINE)
+        for mark, task_title in matches:
+            total_tasks += 1
+            if mark.lower() == "x":
+                completed_tasks += 1
+
+    verif_file = find_stage_file(plan_dir, "07_VERIFICATION.md")
+    if verif_file and os.path.exists(verif_file):
+        with open(verif_file, "r", encoding="utf-8") as f:
+            verif_text = f.read()
+        v_matches = re.findall(r"^\s*(?:-\s+|\*\s+|\d+\.\s+)?\[([ xX])\]\s+(.*)", verif_text, re.MULTILINE)
+        if total_tasks == 0:
+            for mark, task_title in v_matches:
+                total_tasks += 1
+                if mark.lower() == "x":
+                    completed_tasks += 1
+
+    pct = round((completed_tasks / total_tasks) * 100) if total_tasks > 0 else 0
+    slices_str = f"{completed_tasks} / {total_tasks}" if total_tasks > 0 else "0 / 0"
+    progress_str = f"{pct}%"
+
+    active_stage_num = 0
+    if stage_presence:
+        for s in [8, 7, 5, 4, 3, 2, 1, 0]:
+            if stage_presence.get(s):
+                active_stage_num = s
+                break
+    else:
+        if find_stage_file(plan_dir, "08_WALKTHROUGH.md"): active_stage_num = 8
+        elif find_stage_file(plan_dir, "07_VERIFICATION.md"): active_stage_num = 7
+        elif find_stage_file(plan_dir, "05_PLAN.md"): active_stage_num = 5
+        elif find_stage_file(plan_dir, "04_SPEC.md"): active_stage_num = 4
+        elif find_stage_file(plan_dir, "03_EXTRACTION.md"): active_stage_num = 3
+        elif find_stage_file(plan_dir, "02_PRD.md"): active_stage_num = 2
+        elif os.path.exists(os.path.join(find_repo_root(), "docs", "glossary.md")): active_stage_num = 1
+
+    active_stage_str = f"Stage {active_stage_num}"
+
+    with open(dashboard_path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    content = re.sub(r'(<div[^>]*id="mainProgressText"[^>]*>)[^<]*(</div>)', rf'\g<1>{progress_str}\2', content)
+    content = re.sub(r'(<div[^>]*id="completedTasksText"[^>]*>)[^<]*(</div>)', rf'\g<1>{slices_str}\2', content)
+    content = re.sub(r'(<div[^>]*id="currentStageBadge"[^>]*>)[^<]*(</div>)', rf'\g<1>{active_stage_str}\2', content)
+
+    with open(dashboard_path, "w", encoding="utf-8") as f:
+        f.write(content)
+
+
 def sync_plan(plan_dir, moniker="feature"):
     """Parses 05_PLAN.md and populates Stage 5 (Execution Planning)."""
     dashboard_path = ensure_dashboard(plan_dir, moniker)
@@ -576,6 +611,7 @@ def sync_plan(plan_dir, moniker="feature"):
     render_full_markdown_cards(dashboard_path, raw, "VP:RAW_PLAN", "VP:OVERVIEW", "05_PLAN.md")
     for extra in ["VP:SLICES", "VP:CONTRACTS", "VP:RISKS"]:
         update_section(dashboard_path, extra, "", optional=True)
+    update_overview_metrics(dashboard_path, plan_dir)
     return True
 
 
@@ -592,6 +628,7 @@ def sync_verification(plan_dir, moniker="feature"):
     render_full_markdown_cards(dashboard_path, raw, "VV:RAW_VERIFICATION", "VV:OVERVIEW", "07_VERIFICATION.md")
     for extra in ["VV:SLICES", "VV:TESTS"]:
         update_section(dashboard_path, extra, "", optional=True)
+    update_overview_metrics(dashboard_path, plan_dir)
     return True
 
 
@@ -688,6 +725,7 @@ def auto_sync(plan_dir, moniker="feature", brain_dir=None):
         stage_presence[8] = True
 
     update_tracker_badges(dashboard_path, stage_presence)
+    update_overview_metrics(dashboard_path, plan_dir, stage_presence)
     mirror_artifact(dashboard_path, brain_dir=brain_dir)
 
     brain_dirs = [brain_dir] if brain_dir else find_brain_dirs()

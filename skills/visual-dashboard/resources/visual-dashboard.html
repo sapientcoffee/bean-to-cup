@@ -805,6 +805,14 @@ flowchart TD
           </details>
         </div>
         
+        <button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('raw-ideation-box'); box.style.display = box.style.display === 'block' ? 'none' : 'block';">
+          📄 View Raw 00_IDEATION.md Document
+        </button>
+
+        <!-- VD:RAW_IDEATION -->
+        <div class="raw-prd-box" id="raw-ideation-box">Raw 00_IDEATION.md content will load here...</div>
+        <!-- /VD:RAW_IDEATION -->
+        
         <!-- VD:OVERVIEW -->
         <div class="grid cols-3">
           <div class="card" style="border-top: 4px solid var(--accent);">
@@ -915,6 +923,14 @@ flowchart TD
         <div class="search-container">
           <input type="text" id="glossary-search" placeholder="Search terms..." class="search-input" />
         </div>
+
+        <button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('raw-glossary-box'); box.style.display = box.style.display === 'block' ? 'none' : 'block';">
+          📄 View Raw docs/glossary.md Document
+        </button>
+
+        <!-- VG:RAW_GLOSSARY -->
+        <div class="raw-prd-box" id="raw-glossary-box">Raw docs/glossary.md content will load here...</div>
+        <!-- /VG:RAW_GLOSSARY -->
 
         <!-- VG:GLOSSARY -->
         <div class="grid cols-2" id="terms-container">
@@ -1251,7 +1267,12 @@ flowchart TD
           </details>
         </div>
         
+        <button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('raw-recap-box'); box.style.display = box.style.display === 'block' ? 'none' : 'block';">
+          📄 View Raw 08_WALKTHROUGH.md Document
+        </button>
+
         <!-- VIR:RAW_RECAP -->
+        <div class="raw-prd-box" id="raw-recap-box">Raw 08_WALKTHROUGH.md content will load here...</div>
         <!-- /VIR:RAW_RECAP -->
 
         <!-- VIR:OVERVIEW -->
@@ -1622,27 +1643,39 @@ flowchart TD
     }
 
     window.loadLocalPlan = function () {
+      // 1. First parse embedded raw plan if present in DOM
+      const rawPlanBox = document.getElementById('raw-plan-box');
+      if (rawPlanBox && rawPlanBox.innerText.trim()) {
+        parseMarkdownPlan(rawPlanBox.innerText);
+      }
+
+      // 2. Try fetching live 05_PLAN.md file from local server / HTTP
       fetch('05_PLAN.md')
         .then(response => {
           if (!response.ok) throw new Error('CORS or file not found');
           return response.text();
         })
         .then(text => {
-          document.getElementById('importArea').value = text;
-          parseMarkdownPlan(text);
-          document.getElementById('activePlanPath').innerText = 'plans/.../05_PLAN.md (Loaded Live From Disk)';
+          if (text && text.trim()) {
+            const importArea = document.getElementById('importArea');
+            if (importArea) importArea.value = text;
+            parseMarkdownPlan(text);
+            const pathEl = document.getElementById('activePlanPath');
+            if (pathEl) pathEl.innerText = 'plans/.../05_PLAN.md (Loaded Live From Disk)';
+          }
         })
         .catch(err => {
-          console.log("Offline local 05_PLAN.md fallback to localStorage/Pre-Baked.");
-          // Try loading from localStorage
-          try {
-            const saved = localStorage.getItem("va-kanban-tasks-" + "{{MONIKER}}");
-            if (saved) {
-              tasks = JSON.parse(saved);
-              renderKanbanBoard();
-              updateProgressMetrics();
-            }
-          } catch (e) {}
+          console.log("Offline local 05_PLAN.md fallback to embedded/localStorage.");
+          if (!tasks.length) {
+            try {
+              const saved = localStorage.getItem("va-kanban-tasks-" + "{{MONIKER}}");
+              if (saved) {
+                tasks = JSON.parse(saved);
+                renderKanbanBoard();
+                updateProgressMetrics();
+              }
+            } catch (e) {}
+          }
         });
     };
 
@@ -1669,19 +1702,21 @@ flowchart TD
           currentPhase = line.replace(/##\s*/, '');
         }
         
-        // Parse checkboxes
-        const taskMatch = line.match(/^-\s+\[([ xX])\]\s+(.*)$/);
+        // Parse checkboxes (- [ ], - [x], - [X], - [/], * [ ], 1. [ ])
+        const taskMatch = line.match(/^(?:-\s+|\*\s+|\d+\.\s+)?\[([ xX\/])\]\s+(.*)$/);
         if (taskMatch) {
-          const checked = taskMatch[1].toLowerCase() === 'x';
-          const titleText = taskMatch[2];
+          const mark = taskMatch[1].toLowerCase();
+          const checked = mark === 'x';
+          const inProgress = mark === '/';
+          const rawTitle = taskMatch[2].replace(/\*\*/g, '').trim();
           
           // Generate deterministic ID from text
-          const cleanText = titleText.replace(/[^\w]/g, '').toLowerCase();
+          const cleanText = rawTitle.replace(/[^\w]/g, '').toLowerCase();
           const taskObj = {
             id: 'task-' + cleanText.substring(0, 24),
-            title: titleText,
+            title: rawTitle,
             phase: currentPhase,
-            status: checked ? 'done' : 'todo',
+            status: checked ? 'done' : (inProgress ? 'inprogress' : 'todo'),
             instructions: '',
             target: '',
             verification: ''
@@ -1709,6 +1744,34 @@ flowchart TD
         }
       }
 
+      // Check if verification raw box exists and has checked items
+      const rawVerifBox = document.getElementById('raw-verification-box');
+      if (rawVerifBox && rawVerifBox.innerText.trim()) {
+        const verifText = rawVerifBox.innerText;
+        tasks.forEach(t => {
+          const titleSnippet = t.title.substring(0, 20);
+          if (titleSnippet.length > 5 && verifText.includes(titleSnippet)) {
+            if (verifText.toLowerCase().includes('[x]') || verifText.toLowerCase().includes('verified')) {
+              // Keep status synced if verified
+            }
+          }
+        });
+      }
+
+      // Overlay saved drag-and-drop statuses from localStorage
+      try {
+        const saved = localStorage.getItem("va-kanban-tasks-" + "{{MONIKER}}");
+        if (saved) {
+          const savedTasks = JSON.parse(saved);
+          const savedMap = new Map(savedTasks.map(st => [st.id, st.status]));
+          tasks.forEach(t => {
+            if (savedMap.has(t.id) && t.status === 'todo') {
+              t.status = savedMap.get(t.id);
+            }
+          });
+        }
+      } catch (e) {}
+
       renderKanbanBoard();
       updateProgressMetrics();
     }
@@ -1717,6 +1780,8 @@ flowchart TD
       const todoList = document.getElementById("todoList");
       const progressList = document.getElementById("progressList");
       const doneList = document.getElementById("doneList");
+
+      if (!todoList || !progressList || !doneList) return;
 
       todoList.innerHTML = '';
       progressList.innerHTML = '';
@@ -1753,9 +1818,12 @@ flowchart TD
         }
       });
 
-      document.getElementById("todoHeaderCount").innerText = todoCount;
-      document.getElementById("progressHeaderCount").innerText = progCount;
-      document.getElementById("doneHeaderCount").innerText = doneCount;
+      const todoHeader = document.getElementById("todoHeaderCount");
+      const progHeader = document.getElementById("progressHeaderCount");
+      const doneHeader = document.getElementById("doneHeaderCount");
+      if (todoHeader) todoHeader.innerText = todoCount;
+      if (progHeader) progHeader.innerText = progCount;
+      if (doneHeader) doneHeader.innerText = doneCount;
 
       renderMermaidDiagram();
     }
@@ -1765,6 +1833,7 @@ flowchart TD
       if (!task) return;
 
       const p = document.getElementById("detailsPanel");
+      if (!p) return;
       p.style.display = "block";
       p.style.color = "inherit";
       p.style.fontStyle = "normal";
@@ -1785,7 +1854,7 @@ flowchart TD
 
     function renderMermaidDiagram() {
       const container = document.getElementById("mermaidContainer");
-      if (!mermaidOk) return;
+      if (!container || !mermaidOk) return;
 
       let md = 'flowchart TD\n';
       tasks.forEach((t, i) => {
@@ -1820,14 +1889,18 @@ flowchart TD
       const done = tasks.filter(t => t.status === 'done').length;
       const pct = Math.round((done / tasks.length) * 100);
       
-      document.getElementById("mainProgressText").innerText = pct + "%";
-      document.getElementById("completedTasksText").innerText = done + " / " + tasks.length;
+      const mainProg = document.getElementById("mainProgressText");
+      if (mainProg) mainProg.innerText = pct + "%";
+
+      const compTasks = document.getElementById("completedTasksText");
+      if (compTasks) compTasks.innerText = done + " / " + tasks.length;
       
-      // Try setting active timeline stage from completed count
-      if (pct >= 100) setTimelineStage(8);
-      else if (pct > 50) setTimelineStage(4);
-      else if (pct > 25) setTimelineStage(2);
-      else setTimelineStage(1);
+      const stageBadge = document.getElementById("currentStageBadge");
+      if (stageBadge) {
+        if (pct >= 100) stageBadge.innerText = "Stage 8";
+        else if (pct > 50) stageBadge.innerText = "Stage 7";
+        else if (pct > 0) stageBadge.innerText = "Stage 5";
+      }
     }
 
     window.exportMarkdown = function () {
@@ -1836,8 +1909,8 @@ flowchart TD
       
       tasks.forEach(t => {
         const escapedTitle = t.title.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-        const r = new RegExp('-\\s+\\[[ xX]\\]\\s+' + escapedTitle, 'g');
-        const replacement = `- [${t.status === 'done' ? 'x' : ' '}] ${t.title}`;
+        const r = new RegExp('-\\s+\\[[ xX\/]\\]\\s+' + escapedTitle, 'g');
+        const replacement = `- [${t.status === 'done' ? 'x' : (t.status === 'inprogress' ? '/' : ' ')}] ${t.title}`;
         md = md.replace(r, replacement);
       });
 
@@ -1845,13 +1918,35 @@ flowchart TD
       openModal("exportModal");
     };
 
-    /* ---- Initial Actions ---- */
+    /* ---- Initial Actions & Auto-sync listeners ---- */
     var initialTab = (location.hash || "#dashboard").slice(1);
     if (!document.getElementById(initialTab)) initialTab = "dashboard";
     showTab(initialTab, false);
     
     // Auto-fetch local plan
     loadLocalPlan();
+
+    // Auto-update listeners on focus, visibility change, and storage events
+    document.addEventListener("visibilitychange", function() {
+      if (!document.hidden) loadLocalPlan();
+    });
+    window.addEventListener("focus", function() {
+      loadLocalPlan();
+    });
+    window.addEventListener("storage", function(e) {
+      if (e.key === ("va-kanban-tasks-" + "{{MONIKER}}") && e.newValue) {
+        try {
+          tasks = JSON.parse(e.newValue);
+          renderKanbanBoard();
+          updateProgressMetrics();
+        } catch (err) {}
+      }
+    });
+
+    // Periodic auto-poll every 3 seconds to pick up live background changes
+    setInterval(function() {
+      loadLocalPlan();
+    }, 3000);
 
     // Export functions to window
     window.showTab = showTab;

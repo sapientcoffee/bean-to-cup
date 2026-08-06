@@ -104,6 +104,25 @@ class TestManageDashboard(unittest.TestCase):
         self.assertTrue(os.path.exists(mirrored_prd), "Mirrored PRD file missing in brain directory")
         self.assertTrue(os.path.exists(mirrored_plan), "Mirrored Plan file missing in brain directory")
 
+    def test_overview_metrics_calculation(self):
+        with open(os.path.join(self.plan_dir, "05_PLAN.md"), "w", encoding="utf-8") as f:
+            f.write("""# Execution Plan
+- [x] Step 1: Initial setup
+- [/] Step 2: Implementation in progress
+- [ ] Step 3: Pending verification
+- [x] Step 4: Tests passed
+""")
+
+        manage_dashboard.auto_sync(self.plan_dir, moniker="test-feature")
+
+        dash_path = os.path.join(self.plan_dir, "visual-dashboard.html")
+        with open(dash_path, "r", encoding="utf-8") as f:
+            content = f.read()
+
+        self.assertIn('id="mainProgressText">50%</div>', content)
+        self.assertIn('id="completedTasksText">2 / 4</div>', content)
+        self.assertIn('id="currentStageBadge">Stage 5</div>', content)
+
 
 if __name__ == "__main__":
     unittest.main()
