@@ -17,11 +17,14 @@ Your goal is to act as the **Orchestration Engine** to initiate a new feature de
 
 ## Instructions
 
-### Step 1: Initialize Context
-1. **Analyze Request:** Analyze the user's feature request and goals.
-2. **Slugify Feature Name:** Determine a URL-friendly slug for the feature (e.g., "add-login-page").
-3. **Get Timestamp:** Run `date +%Y-%m-%d_%H%M` via a terminal command execution.
-4. **Create Directory:** Create the versioned plan directory: `plans/<feature-slug>/<timestamp>`.
+### Step 1: Initialize & Resolve Context Directory
+1. **Analyze Request & Passed Files:** Check if the user passed an explicit file path (e.g., `plans/<feature-slug>/<timestamp>/00_IDEATION.md`). If so, extract and REUSE that exact directory.
+2. **Slugify Feature Name:** Determine the URL-friendly feature slug (e.g., "coffee-mood-app").
+3. **Reuse Existing Plan Directory First:**
+   - Check if an existing plan directory already exists under `plans/<feature-slug>/`.
+   - If one or more timestamped directories exist (e.g., `plans/<feature-slug>/2026-08-05_1527/`), **REUSE the most recent existing plan directory**. Do NOT create a new timestamp directory when `ideator` or a prior stage was already run!
+   - Preserve all existing files (`00_IDEATION.md`, `visual-dashboard.html`) in that directory and add new stage outputs (`02_PRD.md`, `03_EXTRACTION.md`, etc.) to it.
+4. **Create New Directory (Fallback Only):** ONLY if no existing plan directory for `<feature-slug>` exists under `plans/`, run `date +%Y-%m-%d_%H%M` and create `plans/<feature-slug>/<timestamp>`.
 
 ### Step 2: Discovery & PRD
 1. **Execute Grill Skill (Stage 1 Socratic Alignment):** Call and execute the `grill` skill to conduct a relentless, interactive Socratic requirements gathering and alignment session. Do NOT rely on simple/passive discovery questions. Under the `grill` skill, you must:
@@ -78,10 +81,8 @@ Your goal is to act as the **Orchestration Engine** to initiate a new feature de
    - **Runbooks & SOPs:** [e.g. References to standard recovery playbooks for known failure modes]
    ```
 
-3. **Compile Visual PRD inside the Unified Dashboard (`visual-dashboard.html`)**:
-   Follow the `write-prd` skill to update and fill the PRD sections (Overview, Stories, Criteria, Flows, Constraints, etc.) inside the unified master `visual-dashboard.html` in the versioned plans directory using `python3 scripts/manage_dashboard.py update`, and mirror both files directly to the system artifacts directory:
-   - Copy `02_PRD.md` to system artifacts directory as `02_prd.md`
-   - Mirror `visual-dashboard.html` via `python3 scripts/manage_dashboard.py mirror --plan-dir "plans/<feature-slug>/<timestamp>"`
+3. **Compile Visual PRD & Synchronize Dashboard (`visual-dashboard.html`)**:
+   Run `python3 scripts/manage_dashboard.py auto-sync --plan-dir "plans/<feature-slug>/<timestamp>" --moniker "<feature-slug>"` to parse `00_IDEATION.md`, `02_PRD.md`, `03_EXTRACTION.md`, `04_SPEC.md`, `05_PLAN.md`, update all tabs and Stage Tracker badges, and mirror all artifacts directly to the system artifacts directory.
 
 ### Step 3: Present and Gate
 1. **Report Progress:** Inform the user that the directory, PRD, and visual dashboard companion have been created.

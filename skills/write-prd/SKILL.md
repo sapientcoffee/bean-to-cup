@@ -10,8 +10,8 @@ Your goal as the Product Manager is to turn raw, unstructured user ideas into a 
 
 ## Rules of Engagement
 - **Artifact Handover**: Save your final output back to the file system.
-- **Save Location**: Output the markdown document to `plans/{feature-slug}/{timestamp}/02_PRD.md` and output the visual HTML counterpart to `plans/{feature-slug}/{timestamp}/visual-dashboard.html`. If a versioned feature context is not provided, fallback to writing them as `.plans/02_PRD.md` and `.plans/visual-dashboard.html` respectively.
-- **UI Visibility / Artifact Mirroring**: In addition to saving the documents in the workspace, mirror `visual-dashboard.html` to system artifacts via `python3 scripts/manage_dashboard.py mirror --plan-dir "plans/{feature-slug}/{timestamp}"`, and copy `02_PRD.md` to system artifacts as `02_prd.md`.
+- **Save Location & Directory Reuse**: Output the markdown document to `plans/{feature-slug}/{timestamp}/02_PRD.md` and output the visual HTML counterpart to `plans/{feature-slug}/{timestamp}/visual-dashboard.html`. **CRITICAL**: Check if an existing plan directory already exists under `plans/{feature-slug}/` (e.g., created by `ideator` or a prior skill). If one exists, **REUSE that exact directory**. Do NOT create a new timestamp folder when `ideator` was run first. Fallback to creating a new timestamp directory ONLY if no existing directory for `{feature-slug}` exists under `plans/`.
+- **UI Visibility / Artifact Mirroring**: In addition to saving the documents in the workspace, mirror `visual-dashboard.html` to system artifacts via `python3 ~/.gemini/config/plugins/bean-to-cup/skills/visual-dashboard/scripts/manage_dashboard.py mirror --plan-dir "plans/{feature-slug}/{timestamp}"`, and copy `02_PRD.md` to system artifacts as `02_prd.md`.
 - **Pure Product Boundary**: Do NOT suggest technical frameworks, software libraries, databases, state management patterns, or physical file/folder structures. Keep the requirements focused entirely on the business problem, personas, customer journeys, scope, and functional acceptance criteria.
 - **Approval Gate**: You MUST pause and actively ask the user if they approve the requirements before taking any further action.
 - **Iterative Rework**: If the user leaves comments or provides feedback in chat, apply the requested changes to both `02_PRD.md` and `visual-dashboard.html`, and ask for approval again!
@@ -28,9 +28,9 @@ Your goal as the Product Manager is to turn raw, unstructured user ideas into a 
    - **Deployment & DevOps Strategy**: Target GCP runtimes, Terraform Infrastructure-as-Code resources, CI/CD setup, and progressive release strategies (canary, rolling, blue-green).
    - **SRE & Observability Integration**: Google Cloud Logging (JSON formats), Cloud Monitoring metrics, Cloud Trace integration, SLIs/SLOs targets, error budget rules, and operational runbooks.
 3. **Compile the Visual PRD inside the Unified Dashboard (`visual-dashboard.html`)**:
-   - Ensure `visual-dashboard.html` exists by executing `python3 scripts/manage_dashboard.py ensure --plan-dir "plans/{feature-slug}/{timestamp}" --moniker "{feature-slug}"` (or invoke the `visual-dashboard` skill).
+   - Ensure `visual-dashboard.html` exists by executing `python3 ~/.gemini/config/plugins/bean-to-cup/skills/visual-dashboard/scripts/manage_dashboard.py ensure --plan-dir "plans/{feature-slug}/{timestamp}" --moniker "{feature-slug}"` (or invoke the `visual-dashboard` skill).
    - Automatically compile all PRD sections into full-fidelity HTML cards and render raw markdown by running:
-     `python3 scripts/manage_dashboard.py sync-prd --plan-dir "plans/{feature-slug}/{timestamp}" --moniker "{feature-slug}"`
+     `python3 ~/.gemini/config/plugins/bean-to-cup/skills/visual-dashboard/scripts/manage_dashboard.py sync-prd --plan-dir "plans/{feature-slug}/{timestamp}" --moniker "{feature-slug}"`
    - **Zero Intermediate Snippet Files**: Do NOT write any temporary HTML files (such as `*_snippet.html`). `sync-prd` parses `02_PRD.md` directly and updates `visual-dashboard.html` in-place.
 4. Save the documents.
 5. **Halt Execution**: Explicitly ask the user: "Do you approve of these product requirements and PRD? Please review `02_PRD.md` and the visual dashboard `visual-dashboard.html`. Once approved, we will proceed to Stage 3: Context Extraction."

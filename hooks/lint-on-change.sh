@@ -52,6 +52,10 @@ else
             echo "File changed in workstations-api ($file_path). Running ESLint with fix..." >&2
             npx turbo lint --filter=workstations-api -- --fix >&2
             ;;
+        skills/*|scripts/*|tests/*)
+            echo "Plugin skill/script/test file changed ($file_path). Running fast validation suite..." >&2
+            python3 scripts/run_plugin_tests.py --fast >&2
+            ;;
         scripts/*)
             echo "Shared script changed ($file_path). Running full lint..." >&2
             npx turbo lint -- --fix >&2

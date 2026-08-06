@@ -32,13 +32,16 @@ To maintain efficiency, modularity, and high signal-to-noise ratio by eliminatin
 
 The master dashboard HTML contains dedicated comment block markers for each stage:
 
-| SDLC Stage | Stage Name | Section Comment Marker |
+| SDLC Stage | Stage Name | Section Comment Markers / Parser Subcommand |
 | :--- | :--- | :--- |
-| **Stage 0** | Discovery / Ideation | `<!-- VD:OVERVIEW -->` ... `<!-- /VD:OVERVIEW -->` |
-| **Stage 1** | Glossary & ADRs | `<!-- VG:GLOSSARY -->` ... `<!-- /VG:GLOSSARY -->`<br>`<!-- VG:ADR -->` ... `<!-- /VG:ADR -->` |
-| **Stage 2** | PRD Visual Surfaces | `<!-- VPO:OVERVIEW -->`, `<!-- VPO:STORIES -->`, `<!-- VPO:CRITERIA -->`, `<!-- VPO:FLOWS -->`, `<!-- VPO:CONSTRAINTS -->`, `<!-- VPO:PROTO -->`, `<!-- VPO:QUESTIONS -->`, `<!-- VPO:COMMENTS -->` |
-| **Stage 4** | Technical Design Spec | `<!-- VA:OVERVIEW -->`, `<!-- VA:ARCHITECTURE -->`, `<!-- VA:DATA -->`, `<!-- VA:SECURITY -->`, `<!-- VA:SRE -->` |
-| **Stage 7** | Interactive Kanban Board | Built-in `#kanban` workspace & `#mermaidContainer` |
+| **Stage 0** | Discovery / Ideation | `<!-- VD:RAW_IDEATION -->`, `<!-- VD:OVERVIEW -->` (`sync-ideation`) |
+| **Stage 1** | Glossary & ADRs | `<!-- VG:GLOSSARY -->`, `<!-- VG:ADR -->` (`sync-glossary`) |
+| **Stage 2** | PRD Visual Surfaces | `<!-- VPO:RAW_PRD -->`, `<!-- VPO:OVERVIEW -->`, `<!-- VPO:STORIES -->`, `<!-- VPO:CRITERIA -->`, `<!-- VPO:CONSTRAINTS -->` (`sync-prd`) |
+| **Stage 3** | Context Extraction | `<!-- VX:RAW_EXTRACTION -->`, `<!-- VX:OVERVIEW -->`, `<!-- VX:FINDINGS -->`, `<!-- VX:REFERENCES -->` (`sync-extraction`) |
+| **Stage 4** | Technical Design Spec | `<!-- VA:RAW_SPEC -->`, `<!-- VA:OVERVIEW -->`, `<!-- VA:ARCHITECTURE -->`, `<!-- VA:FILEMAP -->`, `<!-- VA:API -->`, `<!-- VA:SCHEMA -->` (`sync-spec`) |
+| **Stage 5** | Execution Planning | `<!-- VP:RAW_PLAN -->`, `<!-- VP:OVERVIEW -->`, `<!-- VP:SLICES -->`, `<!-- VP:CONTRACTS -->` (`sync-plan`) |
+| **Stage 7** | TDD Implementation | `<!-- VV:RAW_VERIFICATION -->`, `<!-- VV:OVERVIEW -->`, `<!-- VV:SLICES -->`, `<!-- VV:TESTS -->` (`sync-verification`) |
+| **Stage 8** | Walkthrough Recap | `<!-- VIR:RAW_RECAP -->`, `<!-- VIR:OVERVIEW -->`, `<!-- VIR:TASKS -->`, `<!-- VIR:CHANGES -->`, `<!-- VIR:VERIFY -->` (`sync-recap`) |
 
 ---
 
@@ -46,28 +49,22 @@ The master dashboard HTML contains dedicated comment block markers for each stag
 
 Whenever an SDLC skill requires `visual-dashboard.html`:
 
-### Step 1: Ensure Dashboard Exists
-Check if `visual-dashboard.html` exists in the active plan directory (`plans/<feature-slug>/<timestamp>/`). If missing, instantiate it from the self-contained template (`resources/visual-dashboard.html`) and replace `{{MONIKER}}` and `{{TIMESTAMP}}`:
+### Step 1: Ensure Dashboard Exists & Auto-Sync
+Check if `visual-dashboard.html` exists in the active plan directory (`plans/<feature-slug>/<timestamp>/`). Run `auto-sync` to automatically scan for all stage markdown files, parse present artifacts, set tracker badges, and mirror artifacts:
 
 ```bash
-python3 <skill-dir>/scripts/manage_dashboard.py ensure --plan-dir "plans/<feature-slug>/<timestamp>" --moniker "<feature-slug>"
+python3 scripts/manage_dashboard.py auto-sync --plan-dir "plans/<feature-slug>/<timestamp>" --moniker "<feature-slug>"
 ```
-*(Or invoke via repo root `python3 scripts/manage_dashboard.py ensure ...`)*
 
-### Step 2: Update Active Stage Section
-Update only the section corresponding to the current stage while preserving all other previously generated stage tabs:
+### Step 2: Stage-Specific Sync or Section Update
+Optionally execute stage-specific synchronization or direct marker updates:
 
 ```bash
-python3 <skill-dir>/scripts/manage_dashboard.py update --plan-dir "plans/<feature-slug>/<timestamp>" --section "<MARKER>" --file "<path-to-content-file>"
+python3 scripts/manage_dashboard.py sync-extraction --plan-dir "plans/<feature-slug>/<timestamp>" --moniker "<feature-slug>"
 ```
-*(Or pass inline content via `--content "<html-snippet>")*
 
 ### Step 3: Dual-Write / Mirror Artifact for AGY UI Rendering
-Mirror the resulting dashboard directly to the active AGY conversation brain artifacts directory (`<appDataDir>/brain/<conversation-id>/00_visual-dashboard.html`) so it renders live in the chat UI panel:
-
-```bash
-python3 <skill-dir>/scripts/manage_dashboard.py mirror --plan-dir "plans/<feature-slug>/<timestamp>"
-```
+`auto-sync` automatically mirrors the master dashboard (`00_visual-dashboard.html`) and stage markdown files (`00_ideation.md`, `02_prd.md`, `03_extraction.md`, `04_spec.md`, `05_plan.md`, `07_verification.md`, `08_walkthrough.md`) directly to the active AGY conversation brain artifacts directory (`<appDataDir>/brain/<conversation-id>/`) so all stage outputs render live in the chat UI panel.
 
 ---
 

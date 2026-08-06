@@ -1,3 +1,8 @@
+---
+name: record
+description: Record terminal interactions and compile them to animated GIFs. Use during walkthroughs or on-demand recording sessions.
+---
+
 <!--
 Copyright 2026 Google LLC
 
@@ -14,10 +19,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
----
-name: record
-description: Record terminal interactions and compile them to animated GIFs. Use during walkthroughs or on-demand recording sessions.
----
 
 # Asciinema Terminal Recording Skill
 

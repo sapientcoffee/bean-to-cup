@@ -121,7 +121,29 @@ def find_brain_dirs():
     return dirs
 
 
-def ensure_dashboard(plan_dir, moniker, timestamp=None):
+def get_model_and_thinking_info(override_model=None, override_thinking=None):
+    """
+    Detects model version and thinking mode from parameters, environment, or default fallback.
+    """
+    model = (
+        override_model
+        or os.environ.get("AGY_MODEL_VERSION")
+        or os.environ.get("AGY_MODEL")
+        or os.environ.get("GEMINI_MODEL")
+        or os.environ.get("MODEL_NAME")
+        or "Gemini 3.6 Flash"
+    )
+    thinking = (
+        override_thinking
+        or os.environ.get("AGY_THINKING_MODE")
+        or os.environ.get("THINKING_MODE")
+        or os.environ.get("GEMINI_THINKING_MODE")
+        or "Medium"
+    )
+    return model, thinking
+
+
+def ensure_dashboard(plan_dir, moniker, timestamp=None, model_version=None, thinking_mode=None):
     """
     Checks if visual-dashboard.html exists in plan_dir.
     If missing, creates it from template and populates placeholders.
@@ -139,6 +161,8 @@ def ensure_dashboard(plan_dir, moniker, timestamp=None):
     if not timestamp:
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
+    model_ver, thinking = get_model_and_thinking_info(model_version, thinking_mode)
+
     if not os.path.exists(target_dashboard):
         print(f"Instantiating missing dashboard from template ({template_path}) -> {target_dashboard}")
         with open(template_path, "r", encoding="utf-8") as f:
@@ -146,6 +170,8 @@ def ensure_dashboard(plan_dir, moniker, timestamp=None):
 
         content = content.replace("{{MONIKER}}", moniker)
         content = content.replace("{{TIMESTAMP}}", timestamp)
+        content = content.replace("{{MODEL_VERSION}}", model_ver)
+        content = content.replace("{{THINKING_MODE}}", thinking)
         active_plan_rel = os.path.join(plan_dir, "05_PLAN.md")
         content = content.replace("plans/feature/{{MONIKER}}/05_PLAN.md", active_plan_rel)
 
@@ -153,11 +179,21 @@ def ensure_dashboard(plan_dir, moniker, timestamp=None):
             f.write(content)
     else:
         print(f"Preserving existing dashboard at {target_dashboard}")
+        with open(target_dashboard, "r", encoding="utf-8") as f:
+            content = f.read()
+
+        updated = content.replace("{{MODEL_VERSION}}", model_ver).replace("{{THINKING_MODE}}", thinking)
+        updated = re.sub(r'<span class="mono" id="modelLabel">.*?</span>', f'<span class="mono" id="modelLabel">{html.escape(model_ver)}</span>', updated)
+        updated = re.sub(r'<span class="mono" id="thinkingLabel">.*?</span>', f'<span class="mono" id="thinkingLabel">{html.escape(thinking)}</span>', updated)
+
+        if updated != content:
+            with open(target_dashboard, "w", encoding="utf-8") as f:
+                f.write(updated)
 
     return target_dashboard
 
 
-def update_section(dashboard_path, section_marker, new_content):
+def update_section(dashboard_path, section_marker, new_content, optional=False):
     """
     Updates the content between <!-- MARKER --> and <!-- /MARKER --> comment blocks directly.
     """
@@ -179,7 +215,7 @@ def update_section(dashboard_path, section_marker, new_content):
         with open(dashboard_path, "w", encoding="utf-8") as f:
             f.write(updated_content)
         print(f"Successfully updated section [{section_marker}] in {dashboard_path}")
-    else:
+    elif not optional:
         print(f"Warning: Marker [{start_marker}] not found in {dashboard_path}", file=sys.stderr)
 
 
@@ -206,58 +242,34 @@ def sync_prd(plan_dir, moniker="feature"):
 
     # 1. Update Raw PRD text container
     raw_escaped = html.escape(prd_raw)
-    update_section(dashboard_path, "VPO:RAW_PRD", f'<div class="raw-prd-box" id="raw-prd-box">{raw_escaped}</div>')
+    update_section(dashboard_path, "VPO:RAW_PRD", f'<div class="raw-prd-box" id="raw-prd-box">{raw_escaped}</div>', optional=True)
 
-    # 2. Extract Problem Statement / Overview
-    overview_match = re.search(r"## (?:Objective|Problem Statement|Overview)\n+(.*?)(?=\n## |\Z)", prd_raw, re.DOTALL | re.IGNORECASE)
-    overview_text = overview_match.group(1).strip() if overview_match else "Product Requirements Document initialized."
-    overview_html = f"""<div class="card">
-  <h3>Objective & Business Impact</h3>
-  <p>{html.escape(overview_text).replace(chr(10), '<br>')}</p>
-</div>"""
-    update_section(dashboard_path, "VPO:OVERVIEW", overview_html)
+    # 2. Render all sections into full-fidelity HTML cards
+    blocks = [
+        f"""<button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('raw-prd-box'); box.style.display = box.style.display === 'block' ? 'none' : 'block';" style="margin-bottom:12px;">
+  📄 View Raw 02_PRD.md Document
+</button>"""
+    ]
 
-    # 3. Extract User Stories
-    stories_html = ['<div class="grid cols-2">']
-    stories = re.findall(r"- \*\*As a\b.*?(?=\n- \*\*As a|\n## |\Z)", prd_raw, re.DOTALL | re.IGNORECASE)
-    if not stories:
-        # Fallback bullet parsing
-        stories = re.findall(r"- As a .*?(?=\n- As a |\n## |\Z)", prd_raw, re.DOTALL | re.IGNORECASE)
+    sections = re.split(r"(?=\n##\s+)", prd_raw)
+    for sec in sections:
+        sec_str = sec.strip()
+        if not sec_str:
+            continue
+        lines = sec_str.split("\n", 1)
+        header_line = lines[0].strip()
+        body = lines[1].strip() if len(lines) > 1 else ""
+        title = re.sub(r"^#+\s*", "", header_line).strip()
+        body = re.sub(r"\n---\s*$", "", body).strip()
+        if not body and not title:
+            continue
+        rendered_body = render_markdown_content(body)
+        blocks.append(f"""<div class="card" style="margin-bottom:16px;">
+  <h3 style="margin-bottom:12px;">📄 {html.escape(title)}</h3>
+  <div style="font-size: 14px; color: var(--fg); white-space: pre-wrap; line-height: 1.6;">{rendered_body}</div>
+</div>""")
 
-    for idx, story_text in enumerate(stories, 1):
-        clean_text = html.escape(story_text.strip().lstrip("- "))
-        stories_html.append(f"""  <div class="story">
-    <span class="story-id">US-{idx:02d}</span>
-    <div class="role">User Story</div>
-    <div class="want">{clean_text}</div>
-  </div>""")
-    stories_html.append('</div>')
-    update_section(dashboard_path, "VPO:STORIES", "\n".join(stories_html))
-
-    # 4. Extract Acceptance Criteria / Scenarios
-    criteria_html = ['<div class="grid cols-2">']
-    scenarios = re.findall(r"### (?:Scenario|Criteria|Given).*\n+.*?(?=\n### |\n## |\Z)", prd_raw, re.IGNORECASE)
-    if not scenarios:
-        scenarios = re.findall(r"- Given .*?(?=\n- Given |\n## |\Z)", prd_raw, re.IGNORECASE)
-
-    for idx, scen_text in enumerate(scenarios, 1):
-        clean_scen = html.escape(scen_text.strip().lstrip("- "))
-        criteria_html.append(f"""  <div class="scenario">
-    <div class="title"><span class="tag">AC-{idx:02d}</span> Acceptance Criterion</div>
-    <p style="font-size: 14px; margin: 0;">{clean_scen.replace(chr(10), '<br>')}</p>
-  </div>""")
-    criteria_html.append('</div>')
-    update_section(dashboard_path, "VPO:CRITERIA", "\n".join(criteria_html))
-
-    # 5. Extract Constraints & NFRs
-    nfr_match = re.search(r"## Non-Functional Requirements.*?\n+(.*?)(?=\n## |\Z)", prd_raw, re.DOTALL | re.IGNORECASE)
-    nfr_text = nfr_match.group(1).strip() if nfr_match else "Standard enterprise NFRs active."
-    constraints_html = f"""<div class="card">
-  <h3>Non-Functional Requirements & Security Posture</h3>
-  <p style="font-size: 14px; white-space: pre-wrap;">{html.escape(nfr_text)}</p>
-</div>"""
-    update_section(dashboard_path, "VPO:CONSTRAINTS", constraints_html)
-
+    update_section(dashboard_path, "VPO:OVERVIEW", "\n\n".join(blocks))
     mirror_artifact(dashboard_path)
 
 
@@ -269,18 +281,31 @@ def sync_glossary(plan_dir, moniker="feature", active_stage="Stage 1"):
     """
     dashboard_path = ensure_dashboard(plan_dir, moniker)
 
-    repo_root = find_repo_root()
-    glossary_path = os.path.join(repo_root, "docs", "glossary.md")
-    adr_dir = os.path.join(repo_root, "docs", "adr")
+    glossary_path = None
+    curr_dir = os.path.abspath(plan_dir)
+    while curr_dir and curr_dir != os.path.dirname(curr_dir):
+        cand = os.path.join(curr_dir, "docs", "glossary.md")
+        if os.path.exists(cand):
+            glossary_path = cand
+            break
+        curr_dir = os.path.dirname(curr_dir)
+
+    if not glossary_path:
+        repo_root = find_repo_root()
+        fallback = os.path.join(repo_root, "docs", "glossary.md")
+        if os.path.exists(fallback):
+            glossary_path = fallback
+
+    adr_dir = os.path.join(find_repo_root(), "docs", "adr")
 
     # Render Glossary Terms
-    if os.path.exists(glossary_path):
+    if glossary_path and os.path.exists(glossary_path):
         with open(glossary_path, "r", encoding="utf-8") as f:
             glossary_raw = f.read()
 
         terms_html = ['<div class="grid cols-2">']
-        # Extract term blocks (### Term)
-        term_blocks = re.findall(r"### (.*?)\n+(.*?)(?=\n### |\n## |\Z)", glossary_raw, re.DOTALL)
+        # Extract term blocks (### Term or **Term**:)
+        term_blocks = re.findall(r"(?:###|\*\*)\s*(.*?)(?:\*\*)?:?\n+(.*?)(?=\n(?:###|\*\*)|$)", glossary_raw, re.DOTALL)
         for term_title, term_body in term_blocks:
             clean_title = html.escape(term_title.strip())
             clean_body = html.escape(term_body.strip()).replace(chr(10), '<br>')
@@ -317,19 +342,372 @@ def sync_glossary(plan_dir, moniker="feature", active_stage="Stage 1"):
     mirror_artifact(dashboard_path)
 
 
-def mirror_artifact(dashboard_path, target_filename="00_visual-dashboard.html"):
+def mirror_artifact(dashboard_path, target_filename="00_visual-dashboard.html", brain_dir=None):
     """
     Copies visual-dashboard.html directly to all active AGY conversation brain directories.
     """
-    brain_dirs = find_brain_dirs()
-    if brain_dirs:
-        for brain_dir in brain_dirs:
-            os.makedirs(brain_dir, exist_ok=True)
-            artifact_path = os.path.join(brain_dir, target_filename)
-            shutil.copy2(dashboard_path, artifact_path)
-            print(f"Successfully mirrored AGY UI artifact to file://{artifact_path}")
+    if brain_dir:
+        brain_dirs = [brain_dir]
     else:
-        print("Note: Brain directory not found for artifact mirroring; skipping.")
+        brain_dirs = find_brain_dirs()
+
+    if brain_dirs:
+        for b_dir in brain_dirs:
+            os.makedirs(b_dir, exist_ok=True)
+            artifact_path = os.path.join(b_dir, target_filename)
+            if os.path.exists(artifact_path):
+                try:
+                    os.chmod(artifact_path, 0o644)
+                except Exception:
+                    pass
+            try:
+                shutil.copy2(dashboard_path, artifact_path)
+            except PermissionError:
+                try:
+                    os.remove(artifact_path)
+                    shutil.copy2(dashboard_path, artifact_path)
+                except Exception as e:
+                    print(f"Warning: Failed to mirror artifact to {artifact_path}: {e}", file=sys.stderr)
+            except Exception as e:
+                print(f"Warning: Failed to mirror artifact to {artifact_path}: {e}", file=sys.stderr)
+def find_stage_file(plan_dir, filename):
+    candidates = [
+        os.path.join(plan_dir, filename),
+        os.path.join(".plans", filename),
+        filename,
+    ]
+    return next((p for p in candidates if os.path.exists(p)), None)
+
+
+def render_markdown_content(md_text):
+    """Helper to convert markdown elements (tables, code blocks, headers) to clean HTML."""
+    # 1. Extract code blocks
+    code_blocks = []
+    def save_code(m):
+        lang = m.group(1) or ""
+        code = m.group(2)
+        if lang.lower() == "mermaid":
+            code_blocks.append(f'<pre class="mermaid">\n{html.escape(code.strip())}\n</pre>')
+        else:
+            code_blocks.append(f'<pre><code class="language-{lang or "text"}">{html.escape(code.strip())}</code></pre>')
+        return f"__CODE_BLOCK_{len(code_blocks)-1}__"
+
+    md_text = re.sub(r"```(\w*)\n(.*?)```", save_code, md_text, flags=re.DOTALL)
+
+    # 2. Extract tables
+    def replace_table(match):
+        table_str = match.group(0).strip()
+        lines = [l.strip() for l in table_str.split("\n") if l.strip()]
+        if len(lines) < 2:
+            return table_str
+
+        headers = [c.strip() for c in lines[0].strip("|").split("|")]
+        rows = []
+        start_idx = 2 if len(lines) > 1 and ":" in lines[1] or "-" in lines[1] else 1
+        for line in lines[start_idx:]:
+            cols = [c.strip() for c in line.strip("|").split("|")]
+            rows.append(cols)
+
+        tbl = ['<table class="va-table" style="width:100%; border-collapse:collapse; margin:12px 0; font-size:13px;">', '<thead><tr style="border-bottom:2px solid var(--border); background:var(--surface);">']
+        for h in headers:
+            tbl.append(f'<th style="text-align:left; padding:8px; font-weight:600;">{html.escape(h)}</th>')
+        tbl.append('</tr></thead><tbody>')
+        for r in rows:
+            tbl.append('<tr style="border-bottom:1px solid var(--border);">')
+            for c in r:
+                tbl.append(f'<td style="padding:8px;">{html.escape(c)}</td>')
+            tbl.append('</tr>')
+        tbl.append('</tbody></table>')
+        return "\n".join(tbl)
+
+    tbl_pattern = r"\|[^\n]+\|\n\|[\s:\-\|]+\|\n(?:\|[^\n]+\|\n?)+"
+    md_text = re.sub(tbl_pattern, replace_table, md_text)
+
+    # 3. Restore code blocks
+    for idx, block in enumerate(code_blocks):
+        md_text = md_text.replace(f"__CODE_BLOCK_{idx}__", block)
+
+    return md_text
+
+
+def sync_ideation(plan_dir, moniker="feature"):
+    """Parses 00_IDEATION.md and populates Stage 0 (Discovery) with 100% full-fidelity rendered sections."""
+    dashboard_path = ensure_dashboard(plan_dir, moniker)
+    filepath = find_stage_file(plan_dir, "00_IDEATION.md")
+    if not filepath:
+        return False
+
+    with open(filepath, "r", encoding="utf-8") as f:
+        raw = f.read()
+
+    update_section(dashboard_path, "VD:RAW_IDEATION", f'<div class="raw-prd-box" id="raw-ideation-box">{html.escape(raw)}</div>', optional=True)
+
+    blocks = [
+        f"""<button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('raw-ideation-box'); box.style.display = box.style.display === 'block' ? 'none' : 'block';" style="margin-bottom:12px;">
+  📄 View Raw 00_IDEATION.md Document
+</button>"""
+    ]
+
+    # Split markdown by top-level section headers (## Section)
+    sections = re.split(r"(?=\n##\s+)", raw)
+
+    for sec in sections:
+        sec_str = sec.strip()
+        if not sec_str:
+            continue
+
+        # Extract title
+        lines = sec_str.split("\n", 1)
+        header_line = lines[0].strip()
+        body = lines[1].strip() if len(lines) > 1 else ""
+
+        title = re.sub(r"^#+\s*", "", header_line).strip()
+        # Remove markdown horizontal rules at bottom of section body
+        body = re.sub(r"\n---\s*$", "", body).strip()
+
+        if not body and not title:
+            continue
+
+        # Convert markdown elements (tables, code blocks) in body
+        rendered_body = render_markdown_content(body)
+
+        blocks.append(f"""<div class="card" style="margin-bottom:16px;">
+  <h3 style="margin-bottom:12px;">💡 {html.escape(title)}</h3>
+  <div style="font-size: 14px; color: var(--fg); white-space: pre-wrap; line-height: 1.6;">{rendered_body}</div>
+</div>""")
+
+    update_section(dashboard_path, "VD:OVERVIEW", "\n\n".join(blocks))
+    return True
+
+
+def render_full_markdown_cards(dashboard_path, raw_md, raw_marker, overview_marker, doc_name):
+    """Renders 100% full-fidelity section cards from markdown into the specified section markers."""
+    raw_escaped = html.escape(raw_md)
+    raw_box_id = f"raw-{raw_marker.lower().replace(':', '-')}-box"
+    update_section(dashboard_path, raw_marker, f'<div class="raw-prd-box" id="{raw_box_id}">{raw_escaped}</div>', optional=True)
+
+    blocks = [
+        f"""<button class="raw-prd-toggle-btn" onclick="const box = document.getElementById('{raw_box_id}'); box.style.display = box.style.display === 'block' ? 'none' : 'block';" style="margin-bottom:12px;">
+  📄 View Raw {doc_name} Document
+</button>"""
+    ]
+
+    sections = re.split(r"(?=\n##\s+)", raw_md)
+    for sec in sections:
+        sec_str = sec.strip()
+        if not sec_str:
+            continue
+        lines = sec_str.split("\n", 1)
+        header_line = lines[0].strip()
+        body = lines[1].strip() if len(lines) > 1 else ""
+        title = re.sub(r"^#+\s*", "", header_line).strip()
+        body = re.sub(r"\n---\s*$", "", body).strip()
+        if not body and not title:
+            continue
+        rendered_body = render_markdown_content(body)
+        blocks.append(f"""<div class="card" style="margin-bottom:16px;">
+  <h3 style="margin-bottom:12px;">📄 {html.escape(title)}</h3>
+  <div style="font-size: 14px; color: var(--fg); white-space: pre-wrap; line-height: 1.6;">{rendered_body}</div>
+</div>""")
+
+    update_section(dashboard_path, overview_marker, "\n\n".join(blocks))
+
+
+def sync_prd(plan_dir, moniker="feature"):
+    """Parses 02_PRD.md and populates Stage 2 (Product Requirements Document)."""
+    dashboard_path = ensure_dashboard(plan_dir, moniker)
+    filepath = find_stage_file(plan_dir, "02_PRD.md")
+    if not filepath:
+        return False
+
+    with open(filepath, "r", encoding="utf-8") as f:
+        raw = f.read()
+
+    render_full_markdown_cards(dashboard_path, raw, "VPO:RAW_PRD", "VPO:OVERVIEW", "02_PRD.md")
+    for extra in ["VPO:STORIES", "VPO:CRITERIA", "VPO:FLOWS", "VPO:CONSTRAINTS", "VPO:PROTO", "VPO:QUESTIONS", "VPO:COMMENTS"]:
+        update_section(dashboard_path, extra, "", optional=True)
+    return True
+
+
+def sync_extraction(plan_dir, moniker="feature"):
+    """Parses 03_EXTRACTION.md and populates Stage 3 (Context Extraction)."""
+    dashboard_path = ensure_dashboard(plan_dir, moniker)
+    filepath = find_stage_file(plan_dir, "03_EXTRACTION.md")
+    if not filepath:
+        return False
+
+    with open(filepath, "r", encoding="utf-8") as f:
+        raw = f.read()
+
+    render_full_markdown_cards(dashboard_path, raw, "VX:RAW_EXTRACTION", "VX:OVERVIEW", "03_EXTRACTION.md")
+    for extra in ["VX:FINDINGS", "VX:REFERENCES", "VX:ARCH", "VX:QUESTIONS"]:
+        update_section(dashboard_path, extra, "", optional=True)
+    return True
+
+
+def sync_spec(plan_dir, moniker="feature"):
+    """Parses 04_SPEC.md and populates Stage 4 (Technical Spec)."""
+    dashboard_path = ensure_dashboard(plan_dir, moniker)
+    filepath = find_stage_file(plan_dir, "04_SPEC.md")
+    if not filepath:
+        return False
+
+    with open(filepath, "r", encoding="utf-8") as f:
+        raw = f.read()
+
+    render_full_markdown_cards(dashboard_path, raw, "VA:RAW_SPEC", "VA:OVERVIEW", "04_SPEC.md")
+    for extra in ["VA:ARCHITECTURE", "VA:FILEMAP", "VA:CODE", "VA:API", "VA:SCHEMA", "VA:PROTO", "VA:QUESTIONS", "VA:COMMENTS"]:
+        update_section(dashboard_path, extra, "", optional=True)
+    return True
+
+
+def sync_plan(plan_dir, moniker="feature"):
+    """Parses 05_PLAN.md and populates Stage 5 (Execution Planning)."""
+    dashboard_path = ensure_dashboard(plan_dir, moniker)
+    filepath = find_stage_file(plan_dir, "05_PLAN.md")
+    if not filepath:
+        return False
+
+    with open(filepath, "r", encoding="utf-8") as f:
+        raw = f.read()
+
+    render_full_markdown_cards(dashboard_path, raw, "VP:RAW_PLAN", "VP:OVERVIEW", "05_PLAN.md")
+    for extra in ["VP:SLICES", "VP:CONTRACTS", "VP:RISKS"]:
+        update_section(dashboard_path, extra, "", optional=True)
+    return True
+
+
+def sync_verification(plan_dir, moniker="feature"):
+    """Parses 07_VERIFICATION.md and populates Stage 7 (TDD Implementation)."""
+    dashboard_path = ensure_dashboard(plan_dir, moniker)
+    filepath = find_stage_file(plan_dir, "07_VERIFICATION.md")
+    if not filepath:
+        return False
+
+    with open(filepath, "r", encoding="utf-8") as f:
+        raw = f.read()
+
+    render_full_markdown_cards(dashboard_path, raw, "VV:RAW_VERIFICATION", "VV:OVERVIEW", "07_VERIFICATION.md")
+    for extra in ["VV:SLICES", "VV:TESTS"]:
+        update_section(dashboard_path, extra, "", optional=True)
+    return True
+
+
+def sync_recap(plan_dir, moniker="feature"):
+    """Parses 08_WALKTHROUGH.md and populates Stage 8 (Walkthrough Recap)."""
+    dashboard_path = ensure_dashboard(plan_dir, moniker)
+    filepath = find_stage_file(plan_dir, "08_WALKTHROUGH.md")
+    if not filepath:
+        return False
+
+    with open(filepath, "r", encoding="utf-8") as f:
+        raw = f.read()
+
+    render_full_markdown_cards(dashboard_path, raw, "VIR:RAW_RECAP", "VIR:OVERVIEW", "08_WALKTHROUGH.md")
+    for extra in ["VIR:TASKS", "VIR:FILES", "VIR:CHANGES", "VIR:ARCH", "VIR:CONTRACTS", "VIR:UI", "VIR:VERIFY", "VIR:NOTES"]:
+        update_section(dashboard_path, extra, "", optional=True)
+    return True
+
+
+def update_tracker_badges(dashboard_path, stage_files_present):
+    """
+    Updates the Stage Tracker Board badges in visual-dashboard.html based on actual stage files found.
+    """
+    if not os.path.exists(dashboard_path):
+        return
+
+    with open(dashboard_path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    for stage_num in range(10):
+        badge_id = f"badge-stage-{stage_num}"
+        has_file = stage_files_present.get(stage_num, False)
+
+        if has_file:
+            badge_html = f'<span class="badge new" id="{badge_id}">🟢 Complete</span>'
+        else:
+            if stage_num == 6 and stage_files_present.get(5, False) and not stage_files_present.get(7, False):
+                badge_html = f'<span class="badge mod" id="{badge_id}" style="background:#ddf4ff; color:#0969da;">🛑 Gate Active</span>'
+            else:
+                badge_html = f'<span class="badge" id="{badge_id}" style="background:var(--faint); color:var(--muted);">⚪ Pending</span>'
+
+        pattern = rf'<span class="badge[^"]*" id="{badge_id}".*?</span>'
+        content = re.sub(pattern, badge_html, content)
+
+    with open(dashboard_path, "w", encoding="utf-8") as f:
+        f.write(content)
+
+
+def auto_sync(plan_dir, moniker="feature", brain_dir=None):
+    """
+    Scans plan_dir for all SDLC stage files, runs individual parsers for present artifacts,
+    updates Stage Tracker Board badges dynamically, and mirrors all generated files.
+    """
+    dashboard_path = ensure_dashboard(plan_dir, moniker)
+
+    stage_file_map = {
+        0: "00_IDEATION.md",
+        1: "docs/glossary.md",
+        2: "02_PRD.md",
+        3: "03_EXTRACTION.md",
+        4: "04_SPEC.md",
+        5: "05_PLAN.md",
+        7: "07_VERIFICATION.md",
+        8: "08_WALKTHROUGH.md",
+    }
+
+    stage_presence = {}
+
+    if sync_ideation(plan_dir, moniker):
+        stage_presence[0] = True
+
+    repo_root = find_repo_root()
+    if os.path.exists(os.path.join(repo_root, "docs", "glossary.md")):
+        sync_glossary(plan_dir, moniker)
+        stage_presence[1] = True
+
+    if find_stage_file(plan_dir, "02_PRD.md"):
+        sync_prd(plan_dir, moniker)
+        stage_presence[2] = True
+
+    if sync_extraction(plan_dir, moniker):
+        stage_presence[3] = True
+
+    if sync_spec(plan_dir, moniker):
+        stage_presence[4] = True
+
+    if sync_plan(plan_dir, moniker):
+        stage_presence[5] = True
+
+    if sync_verification(plan_dir, moniker):
+        stage_presence[7] = True
+
+    if sync_recap(plan_dir, moniker):
+        stage_presence[8] = True
+
+    update_tracker_badges(dashboard_path, stage_presence)
+    mirror_artifact(dashboard_path, brain_dir=brain_dir)
+
+    brain_dirs = [brain_dir] if brain_dir else find_brain_dirs()
+    if brain_dirs:
+        for b_dir in brain_dirs:
+            os.makedirs(b_dir, exist_ok=True)
+            for s_num, s_file in stage_file_map.items():
+                found_path = find_stage_file(plan_dir, s_file)
+                if found_path:
+                    target_name = s_file.lower().replace("docs/", "")
+                    t_path = os.path.join(b_dir, target_name)
+                    if os.path.exists(t_path):
+                        try:
+                            os.chmod(t_path, 0o644)
+                        except Exception:
+                            pass
+                    try:
+                        shutil.copy2(found_path, t_path)
+                    except Exception:
+                        pass
+
+    print(f"🟢 auto-sync completed for plan directory: {plan_dir}")
 
 
 def main():
@@ -342,16 +720,52 @@ def main():
     parser_ensure.add_argument("--moniker", required=True, help="Feature slug / moniker")
     parser_ensure.add_argument("--timestamp", help="Optional timestamp override")
 
+    # auto-sync subcommand
+    parser_auto = subparsers.add_parser("auto-sync", help="Automatically scan and sync all stage files in target plan directory")
+    parser_auto.add_argument("--plan-dir", required=True, help="Path to plan directory")
+    parser_auto.add_argument("--moniker", default="feature", help="Feature slug / moniker")
+    parser_auto.add_argument("--artifacts-dir", "--brain-dir", dest="brain_dir", help="Explicit target brain/artifacts directory")
+
+    # sync-ideation subcommand
+    parser_sync_ideation = subparsers.add_parser("sync-ideation", help="Parse 00_IDEATION.md and update visual-dashboard.html")
+    parser_sync_ideation.add_argument("--plan-dir", required=True, help="Path to plan directory")
+    parser_sync_ideation.add_argument("--moniker", default="feature", help="Feature slug / moniker")
+
     # sync-prd subcommand
     parser_sync_prd = subparsers.add_parser("sync-prd", help="Directly parse 02_PRD.md and update visual-dashboard.html with full fidelity")
     parser_sync_prd.add_argument("--plan-dir", required=True, help="Path to plan directory")
     parser_sync_prd.add_argument("--moniker", default="feature", help="Feature slug / moniker")
 
     # sync-glossary subcommand
-    parser_sync_glossary = subparsers.add_parser("sync-glossary", help="Directly parse docs/glossary.md & docs/adr/ and update visual-dashboard.html with addition flags")
+    parser_sync_glossary = subparsers.add_parser("sync-glossary", help="Directly parse docs/glossary.md & docs/adr/ and update visual-dashboard.html")
     parser_sync_glossary.add_argument("--plan-dir", required=True, help="Path to plan directory")
     parser_sync_glossary.add_argument("--moniker", default="feature", help="Feature slug / moniker")
     parser_sync_glossary.add_argument("--stage", default="Stage 1", help="Active SDLC stage name for addition badges")
+
+    # sync-extraction subcommand
+    parser_sync_extraction = subparsers.add_parser("sync-extraction", help="Parse 03_EXTRACTION.md and update visual-dashboard.html")
+    parser_sync_extraction.add_argument("--plan-dir", required=True, help="Path to plan directory")
+    parser_sync_extraction.add_argument("--moniker", default="feature", help="Feature slug / moniker")
+
+    # sync-spec subcommand
+    parser_sync_spec = subparsers.add_parser("sync-spec", help="Parse 04_SPEC.md and update visual-dashboard.html")
+    parser_sync_spec.add_argument("--plan-dir", required=True, help="Path to plan directory")
+    parser_sync_spec.add_argument("--moniker", default="feature", help="Feature slug / moniker")
+
+    # sync-plan subcommand
+    parser_sync_plan = subparsers.add_parser("sync-plan", help="Parse 05_PLAN.md and update visual-dashboard.html")
+    parser_sync_plan.add_argument("--plan-dir", required=True, help="Path to plan directory")
+    parser_sync_plan.add_argument("--moniker", default="feature", help="Feature slug / moniker")
+
+    # sync-verification subcommand
+    parser_sync_verification = subparsers.add_parser("sync-verification", help="Parse 07_VERIFICATION.md and update visual-dashboard.html")
+    parser_sync_verification.add_argument("--plan-dir", required=True, help="Path to plan directory")
+    parser_sync_verification.add_argument("--moniker", default="feature", help="Feature slug / moniker")
+
+    # sync-recap subcommand
+    parser_sync_recap = subparsers.add_parser("sync-recap", help="Parse 08_WALKTHROUGH.md and update visual-dashboard.html")
+    parser_sync_recap.add_argument("--plan-dir", required=True, help="Path to plan directory")
+    parser_sync_recap.add_argument("--moniker", default="feature", help="Feature slug / moniker")
 
     # update subcommand
     parser_update = subparsers.add_parser("update", help="Update specific section inside visual-dashboard.html")
@@ -364,6 +778,7 @@ def main():
     parser_mirror = subparsers.add_parser("mirror", help="Dual-write visual-dashboard.html to active chat UI brain artifacts directory")
     parser_mirror.add_argument("--plan-dir", required=True, help="Path to plan directory")
     parser_mirror.add_argument("--target-filename", default="00_visual-dashboard.html", help="Target filename in brain directory")
+    parser_mirror.add_argument("--artifacts-dir", "--brain-dir", dest="brain_dir", help="Explicit target brain/artifacts directory")
 
     args = parser.parse_args()
 
@@ -371,11 +786,32 @@ def main():
         target_dashboard = ensure_dashboard(args.plan_dir, args.moniker, args.timestamp)
         mirror_artifact(target_dashboard)
 
+    elif args.command == "auto-sync":
+        auto_sync(args.plan_dir, args.moniker, brain_dir=args.brain_dir)
+
+    elif args.command == "sync-ideation":
+        sync_ideation(args.plan_dir, args.moniker)
+
     elif args.command == "sync-prd":
         sync_prd(args.plan_dir, args.moniker)
 
     elif args.command == "sync-glossary":
         sync_glossary(args.plan_dir, args.moniker, args.stage)
+
+    elif args.command == "sync-extraction":
+        sync_extraction(args.plan_dir, args.moniker)
+
+    elif args.command == "sync-spec":
+        sync_spec(args.plan_dir, args.moniker)
+
+    elif args.command == "sync-plan":
+        sync_plan(args.plan_dir, args.moniker)
+
+    elif args.command == "sync-verification":
+        sync_verification(args.plan_dir, args.moniker)
+
+    elif args.command == "sync-recap":
+        sync_recap(args.plan_dir, args.moniker)
 
     elif args.command == "update":
         target_dashboard = os.path.join(args.plan_dir, "visual-dashboard.html")
@@ -394,8 +830,9 @@ def main():
 
     elif args.command == "mirror":
         target_dashboard = os.path.join(args.plan_dir, "visual-dashboard.html")
-        mirror_artifact(target_dashboard, args.target_filename)
+        mirror_artifact(target_dashboard, target_filename=args.target_filename, brain_dir=args.brain_dir)
 
 
 if __name__ == "__main__":
     main()
+

@@ -20,32 +20,10 @@ jobs:
       with:
         python-version: "3.11"
 
-    - name: "Install Antigravity CLI"
+    - name: "Install Dependencies"
       run: |
-        # Simulate CLI installation
-        echo "Installing agy 2.0 CLI compiler..."
-        # In a real environment, you'd execute: npm install -g @antigravity/cli
-        echo "agy compiler successfully installed."
+        pip install pyyaml
 
-    - name: "Validate Plugin Schema"
+    - name: "Run Complete Plugin Test Suite (Tiers 1, 2, and 3)"
       run: |
-        # Assert schema compilation (agy plugin validate)
-        # For CI dry runs, we verify no syntax errors exist in SKILL.md frontmatter or agents
-        echo "Running agy plugin validate . ..."
-        python3 -c "import os; print('Plugin layout verified successfully.')"
-
-    - name: "Run Testing Harness Unit Tests"
-      run: |
-        # Verify the behavioral assertion engine runs correctly
-        chmod +x scripts/verify_agent_behavior.py scripts/run_stage_tests.py
-        
-        # Test bootstrapping Stage 2
-        python3 scripts/run_stage_tests.py --stage 2 --sandbox scratch/sandbox-ci
-        
-        # Verify Stage 2 input file is generated
-        test -f scratch/sandbox-ci/docs/glossary.md
-        echo "Harness bootstrap test: PASS"
-
-        # Validate stage verification tool is operational
-        python3 scripts/run_stage_tests.py --stage 2 --sandbox scratch/sandbox-ci --validate
-        echo "Harness output validation test: PASS"
+        python3 scripts/run_plugin_tests.py --tier all -v

@@ -18,9 +18,10 @@ Your goal is to act as the **Orchestration Engine** to generate a local, interac
 
 ## Instructions
 
-### Step 1: Locate Active Plan
+### Step 1: Locate & Resolve Active Plan Directory
 1. Find the active plan directory `plans/<feature-slug>/<timestamp>/` for the feature currently being implemented.
-2. Read the `05_PLAN.md` (or `05_IMPLEMENTATION_PLAN.md`) file to extract the checklist tasks and implementation details.
+2. **Directory Reuse Mandate**: Check if an existing plan directory already exists under `plans/<feature-slug>/` (e.g. created by `ideator`, `grill`, or `write-prd`). **REUSE that exact plan directory**. Do NOT create a new timestamp directory if `ideator` or a prior stage was already run!
+3. Read `05_PLAN.md` (or `05_IMPLEMENTATION_PLAN.md`) from that plan directory.
 
 ### Step 2: Generate 05_KANBAN.md
 Create a visual overview of the vertical slices in Markdown:
