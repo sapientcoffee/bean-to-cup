@@ -114,10 +114,10 @@ flowchart TD
     %% STAGE 1: SOCRATIC ALIGNMENT
     subgraph S1 ["Stage 1: Socratic Alignment"]
         S1_Title["Stage 1: Socratic Alignment"]:::stage
-        U1["User Types:<br><b>/feature [goal]</b><br>+ Answers Socratic Qs"]:::user
+        U1["User Types:<br>/feature goal<br>+ Answers Socratic Qs"]:::user
         I1["Input:<br>00_IDEATION.md (Optional)"]:::artifact
         C1["Skills: grill, grilling,<br>domain-modeling"]:::component
-        A1["Output:<br>docs/glossary.md &<br>visual-dashboard.html (Glossary Tab)"]:::artifact
+        A1["Output:<br>docs/glossary.md and<br>visual-dashboard.html (Glossary Tab)"]:::artifact
         
         A0 -.-> I1
         U1 --> C1
@@ -129,9 +129,9 @@ flowchart TD
     subgraph S2 ["Stage 2: Product Requirements"]
         S2_Title["Stage 2: Product Requirements"]:::stage
         U2["User Action:<br>Reviews PRD in chat UI"]:::user
-        I2["Input:<br>docs/glossary.md &<br>visual-dashboard.html (Glossary Tab)"]:::artifact
+        I2["Input:<br>docs/glossary.md and<br>visual-dashboard.html (Glossary Tab)"]:::artifact
         C2["Skill: write-prd"]:::component
-        A2["Output:<br>02_PRD.md &<br>visual-dashboard.html (PRD Tab)"]:::artifact
+        A2["Output:<br>02_PRD.md and<br>visual-dashboard.html (PRD Tab)"]:::artifact
         
         A1 --> I2
         U2 -.-> C2
@@ -142,9 +142,9 @@ flowchart TD
     %% STAGE 3: CONTEXT EXTRACTION
     subgraph S3 ["Stage 3: Context Extraction"]
         S3_Title["Stage 3: Context Extraction"]:::stage
-        U3["User Action:<br>Approves PRD<br>(or types <b>/research [query]</b>)"]:::user
+        U3["User Action:<br>Approves PRD<br>(or types /research query)"]:::user
         I3["Input:<br>02_PRD.md / query"]:::artifact
-        C3["Command: <b>/research</b><br>➔ Skill: research<br>➔ Subagents: @scout,<br>@context-mapping,<br>@codebase-analyzer,<br>@pattern-recognition"]:::component
+        C3["Command: /research<br>- Skill: research<br>- Subagents: @scout,<br>@context-mapping,<br>@codebase-analyzer,<br>@pattern-recognition"]:::component
         A3["Output:<br>03_EXTRACTION.md<br>(Factual Code Map)"]:::artifact
         
         A2 --> I3
@@ -154,13 +154,13 @@ flowchart TD
     end
 
     %% STAGE 4 & 5: TECH SPEC & EXECUTION PLAN
-    subgraph S45 ["Stages 4 & 5: Spec & Plan"]
-        S45_Title["Stages 4 & 5: Spec & Plan"]:::stage
+    subgraph S45 ["Stages 4 and 5: Spec and Plan"]
+        S45_Title["Stages 4 and 5: Spec and Plan"]:::stage
         U45["User Action:<br>None (Automated)"]:::user
-        I45_1["Input 1:<br>02_PRD.md &<br>visual-dashboard.html (PRD Tab)"]:::artifact
+        I45_1["Input 1:<br>02_PRD.md and<br>visual-dashboard.html (PRD Tab)"]:::artifact
         I45_2["Input 2:<br>03_EXTRACTION.md"]:::artifact
         C45["Subagent: @architect<br>(system-design.md)"]:::component
-        A4["Output:<br>04_SPEC.md &<br>visual-dashboard.html (Spec Tab)"]:::artifact
+        A4["Output:<br>04_SPEC.md and<br>visual-dashboard.html (Spec Tab)"]:::artifact
         A5["Output:<br>05_PLAN.md (Checklist)"]:::artifact
         
         A2 -.-> I45_1
@@ -174,7 +174,7 @@ flowchart TD
     %% STAGE 6: HUMAN GATE
     subgraph S6 ["Stage 6: Human Review Gate"]
         S6_Title["Stage 6: Human Gate"]:::gate
-        U6["User Action:<br>Reviews 04_SPEC contracts<br>and types <b>'approve'</b>"]:::user
+        U6["User Action:<br>Reviews 04_SPEC contracts<br>and types approve"]:::user
         I6_1["Input 1:<br>04_SPEC.md"]:::artifact
         I6_2["Input 2:<br>05_PLAN.md"]:::artifact
         
@@ -187,10 +187,10 @@ flowchart TD
     %% STAGE 7: TEST-DRIVEN IMPLEMENTATION
     subgraph S7 ["Stage 7: Test-Driven Implementation (TDD)"]
         S7_Title["Stage 7: TDD Loop"]:::stage
-        U7["User Action:<br>Approves milestone commits<br>(Types 'yes' / 'approve')"]:::user
+        U7["User Action:<br>Approves milestone commits<br>(Types yes / approve)"]:::user
         I7_1["Input 1:<br>04_SPEC.md (Contracts)"]:::artifact
         I7_2["Input 2:<br>05_PLAN.md (Checklist)"]:::artifact
-        C7["Subagents: @engineer, @auditor,<br>@code-review<br>➔ Skills: generate-code, audit-code,<br>kanban, deploy-app<br>➔ Hook: lint-on-change.sh"]:::component
+        C7["Subagents: @engineer, @auditor,<br>@code-review<br>- Skills: generate-code, audit-code,<br>kanban, deploy-app<br>- Hook: lint-on-change.sh"]:::component
         A7["Outputs:<br>- Working verified code<br>- 07_VERIFICATION.md (Logs)<br>- visual-dashboard.html (Overview Tab)"]:::artifact
         
         U6 -->|Approved| C7
@@ -205,11 +205,11 @@ flowchart TD
     %% STAGE 8: AUTOMATED WALKTHROUGH
     subgraph S8 ["Stage 8: Automated Walkthrough"]
         S8_Title["Stage 8: Walkthrough"]:::stage
-        U8["User Types:<br><b>/record</b>"]:::user
+        U8["User Types:<br>/record"]:::user
         I8_1["Input 1:<br>07_VERIFICATION.md"]:::artifact
         I8_2["Input 2:<br>walkthrough_scenario.json"]:::default
-        C8["Command: <b>/record</b><br>➔ Skill: asciinema"]:::component
-        A8["Output:<br>08_WALKTHROUGH.md &<br>visual-dashboard.html (Recap Tab)"]:::artifact
+        C8["Command: /record<br>- Skill: asciinema"]:::component
+        A8["Output:<br>08_WALKTHROUGH.md and<br>visual-dashboard.html (Recap Tab)"]:::artifact
         
         A7 --> I8_1
         U8 --> C8
@@ -219,13 +219,13 @@ flowchart TD
     end
 
     %% STAGE 9: PR DELIVERY & MAINTENANCE
-    subgraph S9 ["Stage 9: PR Delivery & Maintenance"]
-        S9_Title["Stage 9: Delivery & PR"]:::stage
-        U9["User Action:<br>Completes PR review<br>Optionally types:<br><b>/archive</b>, <b>/sync</b>,<br><b>/worktree</b>, <b>/build:production</b>"]:::user
+    subgraph S9 ["Stage 9: PR Delivery and Maintenance"]
+        S9_Title["Stage 9: Delivery and PR"]:::stage
+        U9["User Action:<br>Completes PR review<br>Optionally types:<br>/archive, /sync,<br>/worktree, /build:production"]:::user
         I9_1["Input 1:<br>Working code"]:::artifact
-        I9_2["Input 2:<br>08_WALKTHROUGH.md &<br>visual-dashboard.html (Recap Tab)"]:::artifact
-        C9["Skill: github-workflow<br>(creates PR via <b>gh</b> CLI)"]:::component
-        A9["Output:<br>Active GitHub PR<br>& clean workspace"]:::artifact
+        I9_2["Input 2:<br>08_WALKTHROUGH.md and<br>visual-dashboard.html (Recap Tab)"]:::artifact
+        C9["Skill: github-workflow<br>(creates PR via gh CLI)"]:::component
+        A9["Output:<br>Active GitHub PR<br>and clean workspace"]:::artifact
         
         A8 --> I9_2
         U9 --> C9

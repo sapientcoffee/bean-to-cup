@@ -126,14 +126,14 @@ sequenceDiagram
     Sandbox-->>Developer: Output Artifacts (e.g. 04_SPEC.md)
     Developer->>AST: Trigger python --validate (Option 1)
     Note over AST: Check Apache Licenses,<br/>Verify no empty slots,<br/>Audit Markdown Structure
-    ALT AST Validation Fails
+    alt AST Validation Fails
         AST-->>Developer: Return Exit Code 1 (Stop)
-    ELSE AST Validation Passes
+    else AST Validation Passes
         AST->>Auditor: Dispatch @auditor (Option 2)
-        Note over Auditor: Parse Quality Rubric,<br/>Evaluate architecture & threat spec
+        Note over Auditor: Parse Quality Rubric,<br/>Evaluate architecture and threat spec
         Auditor-->>Developer: Output 07_VERIFICATION.md (Score Matrix)
         Note over Developer: Ready for GitHub PR submission!
-    END
+    end
 ```
 
 ---
