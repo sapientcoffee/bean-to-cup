@@ -58,6 +58,24 @@ The markdown files (`02_PRD.md`, `04_SPEC.md`, `05_PLAN.md`, `07_VERIFICATION.md
 
 ---
 
+### 📊 The Unified Master Visual Dashboard (`visual-dashboard.html`)
+
+A core innovation of Bean-to-Cup is the **Unified Master Visual Dashboard** (`visual-dashboard.html`). Created as a persistent visual artifact in your feature plan directory (`plans/<feature-slug>/<timestamp>/visual-dashboard.html`), it provides an interactive, rich UI dashboard that aggregates real-time insights across **all SDLC stages**:
+
+*   **Discovery Tab (Stage 0)**: Displays raw ideation flows, target persona friction points, and mock data schemas.
+*   **Glossary & ADR Tab (Stage 1)**: Visualizes the global Ubiquitous Glossary terms and Architecture Decision Records (ADRs).
+*   **PRD Tab (Stage 2)**: Renders business requirements, Gherkin acceptance scenarios, and explicit non-goals.
+*   **Extraction Tab (Stage 3)**: Interactive codebase entrypoint maps, component trees, and architectural pattern findings.
+*   **Design Spec Tab (Stage 4)**: Renders Mermaid sequence diagrams, OpenAPI cards, ER schemas, and lo-fi wireframes.
+*   **Brew Overview / Interactive Kanban (Stages 5 & 7)**: Interactive Kanban board tracking vertical sprint slices and TDD task execution progress in real-time.
+*   **Recap Tab (Stage 8)**: Retrospective report, terminal recording playback, and walkthrough verification proof.
+
+> [!TIP]
+> **Live Chat UI Panel Integration**:
+> Every stage update automatically mirrors `visual-dashboard.html` directly to the assistant's private system artifacts directory (`<appDataDir>/brain/<conversation-id>/00_visual-dashboard.html`), allowing you to view and inspect live feature progress in the side-panel artifact viewer without leaving the chat interface!
+
+---
+
 ## 🏗️ Architectural Overview
 
 ### The 9-Phase Protocol (The State Machine)
@@ -292,7 +310,7 @@ Each modular skill in the `skills/` directory complies with the open **Agent Ski
 *   **`generate-code`** [CORE]: **Stage 7**: Generates boilerplate and components according to Spec contracts.
 *   **`kanban`** [CORE]: **Stage 7**: Progress tracking (HTML & Mermaid visualizer) for vertical sprint slices.
 *   **`chaos-mitigation`** [CORE]: **Stage 7**: Handles SRE log inspection and runs automated mitigation playbooks.
-*   **`deploy-app`** [CORE]: **Stage 7**: Resolves dependencies, compiles packages, and serves local webservers.
+*   **`visual-dashboard`** [CORE]: **Universal (Stages 0–8)**: Central authority to instantiate, preserve, update, and mirror `visual-dashboard.html` across all stages to the assistant's private system artifacts directory.
 *   **`github-workflow`** [CORE]: **Stage 9**: Automates branch pushes and PR compilation with the GitHub CLI (`gh`).
 *   **`git-delivery`** [CORE]: **Stage 9**: Provides an emoji-powered, best-practice delivery pipeline to verify, stage, commit, and raise high-quality "What, Why, How" PRs.
 
